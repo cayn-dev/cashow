@@ -18,10 +18,10 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
       setPin(newPin);
       setError(false);
       
-      // Auto-submit when PIN is 4+ digits
-      if (newPin.length >= 4) {
+      // Auto-submit when PIN is exactly 6 digits
+      if (newPin.length === 6) {
         const success = onUnlock(newPin);
-        if (!success && newPin.length === 6) {
+        if (!success) {
           setError(true);
           setShake(true);
           setTimeout(() => {
@@ -39,7 +39,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
   };
 
   const handleSubmit = () => {
-    if (pin.length >= 4) {
+    if (pin.length === 6) {
       const success = onUnlock(pin);
       if (!success) {
         setError(true);
@@ -66,7 +66,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
             <Lock className="w-10 h-10 text-primary" />
           </div>
           <h1 className="font-display text-2xl font-bold mb-2">FinanceFlow</h1>
-          <p className="text-muted-foreground">Inserisci il tuo PIN</p>
+          <p className="text-muted-foreground">Inserisci il tuo PIN (6 cifre)</p>
         </div>
 
         {/* PIN dots */}
@@ -126,7 +126,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
           </button>
         </div>
 
-        {pin.length >= 4 && (
+        {pin.length === 6 && (
           <Button onClick={handleSubmit} className="w-full" size="lg">
             Sblocca
           </Button>

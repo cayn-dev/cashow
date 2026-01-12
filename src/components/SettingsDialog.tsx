@@ -55,8 +55,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [pinError, setPinError] = useState('');
 
   const handleSetPin = () => {
-    if (newPin.length < 4) {
-      setPinError('Il PIN deve avere almeno 4 cifre');
+    if (newPin.length !== 6) {
+      setPinError('Il PIN deve avere esattamente 6 cifre');
       return;
     }
     if (newPin !== confirmPin) {
@@ -193,8 +193,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Nuovo PIN (min 4 cifre)</Label>
+              <div className="space-y-2">
+                <Label>Nuovo PIN (6 cifre)</Label>
                   <Input
                     type="password"
                     inputMode="numeric"
