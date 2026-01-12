@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button';
 interface TransactionItemProps {
   transaction: Transaction;
   onDelete: (id: string) => void;
+  currencySymbol?: string;
 }
 
-export function TransactionItem({ transaction, onDelete }: TransactionItemProps) {
+export function TransactionItem({ transaction, onDelete, currencySymbol = '€' }: TransactionItemProps) {
   const category = CATEGORY_CONFIG[transaction.category];
   const payment = PAYMENT_METHODS[transaction.paymentMethod];
   const isIncome = transaction.type === 'income';
@@ -47,7 +48,7 @@ export function TransactionItem({ transaction, onDelete }: TransactionItemProps)
           'font-display font-semibold text-lg',
           isIncome ? 'text-success' : 'text-destructive'
         )}>
-          {isIncome ? '+' : '-'}€{transaction.amount.toLocaleString()}
+          {isIncome ? '+' : '-'}{currencySymbol}{transaction.amount.toLocaleString()}
         </span>
         
         <Button

@@ -4,7 +4,8 @@ import {
   ArrowUpDown, 
   Wallet, 
   Target,
-  Settings 
+  Settings,
+  Lock 
 } from 'lucide-react';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
@@ -12,6 +13,9 @@ type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
 interface NavigationProps {
   currentView: View;
   onViewChange: (view: View) => void;
+  onOpenSettings: () => void;
+  onLock?: () => void;
+  pinEnabled?: boolean;
 }
 
 const navItems = [
@@ -21,7 +25,7 @@ const navItems = [
   { id: 'savings' as View, label: 'Risparmi', icon: Target },
 ];
 
-export function Navigation({ currentView, onViewChange }: NavigationProps) {
+export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, pinEnabled }: NavigationProps) {
   return (
     <nav className="glass-panel p-2 mb-6">
       <div className="flex items-center justify-between">
@@ -50,9 +54,23 @@ export function Navigation({ currentView, onViewChange }: NavigationProps) {
           ))}
         </div>
 
-        <button className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-          <Settings className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          {pinEnabled && onLock && (
+            <button 
+              onClick={onLock}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              title="Blocca app"
+            >
+              <Lock className="w-5 h-5" />
+            </button>
+          )}
+          <button 
+            onClick={onOpenSettings}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </nav>
   );

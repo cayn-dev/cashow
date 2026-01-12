@@ -17,12 +17,14 @@ interface TransactionsViewProps {
   transactions: Transaction[];
   onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   onDeleteTransaction: (id: string) => void;
+  currencySymbol?: string;
 }
 
 export function TransactionsView({
   transactions,
   onAddTransaction,
   onDeleteTransaction,
+  currencySymbol = '€',
 }: TransactionsViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -114,6 +116,7 @@ export function TransactionsView({
                   key={transaction.id}
                   transaction={transaction}
                   onDelete={onDeleteTransaction}
+                  currencySymbol={currencySymbol}
                 />
               ))}
             </div>
