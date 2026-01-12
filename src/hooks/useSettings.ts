@@ -58,8 +58,8 @@ export function useSettings() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // Always lock on app open if PIN is enabled
-        if (parsed.pinEnabled && parsed.pin) {
+        // Only lock if PIN is enabled AND a valid 6-digit PIN exists
+        if (parsed.pinEnabled === true && parsed.pin && typeof parsed.pin === 'string' && parsed.pin.length === 6) {
           return true;
         }
       } catch {
