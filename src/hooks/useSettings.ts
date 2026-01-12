@@ -58,9 +58,9 @@ export function useSettings() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
+        // Always lock on app open if PIN is enabled
         if (parsed.pinEnabled && parsed.pin) {
-          const verified = sessionStorage.getItem(PIN_VERIFIED_KEY);
-          return verified !== 'true';
+          return true;
         }
       } catch {
         return false;
