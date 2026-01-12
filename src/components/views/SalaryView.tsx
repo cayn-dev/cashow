@@ -29,6 +29,7 @@ interface SalaryViewProps {
   cumulativeSalary: number;
   salaryTransactions: Transaction[];
   onSetMonthlySalary: (salary: number) => void;
+  currencySymbol?: string;
 }
 
 export function SalaryView({
@@ -36,6 +37,7 @@ export function SalaryView({
   cumulativeSalary,
   salaryTransactions,
   onSetMonthlySalary,
+  currencySymbol = '€',
 }: SalaryViewProps) {
   const [newSalary, setNewSalary] = useState(monthlySalary.toString());
 
@@ -75,14 +77,14 @@ export function SalaryView({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Stipendio Mensile"
-          value={`€${monthlySalary.toLocaleString()}`}
+          value={`${currencySymbol}${monthlySalary.toLocaleString()}`}
           icon={Wallet}
           variant="primary"
           delay={0}
         />
         <StatCard
           title="Stipendio Cumulativo"
-          value={`€${cumulativeSalary.toLocaleString()}`}
+          value={`${currencySymbol}${cumulativeSalary.toLocaleString()}`}
           subtitle="Totale guadagnato"
           icon={TrendingUp}
           variant="income"
@@ -90,7 +92,7 @@ export function SalaryView({
         />
         <StatCard
           title="Media Mensile"
-          value={`€${salaryTransactions.length > 0 
+          value={`${currencySymbol}${salaryTransactions.length > 0 
             ? Math.round(cumulativeSalary / salaryTransactions.length).toLocaleString() 
             : '0'}`}
           icon={Calculator}
@@ -105,7 +107,7 @@ export function SalaryView({
         </h3>
         <div className="flex gap-4 items-end">
           <div className="flex-1 space-y-2">
-            <Label htmlFor="newSalary">Nuovo importo (€)</Label>
+            <Label htmlFor="newSalary">Nuovo importo ({currencySymbol})</Label>
             <Input
               id="newSalary"
               type="number"
@@ -156,7 +158,7 @@ export function SalaryView({
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `€${value.toLocaleString()}`}
+                  tickFormatter={(value) => `${currencySymbol}${value.toLocaleString()}`}
                 />
                 <Tooltip
                   content={({ active, payload }) => {
@@ -165,10 +167,10 @@ export function SalaryView({
                         <div className="glass-panel p-3">
                           <p className="text-sm text-muted-foreground">{payload[0].payload.date}</p>
                           <p className="text-sm font-medium">
-                            Stipendio: <span className="text-success">€{payload[0].payload.amount.toLocaleString()}</span>
+                            Stipendio: <span className="text-success">{currencySymbol}{payload[0].payload.amount.toLocaleString()}</span>
                           </p>
                           <p className="text-sm font-medium">
-                            Totale: <span className="text-primary">€{payload[0].payload.cumulative.toLocaleString()}</span>
+                            Totale: <span className="text-primary">{currencySymbol}{payload[0].payload.cumulative.toLocaleString()}</span>
                           </p>
                         </div>
                       );
@@ -218,7 +220,7 @@ export function SalaryView({
                 </div>
               </div>
               <span className="font-display font-semibold text-lg text-success">
-                +€{t.amount.toLocaleString()}
+                +{currencySymbol}{t.amount.toLocaleString()}
               </span>
             </div>
           ))}

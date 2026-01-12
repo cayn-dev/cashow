@@ -11,6 +11,7 @@ interface SavingsViewProps {
   onAddGoal: (goal: Omit<SavingsGoal, 'id' | 'createdAt'>) => void;
   onUpdateGoal: (id: string, amount: number) => void;
   onDeleteGoal: (id: string) => void;
+  currencySymbol?: string;
 }
 
 export function SavingsView({
@@ -19,6 +20,7 @@ export function SavingsView({
   onAddGoal,
   onUpdateGoal,
   onDeleteGoal,
+  currencySymbol = '€',
 }: SavingsViewProps) {
   const totalTarget = savingsGoals.reduce((sum, g) => sum + g.targetAmount, 0);
   const completedGoals = savingsGoals.filter(
@@ -42,14 +44,14 @@ export function SavingsView({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Totale Risparmiato"
-          value={`€${totalSavings.toLocaleString()}`}
+          value={`${currencySymbol}${totalSavings.toLocaleString()}`}
           icon={PiggyBank}
           variant="primary"
           delay={0}
         />
         <StatCard
           title="Obiettivo Totale"
-          value={`€${totalTarget.toLocaleString()}`}
+          value={`${currencySymbol}${totalTarget.toLocaleString()}`}
           subtitle={`${savingsGoals.length} obiettivi attivi`}
           icon={Target}
           delay={100}
@@ -84,7 +86,7 @@ export function SavingsView({
               />
             </div>
             <p className="text-sm text-muted-foreground text-center">
-              €{totalSavings.toLocaleString()} risparmiati su €{totalTarget.toLocaleString()}
+              {currencySymbol}{totalSavings.toLocaleString()} risparmiati su {currencySymbol}{totalTarget.toLocaleString()}
             </p>
           </div>
         </GlassCard>
@@ -99,6 +101,7 @@ export function SavingsView({
             onDeposit={onUpdateGoal}
             onWithdraw={onUpdateGoal}
             onDelete={onDeleteGoal}
+            currencySymbol={currencySymbol}
           />
         ))}
       </div>

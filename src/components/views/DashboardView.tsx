@@ -24,6 +24,7 @@ interface DashboardViewProps {
   onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   onDeleteTransaction: (id: string) => void;
   onViewTransactions: () => void;
+  currencySymbol?: string;
 }
 
 export function DashboardView({
@@ -37,6 +38,7 @@ export function DashboardView({
   onAddTransaction,
   onDeleteTransaction,
   onViewTransactions,
+  currencySymbol = '€',
 }: DashboardViewProps) {
   return (
     <div className="space-y-6">
@@ -55,21 +57,21 @@ export function DashboardView({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Entrate del Mese"
-          value={`€${monthlyIncome.toLocaleString()}`}
+          value={`${currencySymbol}${monthlyIncome.toLocaleString()}`}
           icon={TrendingUp}
           variant="income"
           delay={0}
         />
         <StatCard
           title="Uscite del Mese"
-          value={`€${monthlyExpenses.toLocaleString()}`}
+          value={`${currencySymbol}${monthlyExpenses.toLocaleString()}`}
           icon={TrendingDown}
           variant="expense"
           delay={100}
         />
         <StatCard
           title="Saldo Mensile"
-          value={`€${monthlyBalance.toLocaleString()}`}
+          value={`${currencySymbol}${monthlyBalance.toLocaleString()}`}
           subtitle={monthlyBalance >= 0 ? 'Stai risparmiando!' : 'Attenzione!'}
           icon={Wallet}
           variant={monthlyBalance >= 0 ? 'income' : 'expense'}
@@ -77,7 +79,7 @@ export function DashboardView({
         />
         <StatCard
           title="Risparmi Totali"
-          value={`€${totalSavings.toLocaleString()}`}
+          value={`${currencySymbol}${totalSavings.toLocaleString()}`}
           icon={PiggyBank}
           variant="primary"
           delay={300}
@@ -132,14 +134,14 @@ export function DashboardView({
               <div>
                 <p className="text-sm text-muted-foreground">Stipendio Mensile</p>
                 <p className="font-display text-2xl font-bold text-primary glow-text">
-                  €{monthlySalary.toLocaleString()}
+                  {currencySymbol}{monthlySalary.toLocaleString()}
                 </p>
               </div>
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Risparmio potenziale</p>
               <p className="font-display text-lg font-semibold text-success">
-                €{Math.max(0, monthlySalary - monthlyExpenses).toLocaleString()}
+                {currencySymbol}{Math.max(0, monthlySalary - monthlyExpenses).toLocaleString()}
               </p>
             </div>
           </div>

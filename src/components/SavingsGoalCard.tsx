@@ -10,9 +10,10 @@ interface SavingsGoalCardProps {
   onDeposit: (id: string, amount: number) => void;
   onWithdraw: (id: string, amount: number) => void;
   onDelete: (id: string) => void;
+  currencySymbol?: string;
 }
 
-export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete }: SavingsGoalCardProps) {
+export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete, currencySymbol = '€' }: SavingsGoalCardProps) {
   const percentage = Math.min((goal.currentAmount / goal.targetAmount) * 100, 100);
   const isComplete = percentage >= 100;
 
@@ -24,7 +25,7 @@ export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete }: Savin
           <div>
             <h3 className="font-display font-semibold text-foreground">{goal.name}</h3>
             <p className="text-sm text-muted-foreground">
-              €{goal.currentAmount.toLocaleString()} / €{goal.targetAmount.toLocaleString()}
+              {currencySymbol}{goal.currentAmount.toLocaleString()} / {currencySymbol}{goal.targetAmount.toLocaleString()}
             </p>
           </div>
         </div>
@@ -76,7 +77,7 @@ export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete }: Savin
           onClick={() => onDeposit(goal.id, 50)}
           className="flex-1 border-success/30 text-success hover:bg-success/10 hover:text-success"
         >
-          <Plus className="w-4 h-4 mr-1" /> €50
+          <Plus className="w-4 h-4 mr-1" /> {currencySymbol}50
         </Button>
         <Button
           variant="outline"
@@ -85,7 +86,7 @@ export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete }: Savin
           className="flex-1 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
           disabled={goal.currentAmount < 50}
         >
-          <Minus className="w-4 h-4 mr-1" /> €50
+          <Minus className="w-4 h-4 mr-1" /> {currencySymbol}50
         </Button>
       </div>
     </GlassCard>

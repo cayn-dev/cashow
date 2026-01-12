@@ -73,6 +73,56 @@
     --sidebar-border: 0 0% 100% / 0.08;
     --sidebar-ring: 185 100% 50%;
   }
+
+  /* Light theme */
+  .light-theme {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --card-glass: 0 0% 0% / 0.02;
+    --card-border: 0 0% 0% / 0.08;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 185 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 185 100% 50%;
+
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 20%;
+
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 185 80% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 145 70% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 100% 45%;
+    --warning-foreground: 0 0% 10%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --income: 145 70% 40%;
+    --expense: 0 72% 50%;
+
+    --border: 0 0% 0% / 0.1;
+    --input: 0 0% 0% / 0.05;
+    --ring: 185 100% 40%;
+
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 185 100% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 92%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 0% / 0.1;
+    --sidebar-ring: 185 100% 40%;
+  }
 }
 
 @layer base {
@@ -233,4 +283,15 @@
   .delay-300 { animation-delay: 300ms; }
   .delay-400 { animation-delay: 400ms; }
   .delay-500 { animation-delay: 500ms; }
+
+  /* Shake animation for wrong PIN */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
 }
