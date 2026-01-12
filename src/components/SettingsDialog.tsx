@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ import {
   Palette,
   DollarSign,
   AlertTriangle,
+  Fingerprint,
 } from 'lucide-react';
 import { useSettings, Theme, Currency } from '@/hooks/useSettings';
 import { GlassCard } from './GlassCard';
@@ -53,6 +54,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [pinError, setPinError] = useState('');
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [biometricLoading, setBiometricLoading] = useState(false);
+
+  useEffect(() => {
+    const checkBiometric = async () => {
+      const available = await settings.isBiometricAvailable();
+      setBiometricAvailable(available);
+    };
+    checkBiometric();
+  }, [settings.isBiometricAvailable]);
 
   const handleSetPin = () => {
     if (newPin.length !== 6) {
@@ -72,6 +83,22 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   const handleRemovePin = () => {
     settings.setPin(null);
+  };
+
+  const handleToggleBiometric = async (enabled: boolean) => {
+    if (enabled) {
+      setBiometricLoading(true);
+      try {
+        const success = await settings.registerBiometric();
+        if (!success) {
+          console.error('Failed to register biometric');
+        }
+      } finally {
+        setBiometricLoading(false);
+      }
+    } else {
+      settings.disableBiometric();
+    }
   };
 
   return (
@@ -190,6 +217,32 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     Cambia PIN
                   </Button>
                 )}
+
+                <Separator />
+
+                {/* Biometric Authentication */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Fingerprint className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <Label>Face ID / Touch ID</Label>
+                      {!biometricAvailable && (
+                        <p className="text-xs text-muted-foreground">Non disponibile su questo dispositivo</p>
+                      )}
+                    </div>
+                  </div>
+                  <Switch
+                    checked={settings.biometricEnabled}
+                    onCheckedChange={handleToggleBiometric}
+                    disabled={!biometricAvailable || biometricLoading}
+                  />
+                </div>
+
+                {settings.biometricEnabled && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    ✓ Face ID / Touch ID attivo
+                  </p>
+                )}
               </div>
             ) : (
               <div className="space-y-4">
@@ -201,7 +254,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     maxLength={6}
                     value={newPin}
                     onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
-                    placeholder="••••"
+                    placeholder="••••••"
                   />
                 </div>
                 <div className="space-y-2">
@@ -212,7 +265,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     maxLength={6}
                     value={confirmPin}
                     onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ''))}
-                    placeholder="••••"
+                    placeholder="••••••"
                   />
                 </div>
                 {pinError && (

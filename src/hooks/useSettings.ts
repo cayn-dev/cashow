@@ -9,6 +9,8 @@ interface Settings {
   currencySymbol: string;
   pinEnabled: boolean;
   pin: string | null;
+  biometricEnabled: boolean;
+  biometricCredentialId: string | null;
   notificationsEnabled: boolean;
   dailyReminder: boolean;
   spendingAlerts: boolean;
@@ -30,6 +32,8 @@ const defaultSettings: Settings = {
   currencySymbol: '€',
   pinEnabled: false,
   pin: null,
+  biometricEnabled: false,
+  biometricCredentialId: null,
   notificationsEnabled: true,
   dailyReminder: false,
   spendingAlerts: true,
@@ -58,8 +62,10 @@ export function useSettings() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // Only lock if PIN is enabled AND a valid 6-digit PIN exists
-        if (parsed.pinEnabled === true && parsed.pin && typeof parsed.pin === 'string' && parsed.pin.length === 6) {
+        // Lock if PIN is enabled with valid 6-digit PIN OR biometric is enabled
+        const hasPinLock = parsed.pinEnabled === true && parsed.pin && typeof parsed.pin === 'string' && parsed.pin.length === 6;
+        const hasBiometricLock = parsed.biometricEnabled === true && parsed.biometricCredentialId;
+        if (hasPinLock || hasBiometricLock) {
           return true;
         }
       } catch {
@@ -152,6 +158,106 @@ export function useSettings() {
     window.location.reload();
   }, []);
 
+  // Check if biometric authentication is available
+  const isBiometricAvailable = useCallback(async (): Promise<boolean> => {
+    if (!window.PublicKeyCredential) return false;
+    try {
+      const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+      return available;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  // Register biometric credential
+  const registerBiometric = useCallback(async (): Promise<boolean> => {
+    try {
+      const challenge = new Uint8Array(32);
+      crypto.getRandomValues(challenge);
+
+      const userId = new Uint8Array(16);
+      crypto.getRandomValues(userId);
+
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge,
+          rp: {
+            name: 'FinanceFlow',
+            id: window.location.hostname,
+          },
+          user: {
+            id: userId,
+            name: 'user@financeflow.app',
+            displayName: 'FinanceFlow User',
+          },
+          pubKeyCredParams: [
+            { type: 'public-key', alg: -7 },
+            { type: 'public-key', alg: -257 },
+          ],
+          authenticatorSelection: {
+            authenticatorAttachment: 'platform',
+            userVerification: 'required',
+          },
+          timeout: 60000,
+        },
+      }) as PublicKeyCredential;
+
+      if (credential) {
+        const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+        updateSettings({ biometricEnabled: true, biometricCredentialId: credentialId });
+        sessionStorage.setItem(PIN_VERIFIED_KEY, 'true');
+        setIsLocked(false);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Biometric registration failed:', error);
+      return false;
+    }
+  }, [updateSettings]);
+
+  // Verify biometric
+  const verifyBiometric = useCallback(async (): Promise<boolean> => {
+    if (!settings.biometricCredentialId) return false;
+
+    try {
+      const challenge = new Uint8Array(32);
+      crypto.getRandomValues(challenge);
+
+      const credentialId = Uint8Array.from(atob(settings.biometricCredentialId), c => c.charCodeAt(0));
+
+      const assertion = await navigator.credentials.get({
+        publicKey: {
+          challenge,
+          allowCredentials: [
+            {
+              type: 'public-key',
+              id: credentialId,
+              transports: ['internal'],
+            },
+          ],
+          userVerification: 'required',
+          timeout: 60000,
+        },
+      });
+
+      if (assertion) {
+        sessionStorage.setItem(PIN_VERIFIED_KEY, 'true');
+        setIsLocked(false);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Biometric verification failed:', error);
+      return false;
+    }
+  }, [settings.biometricCredentialId]);
+
+  // Disable biometric
+  const disableBiometric = useCallback(() => {
+    updateSettings({ biometricEnabled: false, biometricCredentialId: null });
+  }, [updateSettings]);
+
   return {
     ...settings,
     isLocked,
@@ -166,5 +272,9 @@ export function useSettings() {
     toggleGoalAlerts,
     updateSettings,
     resetData,
+    isBiometricAvailable,
+    registerBiometric,
+    verifyBiometric,
+    disableBiometric,
   };
 }
