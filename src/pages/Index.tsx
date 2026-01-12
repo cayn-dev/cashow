@@ -21,7 +21,14 @@ const Index = () => {
 
   // Show PIN lock screen if app is locked
   if (settings.isLocked) {
-    return <PinLockScreen onUnlock={settings.verifyPin} />;
+    return (
+      <PinLockScreen 
+        onUnlock={settings.verifyPin} 
+        onBiometricUnlock={settings.verifyBiometric}
+        biometricEnabled={settings.biometricEnabled}
+        pinEnabled={settings.pinEnabled}
+      />
+    );
   }
 
   return (
