@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
 import {
   Sun,
   Moon,
@@ -28,8 +29,12 @@ import {
   DollarSign,
   AlertTriangle,
   Fingerprint,
+  Settings2,
+  Eye,
+  Clock,
 } from 'lucide-react';
-import { useSettings, Theme, Currency } from '@/hooks/useSettings';
+import { useSettings, Currency, currencyNames } from '@/hooks/useSettings';
+import { useNotifications } from '@/hooks/useNotifications';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
@@ -50,6 +55,14 @@ interface SettingsDialogProps {
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const settings = useSettings();
+  const notifications = useNotifications({
+    notificationsEnabled: settings.notificationsEnabled,
+    dailyReminder: settings.dailyReminder,
+    spendingAlerts: settings.spendingAlerts,
+    goalAlerts: settings.goalAlerts,
+    spendingLimit: settings.spendingLimit,
+  });
+  
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
@@ -100,6 +113,30 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       settings.disableBiometric();
     }
   };
+
+  const handleToggleNotifications = async (enabled: boolean) => {
+    if (enabled) {
+      const granted = await notifications.requestPermission();
+      if (granted) {
+        settings.toggleNotifications(true);
+        notifications.sendToast('🔔 Notifiche attivate', 'Riceverai aggiornamenti importanti');
+      } else {
+        notifications.sendToast('⚠️ Permesso negato', 'Abilita le notifiche dal browser', 'warning');
+      }
+    } else {
+      settings.toggleNotifications(false);
+    }
+  };
+
+  const currencyOptions: { value: Currency; label: string; symbol: string }[] = [
+    { value: 'EUR', label: currencyNames.EUR, symbol: '€' },
+    { value: 'USD', label: currencyNames.USD, symbol: '$' },
+    { value: 'GBP', label: currencyNames.GBP, symbol: '£' },
+    { value: 'CHF', label: currencyNames.CHF, symbol: 'CHF' },
+    { value: 'JPY', label: currencyNames.JPY, symbol: '¥' },
+    { value: 'CAD', label: currencyNames.CAD, symbol: 'C$' },
+    { value: 'AUD', label: currencyNames.AUD, symbol: 'A$' },
+  ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -163,17 +200,59 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             
             <Select
               value={settings.currency}
-              onValueChange={(value: Currency) => settings.setCurrency(value)}
+              onValueChange={(value: Currency) => {
+                settings.setCurrency(value);
+                notifications.sendToast('💱 Valuta cambiata', `Ora usi ${currencyNames[value]}`);
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="EUR">€ Euro (EUR)</SelectItem>
-                <SelectItem value="USD">$ Dollaro (USD)</SelectItem>
-                <SelectItem value="GBP">£ Sterlina (GBP)</SelectItem>
+                {currencyOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.symbol} {option.label} ({option.value})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
+          </GlassCard>
+
+          {/* Display Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-info/20 flex items-center justify-center">
+                <Eye className="w-5 h-5 text-info" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Visualizzazione</h3>
+                <p className="text-sm text-muted-foreground">Personalizza la visualizzazione</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Vista compatta</Label>
+                  <p className="text-xs text-muted-foreground">Mostra più elementi</p>
+                </div>
+                <Switch
+                  checked={settings.compactView}
+                  onCheckedChange={settings.toggleCompactView}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Mostra decimali</Label>
+                  <p className="text-xs text-muted-foreground">Es: €100.50 vs €100</p>
+                </div>
+                <Switch
+                  checked={settings.showDecimals}
+                  onCheckedChange={settings.toggleShowDecimals}
+                />
+              </div>
+            </div>
           </GlassCard>
 
           {/* Security Section */}
@@ -243,6 +322,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     ✓ Face ID / Touch ID attivo
                   </p>
                 )}
+
+                <Separator />
+
+                {/* Auto-lock timeout */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-muted-foreground" />
+                    <Label>Blocco automatico</Label>
+                  </div>
+                  <Select
+                    value={String(settings.autoLockTimeout)}
+                    onValueChange={(value) => settings.setAutoLockTimeout(Number(value))}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">Disabilitato</SelectItem>
+                      <SelectItem value="1">1 minuto</SelectItem>
+                      <SelectItem value="5">5 minuti</SelectItem>
+                      <SelectItem value="15">15 minuti</SelectItem>
+                      <SelectItem value="30">30 minuti</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             ) : (
               <div className="space-y-4">
@@ -314,7 +418,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Label>Notifiche attive</Label>
                 <Switch
                   checked={settings.notificationsEnabled}
-                  onCheckedChange={settings.toggleNotifications}
+                  onCheckedChange={handleToggleNotifications}
                 />
               </div>
               
@@ -323,7 +427,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Promemoria giornaliero</Label>
-                  <p className="text-xs text-muted-foreground">Ricordati di registrare le spese</p>
+                  <p className="text-xs text-muted-foreground">Ricordati di registrare le spese (ore 20:00)</p>
                 </div>
                 <Switch
                   checked={settings.dailyReminder}
@@ -335,7 +439,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Avvisi spese</Label>
-                  <p className="text-xs text-muted-foreground">Quando spendi troppo</p>
+                  <p className="text-xs text-muted-foreground">Quando superi il limite</p>
                 </div>
                 <Switch
                   checked={settings.spendingAlerts}
@@ -343,6 +447,25 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   disabled={!settings.notificationsEnabled}
                 />
               </div>
+
+              {settings.spendingAlerts && settings.notificationsEnabled && (
+                <div className="space-y-2 pl-4 border-l-2 border-muted">
+                  <Label className="text-sm">Limite mensile spese</Label>
+                  <div className="flex items-center gap-3">
+                    <Slider
+                      value={[settings.spendingLimit]}
+                      onValueChange={([value]) => settings.setSpendingLimit(value)}
+                      min={100}
+                      max={5000}
+                      step={100}
+                      className="flex-1"
+                    />
+                    <span className="text-sm font-medium w-20 text-right">
+                      {settings.currencySymbol}{settings.spendingLimit.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              )}
               
               <div className="flex items-center justify-between">
                 <div>
@@ -355,6 +478,71 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   disabled={!settings.notificationsEnabled}
                 />
               </div>
+            </div>
+          </GlassCard>
+
+          {/* Advanced Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                <Settings2 className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Avanzate</h3>
+                <p className="text-sm text-muted-foreground">Impostazioni aggiuntive</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => {
+                  const data = localStorage.getItem('finance_data');
+                  if (data) {
+                    const blob = new Blob([data], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `financeflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    notifications.sendToast('💾 Backup scaricato', 'I tuoi dati sono stati esportati', 'success');
+                  }
+                }}
+              >
+                📥 Esporta dati (Backup)
+              </Button>
+              
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = '.json';
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        try {
+                          const data = JSON.parse(event.target?.result as string);
+                          localStorage.setItem('finance_data', JSON.stringify(data));
+                          notifications.sendToast('✅ Dati importati', 'Ricarico la pagina...', 'success');
+                          setTimeout(() => window.location.reload(), 1500);
+                        } catch {
+                          notifications.sendToast('❌ Errore', 'File non valido', 'error');
+                        }
+                      };
+                      reader.readAsText(file);
+                    }
+                  };
+                  input.click();
+                }}
+              >
+                📤 Importa dati (Ripristino)
+              </Button>
             </div>
           </GlassCard>
 

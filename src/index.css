@@ -43,6 +43,8 @@
     --warning-foreground: 0 0% 4%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
+    --info: 210 100% 55%;
+    --info-foreground: 0 0% 98%;
 
     /* Income/Expense colors */
     --income: 145 80% 45%;
@@ -106,6 +108,8 @@
     --warning-foreground: 0 0% 10%;
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
+    --info: 210 100% 50%;
+    --info-foreground: 0 0% 100%;
 
     --income: 145 70% 40%;
     --expense: 0 72% 50%;

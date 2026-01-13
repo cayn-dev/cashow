@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 export type Theme = 'dark' | 'light';
-export type Currency = 'EUR' | 'USD' | 'GBP';
+export type Currency = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY' | 'CAD' | 'AUD';
 
 interface Settings {
   theme: Theme;
@@ -15,6 +15,10 @@ interface Settings {
   dailyReminder: boolean;
   spendingAlerts: boolean;
   goalAlerts: boolean;
+  spendingLimit: number;
+  autoLockTimeout: number; // minutes, 0 = disabled
+  compactView: boolean;
+  showDecimals: boolean;
 }
 
 const SETTINGS_KEY = 'finance_settings';
@@ -24,6 +28,20 @@ const currencySymbols: Record<Currency, string> = {
   EUR: '€',
   USD: '$',
   GBP: '£',
+  CHF: 'CHF',
+  JPY: '¥',
+  CAD: 'C$',
+  AUD: 'A$',
+};
+
+export const currencyNames: Record<Currency, string> = {
+  EUR: 'Euro',
+  USD: 'Dollaro USA',
+  GBP: 'Sterlina',
+  CHF: 'Franco Svizzero',
+  JPY: 'Yen Giapponese',
+  CAD: 'Dollaro Canadese',
+  AUD: 'Dollaro Australiano',
 };
 
 const defaultSettings: Settings = {
@@ -38,6 +56,10 @@ const defaultSettings: Settings = {
   dailyReminder: false,
   spendingAlerts: true,
   goalAlerts: true,
+  spendingLimit: 1000,
+  autoLockTimeout: 0,
+  compactView: false,
+  showDecimals: true,
 };
 
 export function useSettings() {
@@ -151,6 +173,22 @@ export function useSettings() {
 
   const toggleGoalAlerts = useCallback((enabled: boolean) => {
     updateSettings({ goalAlerts: enabled });
+  }, [updateSettings]);
+
+  const setSpendingLimit = useCallback((limit: number) => {
+    updateSettings({ spendingLimit: limit });
+  }, [updateSettings]);
+
+  const setAutoLockTimeout = useCallback((minutes: number) => {
+    updateSettings({ autoLockTimeout: minutes });
+  }, [updateSettings]);
+
+  const toggleCompactView = useCallback((enabled: boolean) => {
+    updateSettings({ compactView: enabled });
+  }, [updateSettings]);
+
+  const toggleShowDecimals = useCallback((enabled: boolean) => {
+    updateSettings({ showDecimals: enabled });
   }, [updateSettings]);
 
   const resetData = useCallback(() => {
@@ -270,6 +308,10 @@ export function useSettings() {
     toggleDailyReminder,
     toggleSpendingAlerts,
     toggleGoalAlerts,
+    setSpendingLimit,
+    setAutoLockTimeout,
+    toggleCompactView,
+    toggleShowDecimals,
     updateSettings,
     resetData,
     isBiometricAvailable,

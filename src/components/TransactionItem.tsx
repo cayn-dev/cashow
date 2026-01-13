@@ -17,35 +17,35 @@ export function TransactionItem({ transaction, onDelete, currencySymbol = '€' 
   const isIncome = transaction.type === 'income';
 
   return (
-    <div className="group flex items-center justify-between p-4 rounded-xl bg-card/50 border border-card-border hover:bg-card/80 transition-all duration-200">
-      <div className="flex items-center gap-4">
+    <div className="group flex items-center justify-between p-3 sm:p-4 rounded-xl bg-card/50 border border-card-border hover:bg-card/80 transition-all duration-200 gap-2 overflow-hidden">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
         <div className={cn(
-          'w-12 h-12 rounded-xl flex items-center justify-center text-2xl',
+          'w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0',
           isIncome ? 'bg-success/10' : 'bg-muted'
         )}>
           {category.emoji}
         </div>
         
-        <div>
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="font-medium text-foreground">{transaction.description}</p>
+            <p className="font-medium text-foreground truncate">{transaction.description}</p>
             {transaction.recurrence !== 'none' && (
-              <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
+              <RefreshCw className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
             )}
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{category.label}</span>
+          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground flex-wrap">
+            <span className="truncate">{category.label}</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="hidden sm:flex items-center gap-1">{payment.emoji} {payment.label}</span>
             <span>•</span>
-            <span>{payment.emoji} {payment.label}</span>
-            <span>•</span>
-            <span>{format(transaction.date, 'd MMM', { locale: it })}</span>
+            <span className="shrink-0">{format(transaction.date, 'd MMM', { locale: it })}</span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <span className={cn(
-          'font-display font-semibold text-lg',
+          'font-display font-semibold text-sm sm:text-lg whitespace-nowrap',
           isIncome ? 'text-success' : 'text-destructive'
         )}>
           {isIncome ? '+' : '-'}{currencySymbol}{transaction.amount.toLocaleString()}
@@ -55,7 +55,7 @@ export function TransactionItem({ transaction, onDelete, currencySymbol = '€' 
           variant="ghost"
           size="icon"
           onClick={() => onDelete(transaction.id)}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive h-8 w-8"
+          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive h-8 w-8 shrink-0"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
