@@ -6,16 +6,25 @@ interface GlassCardProps {
   className?: string;
   hover?: boolean;
   glow?: boolean;
+  elevated?: boolean;
   style?: CSSProperties;
 }
 
-export function GlassCard({ children, className, hover = true, glow = false, style }: GlassCardProps) {
+export function GlassCard({ 
+  children, 
+  className, 
+  hover = true, 
+  glow = false, 
+  elevated = false,
+  style 
+}: GlassCardProps) {
   return (
     <div
       className={cn(
-        'glass-panel p-5',
-        hover && 'transition-all duration-300 hover:-translate-y-1 hover:shadow-glass-hover',
-        glow && 'shadow-glow',
+        elevated ? 'glass-panel-elevated' : 'glass-panel',
+        'p-5',
+        hover && 'transition-all duration-300 hover:-translate-y-1',
+        glow && 'glow',
         className
       )}
       style={style}
