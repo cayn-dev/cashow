@@ -3,6 +3,9 @@ import { ExpenseChart } from '@/components/ExpenseChart';
 import { TransactionItem } from '@/components/TransactionItem';
 import { GlassCard } from '@/components/GlassCard';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
+import { InsightsPanel } from '@/components/InsightsPanel';
+import { AIChatDialog } from '@/components/AIChatDialog';
+import { useInsights } from '@/hooks/useInsights';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -10,7 +13,7 @@ import {
   PiggyBank,
   ArrowRight
 } from 'lucide-react';
-import { Transaction, CategoryType } from '@/types/finance';
+import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
 import { Button } from '@/components/ui/button';
 
 interface DashboardViewProps {
@@ -21,6 +24,8 @@ interface DashboardViewProps {
   monthlySalary: number;
   expensesByCategory: Record<CategoryType, number>;
   recentTransactions: Transaction[];
+  allTransactions: Transaction[];
+  savingsGoals: SavingsGoal[];
   onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   onDeleteTransaction: (id: string) => void;
   onViewTransactions: () => void;
@@ -35,11 +40,14 @@ export function DashboardView({
   monthlySalary,
   expensesByCategory,
   recentTransactions,
+  allTransactions,
+  savingsGoals,
   onAddTransaction,
   onDeleteTransaction,
   onViewTransactions,
   currencySymbol = '€',
 }: DashboardViewProps) {
+  const insights = useInsights(allTransactions);
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -122,6 +130,23 @@ export function DashboardView({
           </div>
         </GlassCard>
       </div>
+
+      {/* Insights Panel */}
+      {insights.length > 0 && (
+        <GlassCard className="animate-slide-up">
+          <InsightsPanel insights={insights} />
+        </GlassCard>
+      )}
+
+      {/* AI Chat FAB */}
+      <AIChatDialog
+        transactions={allTransactions}
+        savingsGoals={savingsGoals}
+        monthlyIncome={monthlyIncome}
+        monthlyExpenses={monthlyExpenses}
+        monthlyBalance={monthlyBalance}
+        currencySymbol={currencySymbol}
+      />
 
       {/* Monthly Salary Info */}
       {monthlySalary > 0 && (
