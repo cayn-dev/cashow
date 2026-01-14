@@ -57,6 +57,8 @@ const Index = () => {
             monthlySalary={store.monthlySalary}
             expensesByCategory={store.expensesByCategory}
             recentTransactions={store.currentMonthTransactions}
+            allTransactions={store.transactions}
+            savingsGoals={store.savingsGoals}
             onAddTransaction={store.addTransaction}
             onDeleteTransaction={store.deleteTransaction}
             onViewTransactions={() => setCurrentView('transactions')}
