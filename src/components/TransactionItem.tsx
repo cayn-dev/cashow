@@ -6,6 +6,7 @@ import { Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useFeedback } from '@/hooks/useFeedback';
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -18,9 +19,12 @@ export function TransactionItem({ transaction, onDelete, currencySymbol = '€' 
   const category = CATEGORY_CONFIG[transaction.category];
   const payment = PAYMENT_METHODS[transaction.paymentMethod];
   const isIncome = transaction.type === 'income';
+  const feedback = useFeedback();
 
   const handleDelete = () => {
     setIsDeleting(true);
+    // Trigger delete feedback
+    feedback.delete();
     // Small delay to show animation before actual deletion
     setTimeout(() => {
       onDelete(transaction.id);

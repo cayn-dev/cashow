@@ -37,6 +37,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { useFeedback } from '@/hooks/useFeedback';
 
 interface AddTransactionDialogProps {
   onAdd: (transaction: Omit<Transaction, 'id'>) => void;
@@ -54,6 +55,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
   const [isSalary, setIsSalary] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
   const [autoSuggested, setAutoSuggested] = useState(false);
+  const feedback = useFeedback();
 
   // Auto-categorization effect
   useEffect(() => {
@@ -92,6 +94,9 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
       customRecurrenceDays: recurrence === 'custom' ? parseInt(customRecurrenceDays) : undefined,
       isSalary,
     });
+
+    // Trigger success feedback
+    feedback.success();
 
     // Reset form
     setAmount('');
