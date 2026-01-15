@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
 
 const STORAGE_KEY = 'finance_data';
+const INITIALIZED_KEY = 'finance_initialized';
 
 interface FinanceData {
   transactions: Transaction[];
@@ -119,39 +120,62 @@ const sampleGoals: SavingsGoal[] = [
 ];
 
 export function useFinanceStore() {
+  const isFirstRender = useRef(true);
+  
   const [data, setData] = useState<FinanceData>(() => {
     if (typeof window === 'undefined') return defaultData;
     
     const stored = localStorage.getItem(STORAGE_KEY);
+    const wasInitialized = localStorage.getItem(INITIALIZED_KEY);
+    
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
         return {
           ...parsed,
-          transactions: parsed.transactions.map((t: Transaction) => ({
+          transactions: (parsed.transactions || []).map((t: Transaction) => ({
             ...t,
             date: new Date(t.date),
           })),
-          savingsGoals: parsed.savingsGoals.map((g: SavingsGoal) => ({
+          savingsGoals: (parsed.savingsGoals || []).map((g: SavingsGoal) => ({
             ...g,
             createdAt: new Date(g.createdAt),
             deadline: g.deadline ? new Date(g.deadline) : undefined,
           })),
         };
       } catch {
+        // If parsing fails and was never initialized, use sample data
+        if (!wasInitialized) {
+          localStorage.setItem(INITIALIZED_KEY, 'true');
+          return {
+            transactions: sampleTransactions,
+            savingsGoals: sampleGoals,
+            monthlySalary: 2500,
+          };
+        }
         return defaultData;
       }
     }
     
-    // Return sample data for first time users
-    return {
-      transactions: sampleTransactions,
-      savingsGoals: sampleGoals,
-      monthlySalary: 2500,
-    };
+    // Only return sample data for FIRST TIME users (never initialized before)
+    if (!wasInitialized) {
+      localStorage.setItem(INITIALIZED_KEY, 'true');
+      return {
+        transactions: sampleTransactions,
+        savingsGoals: sampleGoals,
+        monthlySalary: 2500,
+      };
+    }
+    
+    return defaultData;
   });
 
   useEffect(() => {
+    // Skip saving on first render to avoid overwriting with stale data
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
 

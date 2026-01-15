@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -12,25 +14,65 @@ interface TransactionItemProps {
 }
 
 export function TransactionItem({ transaction, onDelete, currencySymbol = '€' }: TransactionItemProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
   const category = CATEGORY_CONFIG[transaction.category];
   const payment = PAYMENT_METHODS[transaction.paymentMethod];
   const isIncome = transaction.type === 'income';
 
+  const handleDelete = () => {
+    setIsDeleting(true);
+    // Small delay to show animation before actual deletion
+    setTimeout(() => {
+      onDelete(transaction.id);
+    }, 200);
+  };
+
   return (
-    <div className="group flex items-center justify-between p-3 sm:p-4 rounded-xl bg-card/50 border border-card-border hover:bg-card/80 transition-all duration-200 gap-2 overflow-hidden">
+    <motion.div 
+      layout
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ 
+        opacity: isDeleting ? 0 : 1, 
+        y: 0, 
+        scale: isDeleting ? 0.8 : 1,
+        x: isDeleting ? -100 : 0,
+      }}
+      exit={{ opacity: 0, x: -100, scale: 0.8 }}
+      transition={{ 
+        type: 'spring', 
+        stiffness: 500, 
+        damping: 30,
+        opacity: { duration: 0.2 },
+      }}
+      whileHover={{ 
+        scale: 1.01,
+        transition: { type: 'spring', stiffness: 400, damping: 20 }
+      }}
+      whileTap={{ scale: 0.99 }}
+      className="group flex items-center justify-between p-3 sm:p-4 rounded-xl bg-card/50 border border-card-border hover:bg-card/80 transition-colors duration-200 gap-2 overflow-hidden"
+    >
       <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-        <div className={cn(
-          'w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0',
-          isIncome ? 'bg-success/10' : 'bg-muted'
-        )}>
+        <motion.div 
+          className={cn(
+            'w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl sm:text-2xl shrink-0',
+            isIncome ? 'bg-success/10' : 'bg-muted'
+          )}
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+        >
           {category.emoji}
-        </div>
+        </motion.div>
         
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <p className="font-medium text-foreground truncate">{transaction.description}</p>
             {transaction.recurrence !== 'none' && (
-              <RefreshCw className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+              </motion.div>
             )}
           </div>
           <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground flex-wrap">
@@ -44,22 +86,36 @@ export function TransactionItem({ transaction, onDelete, currencySymbol = '€' 
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        <span className={cn(
-          'font-display font-semibold text-sm sm:text-lg whitespace-nowrap',
-          isIncome ? 'text-success' : 'text-destructive'
-        )}>
-          {isIncome ? '+' : '-'}{currencySymbol}{transaction.amount.toLocaleString()}
-        </span>
-        
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onDelete(transaction.id)}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive h-8 w-8 shrink-0"
+        <motion.span 
+          className={cn(
+            'font-display font-semibold text-sm sm:text-lg whitespace-nowrap',
+            isIncome ? 'text-success' : 'text-destructive'
+          )}
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
         >
-          <Trash2 className="w-4 h-4" />
-        </Button>
+          {isIncome ? '+' : '-'}{currencySymbol}{transaction.amount.toLocaleString()}
+        </motion.span>
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8 shrink-0"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
+
