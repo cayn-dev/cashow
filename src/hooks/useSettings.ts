@@ -19,6 +19,8 @@ interface Settings {
   autoLockTimeout: number; // minutes, 0 = disabled
   compactView: boolean;
   showDecimals: boolean;
+  soundEnabled: boolean;
+  hapticEnabled: boolean;
 }
 
 const SETTINGS_KEY = 'finance_settings';
@@ -60,6 +62,8 @@ const defaultSettings: Settings = {
   autoLockTimeout: 0,
   compactView: false,
   showDecimals: true,
+  soundEnabled: true,
+  hapticEnabled: true,
 };
 
 export function useSettings() {
@@ -191,6 +195,14 @@ export function useSettings() {
     updateSettings({ showDecimals: enabled });
   }, [updateSettings]);
 
+  const toggleSound = useCallback((enabled: boolean) => {
+    updateSettings({ soundEnabled: enabled });
+  }, [updateSettings]);
+
+  const toggleHaptic = useCallback((enabled: boolean) => {
+    updateSettings({ hapticEnabled: enabled });
+  }, [updateSettings]);
+
   const resetData = useCallback(() => {
     localStorage.removeItem('finance_data');
     window.location.reload();
@@ -312,6 +324,8 @@ export function useSettings() {
     setAutoLockTimeout,
     toggleCompactView,
     toggleShowDecimals,
+    toggleSound,
+    toggleHaptic,
     updateSettings,
     resetData,
     isBiometricAvailable,

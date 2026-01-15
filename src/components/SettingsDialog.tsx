@@ -32,6 +32,8 @@ import {
   Settings2,
   Eye,
   Clock,
+  Volume2,
+  Vibrate,
 } from 'lucide-react';
 import { useSettings, Currency, currencyNames } from '@/hooks/useSettings';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -250,6 +252,36 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Switch
                   checked={settings.showDecimals}
                   onCheckedChange={settings.toggleShowDecimals}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Volume2 className="w-4 h-4 text-muted-foreground" />
+                  <div>
+                    <Label>Suoni</Label>
+                    <p className="text-xs text-muted-foreground">Feedback sonoro</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.soundEnabled}
+                  onCheckedChange={settings.toggleSound}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Vibrate className="w-4 h-4 text-muted-foreground" />
+                  <div>
+                    <Label>Vibrazioni</Label>
+                    <p className="text-xs text-muted-foreground">Feedback haptic</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.hapticEnabled}
+                  onCheckedChange={settings.toggleHaptic}
                 />
               </div>
             </div>
