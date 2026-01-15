@@ -2,6 +2,11 @@ import { useCallback, useRef } from 'react';
 
 type FeedbackType = 'success' | 'delete' | 'tap' | 'error' | 'notification';
 
+interface FeedbackSettings {
+  soundEnabled?: boolean;
+  hapticEnabled?: boolean;
+}
+
 // Audio context singleton
 let audioContext: AudioContext | null = null;
 
@@ -30,11 +35,37 @@ const SOUND_CONFIG: Record<FeedbackType, { frequency: number; duration: number; 
   notification: { frequency: 523.25, duration: 0.12, type: 'sine', volume: 0.07 },
 };
 
-export function useFeedback() {
+export function useFeedback(settings?: FeedbackSettings) {
   const lastFeedbackTime = useRef<number>(0);
   const minInterval = 50; // Prevent rapid-fire feedback
+  
+  // Read settings from localStorage if not provided
+  const getSettings = useCallback((): { soundEnabled: boolean; hapticEnabled: boolean } => {
+    if (settings) {
+      return {
+        soundEnabled: settings.soundEnabled ?? true,
+        hapticEnabled: settings.hapticEnabled ?? true,
+      };
+    }
+    
+    try {
+      const stored = localStorage.getItem('finance_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return {
+          soundEnabled: parsed.soundEnabled ?? true,
+          hapticEnabled: parsed.hapticEnabled ?? true,
+        };
+      }
+    } catch {
+      // Ignore errors
+    }
+    return { soundEnabled: true, hapticEnabled: true };
+  }, [settings]);
 
   const triggerHaptic = useCallback((type: FeedbackType) => {
+    const { hapticEnabled } = getSettings();
+    if (!hapticEnabled) return;
     if (!('vibrate' in navigator)) return;
     
     try {
@@ -42,9 +73,12 @@ export function useFeedback() {
     } catch (e) {
       // Silently fail if haptic not supported
     }
-  }, []);
+  }, [getSettings]);
 
   const playSound = useCallback((type: FeedbackType) => {
+    const { soundEnabled } = getSettings();
+    if (!soundEnabled) return;
+    
     try {
       const ctx = getAudioContext();
       if (ctx.state === 'suspended') {
@@ -95,7 +129,7 @@ export function useFeedback() {
     } catch (e) {
       // Silently fail if audio not supported
     }
-  }, []);
+  }, [getSettings]);
 
   const trigger = useCallback((type: FeedbackType) => {
     const now = Date.now();
