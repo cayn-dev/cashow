@@ -34,9 +34,14 @@ import {
   Clock,
   Volume2,
   Vibrate,
+  Database,
+  BarChart3,
+  History,
+  RefreshCw,
 } from 'lucide-react';
 import { useSettings, Currency, currencyNames } from '@/hooks/useSettings';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
@@ -57,6 +62,7 @@ interface SettingsDialogProps {
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const settings = useSettings();
+  const financeStore = useFinanceStore();
   const notifications = useNotifications({
     notificationsEnabled: settings.notificationsEnabled,
     dailyReminder: settings.dailyReminder,
@@ -64,6 +70,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     goalAlerts: settings.goalAlerts,
     spendingLimit: settings.spendingLimit,
   });
+  
+  const dataStats = financeStore.getDataStats();
   
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
@@ -513,19 +521,80 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </div>
           </GlassCard>
 
+          {/* Data Statistics Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Statistiche Dati</h3>
+                <p className="text-sm text-muted-foreground">Panoramica dei tuoi dati</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="glass-input rounded-xl p-3 text-center">
+                <p className="text-2xl font-bold text-primary">{dataStats.transactionCount}</p>
+                <p className="text-muted-foreground text-xs">Transazioni</p>
+              </div>
+              <div className="glass-input rounded-xl p-3 text-center">
+                <p className="text-2xl font-bold text-success">{dataStats.goalsCount}</p>
+                <p className="text-muted-foreground text-xs">Obiettivi</p>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2 text-xs text-muted-foreground">
+              {dataStats.oldestTransaction && (
+                <div className="flex justify-between">
+                  <span>Prima transazione:</span>
+                  <span>{dataStats.oldestTransaction.toLocaleDateString('it-IT')}</span>
+                </div>
+              )}
+              {dataStats.lastUpdated && (
+                <div className="flex justify-between">
+                  <span>Ultimo aggiornamento:</span>
+                  <span>{dataStats.lastUpdated.toLocaleString('it-IT')}</span>
+                </div>
+              )}
+              {dataStats.lastBackup && (
+                <div className="flex justify-between">
+                  <span>Ultimo backup:</span>
+                  <span>{dataStats.lastBackup.toLocaleString('it-IT')}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span>Versione dati:</span>
+                <span>v{dataStats.dataVersion}</span>
+              </div>
+            </div>
+          </GlassCard>
+
           {/* Advanced Section */}
           <GlassCard className="p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-                <Settings2 className="w-5 h-5 text-muted-foreground" />
+                <Database className="w-5 h-5 text-muted-foreground" />
               </div>
               <div>
-                <h3 className="font-semibold">Avanzate</h3>
-                <p className="text-sm text-muted-foreground">Impostazioni aggiuntive</p>
+                <h3 className="font-semibold">Gestione Dati</h3>
+                <p className="text-sm text-muted-foreground">Backup e ripristino</p>
               </div>
             </div>
 
             <div className="space-y-3">
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => {
+                  financeStore.createManualBackup();
+                  notifications.sendToast('✅ Backup creato', 'I tuoi dati sono al sicuro', 'success');
+                }}
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Crea Backup Manuale
+              </Button>
+
               <Button
                 variant="outline"
                 className="w-full justify-start"
@@ -575,6 +644,121 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               >
                 📤 Importa dati (Ripristino)
               </Button>
+
+              <Separator />
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start text-warning">
+                    <History className="w-4 h-4 mr-2" />
+                    Ripristina da Backup Automatico
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Ripristina backup automatico?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Questo ripristinerà i dati dall'ultimo backup automatico.
+                      {dataStats.lastBackup && (
+                        <span className="block mt-2 font-medium">
+                          Backup del: {dataStats.lastBackup.toLocaleString('it-IT')}
+                        </span>
+                      )}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annulla</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        const success = financeStore.restoreFromBackup();
+                        if (success) {
+                          notifications.sendToast('✅ Ripristinato', 'Dati recuperati dal backup', 'success');
+                          setTimeout(() => window.location.reload(), 1000);
+                        } else {
+                          notifications.sendToast('❌ Errore', 'Nessun backup disponibile', 'error');
+                        }
+                      }}
+                    >
+                      Ripristina
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </GlassCard>
+
+          {/* Selective Clear Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
+                <Settings2 className="w-5 h-5 text-warning" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Pulizia Selettiva</h3>
+                <p className="text-sm text-muted-foreground">Elimina solo ciò che vuoi</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Elimina solo transazioni
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Eliminare tutte le transazioni?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Verranno eliminate {dataStats.transactionCount} transazioni. Gli obiettivi di risparmio verranno mantenuti.
+                      Un backup automatico verrà creato prima dell'eliminazione.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annulla</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        financeStore.clearTransactions();
+                        notifications.sendToast('🗑️ Transazioni eliminate', 'Backup creato automaticamente', 'success');
+                      }}
+                      className="bg-warning text-warning-foreground hover:bg-warning/90"
+                    >
+                      Elimina transazioni
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Elimina solo obiettivi
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Eliminare tutti gli obiettivi?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Verranno eliminati {dataStats.goalsCount} obiettivi di risparmio. Le transazioni verranno mantenute.
+                      Un backup automatico verrà creato prima dell'eliminazione.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annulla</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        financeStore.clearGoals();
+                        notifications.sendToast('🗑️ Obiettivi eliminati', 'Backup creato automaticamente', 'success');
+                      }}
+                      className="bg-warning text-warning-foreground hover:bg-warning/90"
+                    >
+                      Elimina obiettivi
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </GlassCard>
 
