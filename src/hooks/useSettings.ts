@@ -2,6 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 
 export type Theme = 'dark' | 'light';
 export type Currency = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY' | 'CAD' | 'AUD';
+export type DateFormat = 'dd/MM/yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
+export type FirstDayOfWeek = 'monday' | 'sunday';
+
+// Budget per category
+export interface CategoryBudget {
+  category: string;
+  limit: number;
+  enabled: boolean;
+}
 
 interface Settings {
   theme: Theme;
@@ -21,6 +30,22 @@ interface Settings {
   showDecimals: boolean;
   soundEnabled: boolean;
   hapticEnabled: boolean;
+  // New useful settings
+  dailySpendingLimit: number; // 0 = disabled
+  dailySpendingAlerts: boolean;
+  roundUpSavings: boolean; // Round up to nearest euro for savings
+  roundUpAmount: number; // 1 = next euro, 5 = next 5 euros, 10 = next 10
+  dateFormat: DateFormat;
+  firstDayOfWeek: FirstDayOfWeek;
+  categoryBudgets: CategoryBudget[];
+  showMonthlyComparison: boolean;
+  defaultPaymentMethod: string;
+  weeklyReportEnabled: boolean;
+  weeklyReportDay: number; // 0 = Sunday, 1 = Monday, etc.
+  hideSmallTransactions: boolean;
+  smallTransactionThreshold: number;
+  quickAddEnabled: boolean;
+  quickAddAmount: number;
 }
 
 const SETTINGS_KEY = 'finance_settings';
@@ -46,6 +71,12 @@ export const currencyNames: Record<Currency, string> = {
   AUD: 'Dollaro Australiano',
 };
 
+export const dateFormatLabels: Record<DateFormat, string> = {
+  'dd/MM/yyyy': 'Europeo (31/12/2024)',
+  'MM/dd/yyyy': 'Americano (12/31/2024)',
+  'yyyy-MM-dd': 'ISO (2024-12-31)',
+};
+
 const defaultSettings: Settings = {
   theme: 'dark',
   currency: 'EUR',
@@ -64,6 +95,22 @@ const defaultSettings: Settings = {
   showDecimals: true,
   soundEnabled: true,
   hapticEnabled: true,
+  // New defaults
+  dailySpendingLimit: 0,
+  dailySpendingAlerts: false,
+  roundUpSavings: false,
+  roundUpAmount: 1,
+  dateFormat: 'dd/MM/yyyy',
+  firstDayOfWeek: 'monday',
+  categoryBudgets: [],
+  showMonthlyComparison: true,
+  defaultPaymentMethod: 'card',
+  weeklyReportEnabled: false,
+  weeklyReportDay: 1, // Monday
+  hideSmallTransactions: false,
+  smallTransactionThreshold: 1,
+  quickAddEnabled: true,
+  quickAddAmount: 10,
 };
 
 export function useSettings() {
@@ -205,8 +252,108 @@ export function useSettings() {
 
   const resetData = useCallback(() => {
     localStorage.removeItem('finance_data');
+    localStorage.removeItem('finance_data_backup');
+    localStorage.removeItem('finance_initialized');
     window.location.reload();
   }, []);
+
+  // New setting functions
+  const setDailySpendingLimit = useCallback((limit: number) => {
+    updateSettings({ dailySpendingLimit: limit, dailySpendingAlerts: limit > 0 });
+  }, [updateSettings]);
+
+  const toggleRoundUpSavings = useCallback((enabled: boolean) => {
+    updateSettings({ roundUpSavings: enabled });
+  }, [updateSettings]);
+
+  const setRoundUpAmount = useCallback((amount: number) => {
+    updateSettings({ roundUpAmount: amount });
+  }, [updateSettings]);
+
+  const setDateFormat = useCallback((format: DateFormat) => {
+    updateSettings({ dateFormat: format });
+  }, [updateSettings]);
+
+  const setFirstDayOfWeek = useCallback((day: FirstDayOfWeek) => {
+    updateSettings({ firstDayOfWeek: day });
+  }, [updateSettings]);
+
+  const setCategoryBudget = useCallback((category: string, limit: number, enabled: boolean) => {
+    const budgets = [...settings.categoryBudgets];
+    const existingIndex = budgets.findIndex(b => b.category === category);
+    
+    if (existingIndex >= 0) {
+      if (limit === 0 && !enabled) {
+        budgets.splice(existingIndex, 1);
+      } else {
+        budgets[existingIndex] = { category, limit, enabled };
+      }
+    } else if (limit > 0 || enabled) {
+      budgets.push({ category, limit, enabled });
+    }
+    
+    updateSettings({ categoryBudgets: budgets });
+  }, [settings.categoryBudgets, updateSettings]);
+
+  const getCategoryBudget = useCallback((category: string): CategoryBudget | undefined => {
+    return settings.categoryBudgets.find(b => b.category === category);
+  }, [settings.categoryBudgets]);
+
+  const toggleMonthlyComparison = useCallback((enabled: boolean) => {
+    updateSettings({ showMonthlyComparison: enabled });
+  }, [updateSettings]);
+
+  const setDefaultPaymentMethod = useCallback((method: string) => {
+    updateSettings({ defaultPaymentMethod: method });
+  }, [updateSettings]);
+
+  const toggleWeeklyReport = useCallback((enabled: boolean) => {
+    updateSettings({ weeklyReportEnabled: enabled });
+  }, [updateSettings]);
+
+  const setWeeklyReportDay = useCallback((day: number) => {
+    updateSettings({ weeklyReportDay: day });
+  }, [updateSettings]);
+
+  const toggleHideSmallTransactions = useCallback((enabled: boolean) => {
+    updateSettings({ hideSmallTransactions: enabled });
+  }, [updateSettings]);
+
+  const setSmallTransactionThreshold = useCallback((threshold: number) => {
+    updateSettings({ smallTransactionThreshold: threshold });
+  }, [updateSettings]);
+
+  const toggleQuickAdd = useCallback((enabled: boolean) => {
+    updateSettings({ quickAddEnabled: enabled });
+  }, [updateSettings]);
+
+  const setQuickAddAmount = useCallback((amount: number) => {
+    updateSettings({ quickAddAmount: amount });
+  }, [updateSettings]);
+
+  // Calculate round up amount for a given price
+  const calculateRoundUp = useCallback((amount: number): number => {
+    if (!settings.roundUpSavings) return 0;
+    const roundTo = settings.roundUpAmount;
+    const rounded = Math.ceil(amount / roundTo) * roundTo;
+    return rounded - amount;
+  }, [settings.roundUpSavings, settings.roundUpAmount]);
+
+  // Format date according to settings
+  const formatDate = useCallback((date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    switch (settings.dateFormat) {
+      case 'MM/dd/yyyy':
+        return `${month}/${day}/${year}`;
+      case 'yyyy-MM-dd':
+        return `${year}-${month}-${day}`;
+      default:
+        return `${day}/${month}/${year}`;
+    }
+  }, [settings.dateFormat]);
 
   // Check if biometric authentication is available
   const isBiometricAvailable = useCallback(async (): Promise<boolean> => {
@@ -332,5 +479,23 @@ export function useSettings() {
     registerBiometric,
     verifyBiometric,
     disableBiometric,
+    // New functions
+    setDailySpendingLimit,
+    toggleRoundUpSavings,
+    setRoundUpAmount,
+    setDateFormat,
+    setFirstDayOfWeek,
+    setCategoryBudget,
+    getCategoryBudget,
+    toggleMonthlyComparison,
+    setDefaultPaymentMethod,
+    toggleWeeklyReport,
+    setWeeklyReportDay,
+    toggleHideSmallTransactions,
+    setSmallTransactionThreshold,
+    toggleQuickAdd,
+    setQuickAddAmount,
+    calculateRoundUp,
+    formatDate,
   };
 }
