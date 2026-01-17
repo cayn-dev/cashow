@@ -38,8 +38,16 @@ import {
   BarChart3,
   History,
   RefreshCw,
+  Calendar,
+  PiggyBank,
+  Wallet,
+  Target,
+  CreditCard,
+  TrendingUp,
+  Zap,
 } from 'lucide-react';
-import { useSettings, Currency, currencyNames } from '@/hooks/useSettings';
+import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek } from '@/hooks/useSettings';
+import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { GlassCard } from './GlassCard';
@@ -226,6 +234,254 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 ))}
               </SelectContent>
             </Select>
+          </GlassCard>
+
+          {/* Budget & Spending Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Wallet className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Budget e Limiti</h3>
+                <p className="text-sm text-muted-foreground">Controlla le tue spese</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {/* Daily spending limit */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Target className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <Label>Limite giornaliero</Label>
+                      <p className="text-xs text-muted-foreground">Avviso quando superi</p>
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium">
+                    {settings.dailySpendingLimit > 0 ? `${settings.currencySymbol}${settings.dailySpendingLimit}` : 'Disattivato'}
+                  </span>
+                </div>
+                <Slider
+                  value={[settings.dailySpendingLimit]}
+                  onValueChange={([value]) => settings.setDailySpendingLimit(value)}
+                  min={0}
+                  max={500}
+                  step={10}
+                  className="w-full"
+                />
+              </div>
+
+              <Separator />
+
+              {/* Round up savings */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <PiggyBank className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <Label>Arrotonda per risparmiare</Label>
+                      <p className="text-xs text-muted-foreground">Arrotonda le spese e risparmia la differenza</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={settings.roundUpSavings}
+                    onCheckedChange={settings.toggleRoundUpSavings}
+                  />
+                </div>
+                
+                {settings.roundUpSavings && (
+                  <div className="pl-6 space-y-2">
+                    <Label className="text-sm">Arrotonda a:</Label>
+                    <div className="flex gap-2">
+                      {[1, 5, 10].map((amount) => (
+                        <Button
+                          key={amount}
+                          variant={settings.roundUpAmount === amount ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => settings.setRoundUpAmount(amount)}
+                        >
+                          {settings.currencySymbol}{amount}
+                        </Button>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Es: Spesa €7.30 → Arrotondata a €{7.30 + settings.calculateRoundUp(7.30)} (+€{settings.calculateRoundUp(7.30).toFixed(2)} risparmiati)
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <Separator />
+
+              {/* Default payment method */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-muted-foreground" />
+                  <Label>Metodo di pagamento predefinito</Label>
+                </div>
+                <Select
+                  value={settings.defaultPaymentMethod}
+                  onValueChange={settings.setDefaultPaymentMethod}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(PAYMENT_METHODS).map(([key, { label, emoji }]) => (
+                      <SelectItem key={key} value={key}>
+                        {emoji} {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* Quick Actions Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-success/20 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-success" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Azioni Rapide</h3>
+                <p className="text-sm text-muted-foreground">Velocizza l'inserimento</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Aggiunta rapida</Label>
+                  <p className="text-xs text-muted-foreground">Aggiungi spese con un tap</p>
+                </div>
+                <Switch
+                  checked={settings.quickAddEnabled}
+                  onCheckedChange={settings.toggleQuickAdd}
+                />
+              </div>
+
+              {settings.quickAddEnabled && (
+                <div className="space-y-2 pl-4 border-l-2 border-muted">
+                  <Label className="text-sm">Importo predefinito</Label>
+                  <div className="flex items-center gap-3">
+                    <Slider
+                      value={[settings.quickAddAmount]}
+                      onValueChange={([value]) => settings.setQuickAddAmount(value)}
+                      min={5}
+                      max={100}
+                      step={5}
+                      className="flex-1"
+                    />
+                    <span className="text-sm font-medium w-16 text-right">
+                      {settings.currencySymbol}{settings.quickAddAmount}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Nascondi piccole spese</Label>
+                  <p className="text-xs text-muted-foreground">Nascondi transazioni minime</p>
+                </div>
+                <Switch
+                  checked={settings.hideSmallTransactions}
+                  onCheckedChange={settings.toggleHideSmallTransactions}
+                />
+              </div>
+
+              {settings.hideSmallTransactions && (
+                <div className="space-y-2 pl-4 border-l-2 border-muted">
+                  <Label className="text-sm">Soglia minima</Label>
+                  <div className="flex items-center gap-3">
+                    <Slider
+                      value={[settings.smallTransactionThreshold]}
+                      onValueChange={([value]) => settings.setSmallTransactionThreshold(value)}
+                      min={1}
+                      max={20}
+                      step={1}
+                      className="flex-1"
+                    />
+                    <span className="text-sm font-medium w-16 text-right">
+                      {settings.currencySymbol}{settings.smallTransactionThreshold}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </GlassCard>
+
+          {/* Date & Format Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-accent" />
+              </div>
+              <div>
+                <h3 className="font-semibold">Data e Formato</h3>
+                <p className="text-sm text-muted-foreground">Personalizza le date</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Formato data</Label>
+                <Select
+                  value={settings.dateFormat}
+                  onValueChange={(value: DateFormat) => settings.setDateFormat(value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(dateFormatLabels).map(([format, label]) => (
+                      <SelectItem key={format} value={format}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Primo giorno della settimana</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant={settings.firstDayOfWeek === 'monday' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => settings.setFirstDayOfWeek('monday')}
+                  >
+                    Lunedì
+                  </Button>
+                  <Button
+                    variant={settings.firstDayOfWeek === 'sunday' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => settings.setFirstDayOfWeek('sunday')}
+                  >
+                    Domenica
+                  </Button>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Confronto mensile</Label>
+                  <p className="text-xs text-muted-foreground">Mostra variazioni rispetto al mese scorso</p>
+                </div>
+                <Switch
+                  checked={settings.showMonthlyComparison}
+                  onCheckedChange={settings.toggleMonthlyComparison}
+                />
+              </div>
+            </div>
           </GlassCard>
 
           {/* Display Section */}
