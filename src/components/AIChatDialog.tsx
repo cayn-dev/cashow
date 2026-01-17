@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,10 +9,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Send, User, Sparkles, Loader2 } from 'lucide-react';
+import { Bot, Send, User, Sparkles, Loader2, Zap, TrendingUp, Target, PiggyBank } from 'lucide-react';
 import { Transaction, SavingsGoal } from '@/types/finance';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -28,6 +27,8 @@ interface AIChatDialogProps {
   currencySymbol?: string;
 }
 
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/finance-ai-chat`;
+
 export function AIChatDialog({
   transactions,
   savingsGoals,
@@ -41,6 +42,7 @@ export function AIChatDialog({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -48,31 +50,192 @@ export function AIChatDialog({
     }
   }, [messages]);
 
-  const buildFinancialContext = () => {
+  const buildFinancialContext = useCallback(() => {
     const now = new Date();
     const currentMonth = now.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
     
+    // Calculate category totals
+    const categoryTotals = transactions
+      .filter(t => t.type === 'expense' && t.date.getMonth() === now.getMonth() && t.date.getFullYear() === now.getFullYear())
+      .reduce((acc, t) => {
+        acc[t.category] = (acc[t.category] || 0) + t.amount;
+        return acc;
+      }, {} as Record<string, number>);
+
+    const categoryBreakdown = Object.entries(categoryTotals)
+      .sort(([, a], [, b]) => b - a)
+      .map(([cat, amount]) => `- ${cat}: ${currencySymbol}${amount.toLocaleString()} (${((amount / monthlyExpenses) * 100).toFixed(1)}%)`)
+      .join('\n');
+
     const recentTransactions = transactions
-      .slice(0, 10)
-      .map(t => `- ${t.description}: ${currencySymbol}${t.amount} (${t.type === 'income' ? 'entrata' : 'uscita'}, ${t.category})`)
+      .slice(0, 15)
+      .map(t => `- ${t.date.toLocaleDateString('it-IT')}: ${t.description} - ${currencySymbol}${t.amount} (${t.type === 'income' ? '📈 entrata' : '📉 uscita'}, ${t.category})`)
       .join('\n');
 
     const goals = savingsGoals
-      .map(g => `- ${g.emoji} ${g.name}: ${currencySymbol}${g.currentAmount}/${currencySymbol}${g.targetAmount} (${Math.round((g.currentAmount / g.targetAmount) * 100)}%)`)
+      .map(g => {
+        const progress = Math.round((g.currentAmount / g.targetAmount) * 100);
+        const remaining = g.targetAmount - g.currentAmount;
+        return `- ${g.emoji} ${g.name}: ${currencySymbol}${g.currentAmount.toLocaleString()}/${currencySymbol}${g.targetAmount.toLocaleString()} (${progress}% completato, mancano ${currencySymbol}${remaining.toLocaleString()})`;
+      })
       .join('\n');
 
-    return `
-Dati finanziari dell'utente per ${currentMonth}:
-- Entrate mensili: ${currencySymbol}${monthlyIncome.toLocaleString()}
-- Uscite mensili: ${currencySymbol}${monthlyExpenses.toLocaleString()}
-- Saldo mensile: ${currencySymbol}${monthlyBalance.toLocaleString()}
+    const savingsRate = monthlyIncome > 0 ? ((monthlyBalance / monthlyIncome) * 100).toFixed(1) : '0';
+    const totalTransactions = transactions.length;
+    const avgDailyExpense = monthlyExpenses / now.getDate();
 
-Ultime transazioni:
+    return `
+📅 Periodo: ${currentMonth}
+
+💰 RIEPILOGO MENSILE:
+- Entrate totali: ${currencySymbol}${monthlyIncome.toLocaleString()}
+- Uscite totali: ${currencySymbol}${monthlyExpenses.toLocaleString()}
+- Saldo netto: ${currencySymbol}${monthlyBalance.toLocaleString()}
+- Tasso di risparmio: ${savingsRate}%
+- Spesa media giornaliera: ${currencySymbol}${avgDailyExpense.toFixed(2)}
+
+📊 SPESE PER CATEGORIA (questo mese):
+${categoryBreakdown || 'Nessuna spesa registrata'}
+
+📝 ULTIME ${Math.min(15, totalTransactions)} TRANSAZIONI (su ${totalTransactions} totali):
 ${recentTransactions || 'Nessuna transazione recente'}
 
-Obiettivi di risparmio:
+🎯 OBIETTIVI DI RISPARMIO:
 ${goals || 'Nessun obiettivo impostato'}
     `.trim();
+  }, [transactions, savingsGoals, monthlyIncome, monthlyExpenses, monthlyBalance, currencySymbol]);
+
+  const streamMessage = async (userMessage: Message) => {
+    setIsLoading(true);
+    
+    // Cancel any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    try {
+      const financialContext = buildFinancialContext();
+      
+      const resp = await fetch(CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content,
+          })),
+          financialContext,
+          stream: true,
+        }),
+        signal: abortControllerRef.current.signal,
+      });
+
+      if (!resp.ok) {
+        const errorData = await resp.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Errore di connessione');
+      }
+
+      if (!resp.body) throw new Error('Nessuna risposta');
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = '';
+      let assistantContent = '';
+
+      // Add empty assistant message
+      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              assistantContent += content;
+              setMessages(prev => {
+                const newMessages = [...prev];
+                const lastMsg = newMessages[newMessages.length - 1];
+                if (lastMsg?.role === 'assistant') {
+                  lastMsg.content = assistantContent;
+                }
+                return newMessages;
+              });
+            }
+          } catch {
+            // Incomplete JSON, put back
+            textBuffer = line + '\n' + textBuffer;
+            break;
+          }
+        }
+      }
+
+      // Handle any remaining buffer
+      if (textBuffer.trim()) {
+        for (let raw of textBuffer.split('\n')) {
+          if (!raw) continue;
+          if (raw.endsWith('\r')) raw = raw.slice(0, -1);
+          if (raw.startsWith(':') || raw.trim() === '') continue;
+          if (!raw.startsWith('data: ')) continue;
+          const jsonStr = raw.slice(6).trim();
+          if (jsonStr === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              assistantContent += content;
+              setMessages(prev => {
+                const newMessages = [...prev];
+                const lastMsg = newMessages[newMessages.length - 1];
+                if (lastMsg?.role === 'assistant') {
+                  lastMsg.content = assistantContent;
+                }
+                return newMessages;
+              });
+            }
+          } catch { /* ignore */ }
+        }
+      }
+
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        console.error('AI Chat error:', error);
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMsg = newMessages[newMessages.length - 1];
+          if (lastMsg?.role === 'assistant' && !lastMsg.content) {
+            lastMsg.content = 'Mi dispiace, si è verificato un errore. Riprova più tardi.';
+          } else {
+            newMessages.push({
+              role: 'assistant',
+              content: 'Mi dispiace, si è verificato un errore. Riprova più tardi.',
+            });
+          }
+          return newMessages;
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const sendMessage = async () => {
@@ -81,43 +244,8 @@ ${goals || 'Nessun obiettivo impostato'}
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
-    setIsLoading(true);
-
-    try {
-      const financialContext = buildFinancialContext();
-      
-      const response = await supabase.functions.invoke('finance-ai-chat', {
-        body: {
-          messages: [...messages, userMessage].map(m => ({
-            role: m.role,
-            content: m.content,
-          })),
-          financialContext,
-        },
-      });
-
-      if (response.error) {
-        throw new Error(response.error.message);
-      }
-
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: response.data.message || 'Mi dispiace, non sono riuscito a elaborare la risposta.',
-      };
-      
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('AI Chat error:', error);
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: 'Mi dispiace, si è verificato un errore. Riprova più tardi.',
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
+    
+    await streamMessage(userMessage);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -128,10 +256,10 @@ ${goals || 'Nessun obiettivo impostato'}
   };
 
   const suggestedQuestions = [
-    'Come posso risparmiare di più?',
-    'Analizza le mie spese',
-    'Consigli per raggiungere i miei obiettivi',
-    'Dove sto spendendo troppo?',
+    { icon: TrendingUp, text: 'Analizza le mie spese' },
+    { icon: PiggyBank, text: 'Come posso risparmiare di più?' },
+    { icon: Target, text: 'Aiutami con i miei obiettivi' },
+    { icon: Zap, text: 'Dove sto spendendo troppo?' },
   ];
 
   return (
@@ -171,15 +299,20 @@ ${goals || 'Nessun obiettivo impostato'}
                       key={i}
                       variant="outline"
                       size="sm"
-                      className="text-xs h-auto py-2 px-3 glass-input text-left justify-start"
+                      className="text-xs h-auto py-3 px-3 glass-input text-left justify-start gap-2 group hover:border-primary/50 transition-colors"
                       onClick={() => {
-                        setInput(question);
+                        setInput(question.text);
                       }}
                     >
-                      {question}
+                      <question.icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                      <span className="truncate">{question.text}</span>
                     </Button>
                   ))}
                 </div>
+                
+                <p className="text-xs text-muted-foreground mt-4">
+                  💡 Risposte in tempo reale con streaming AI
+                </p>
               </div>
             )}
 
