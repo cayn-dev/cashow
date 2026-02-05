@@ -5,7 +5,8 @@ import {
   Wallet, 
   Target,
   Settings,
-  Lock 
+   Lock,
+   LogOut
 } from 'lucide-react';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
@@ -16,6 +17,7 @@ interface NavigationProps {
   onOpenSettings: () => void;
   onLock?: () => void;
   pinEnabled?: boolean;
+   onLogout?: () => void;
 }
 
 const navItems = [
@@ -25,7 +27,7 @@ const navItems = [
   { id: 'savings' as View, label: 'Risparmi', icon: Target },
 ];
 
-export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, pinEnabled }: NavigationProps) {
+ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, pinEnabled, onLogout }: NavigationProps) {
   return (
     <nav className="glass-panel p-2 mb-6">
       <div className="flex items-center justify-between">
@@ -70,6 +72,15 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
           >
             <Settings className="w-5 h-5" />
           </button>
+         {onLogout && (
+           <button 
+             onClick={onLogout}
+             className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+             title="Esci"
+           >
+             <LogOut className="w-5 h-5" />
+           </button>
+         )}
         </div>
       </div>
     </nav>
