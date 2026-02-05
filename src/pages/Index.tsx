@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useFinanceStore } from '@/hooks/useFinanceStore';
+ import { useState } from 'react';
+ import { useSupabaseFinanceStore } from '@/hooks/useSupabaseFinanceStore';
+ import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/hooks/useSettings';
 import { Navigation } from '@/components/Navigation';
 import { DashboardView } from '@/components/views/DashboardView';
@@ -14,11 +15,24 @@ type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const store = useFinanceStore();
+   const store = useSupabaseFinanceStore();
   const settings = useSettings();
+   const { signOut } = useAuth();
 
   const salaryTransactions = store.transactions.filter(t => t.isSalary);
 
+   // Show loading state
+   if (store.loading) {
+     return (
+       <div className="min-h-screen bg-background flex items-center justify-center">
+         <div className="text-center">
+           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+           <p className="text-muted-foreground">Caricamento dati...</p>
+         </div>
+       </div>
+     );
+   }
+ 
   // Show PIN lock screen if app is locked
   if (settings.isLocked) {
     return (
@@ -46,6 +60,7 @@ const Index = () => {
           onOpenSettings={() => setSettingsOpen(true)}
           onLock={settings.lockApp}
           pinEnabled={settings.pinEnabled}
+           onLogout={signOut}
         />
 
         {currentView === 'dashboard' && (
