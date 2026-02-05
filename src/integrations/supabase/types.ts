@@ -20,7 +20,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_next_run_date: {
+        Args: { p_current_date: string; p_frequency: string }
+        Returns: string
+      }
+      process_recurring_transactions: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never
