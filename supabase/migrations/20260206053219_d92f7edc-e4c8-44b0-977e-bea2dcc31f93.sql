@@ -1,0 +1,4 @@
+
+-- Abilita le estensioni necessarie per cron
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_net;
