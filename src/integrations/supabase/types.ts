@@ -14,7 +14,228 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          record_id: string
+          table_name: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id: string
+          table_name: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string
+          table_name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          currency_symbol: string | null
+          display_name: string | null
+          id: string
+          monthly_salary: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency_symbol?: string | null
+          display_name?: string | null
+          id?: string
+          monthly_salary?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency_symbol?: string | null
+          display_name?: string | null
+          id?: string
+          monthly_salary?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      recurring_transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          description: string
+          end_date: string | null
+          frequency: string
+          id: string
+          is_active: boolean | null
+          is_salary: boolean | null
+          last_run_at: string | null
+          next_run_at: string
+          payment_method: string | null
+          start_date: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          description: string
+          end_date?: string | null
+          frequency: string
+          id?: string
+          is_active?: boolean | null
+          is_salary?: boolean | null
+          last_run_at?: string | null
+          next_run_at: string
+          payment_method?: string | null
+          start_date?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string
+          end_date?: string | null
+          frequency?: string
+          id?: string
+          is_active?: boolean | null
+          is_salary?: boolean | null
+          last_run_at?: string | null
+          next_run_at?: string
+          payment_method?: string | null
+          start_date?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      savings_goals: {
+        Row: {
+          created_at: string
+          current_amount: number
+          deadline: string | null
+          emoji: string | null
+          id: string
+          name: string
+          target_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_amount?: number
+          deadline?: string | null
+          emoji?: string | null
+          id?: string
+          name: string
+          target_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_amount?: number
+          deadline?: string | null
+          emoji?: string | null
+          id?: string
+          name?: string
+          target_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string
+          id: string
+          is_salary: boolean | null
+          payment_method: string | null
+          recurring_source_id: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          date?: string
+          description: string
+          id?: string
+          is_salary?: boolean | null
+          payment_method?: string | null
+          recurring_source_id?: string | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          is_salary?: boolean | null
+          payment_method?: string | null
+          recurring_source_id?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -24,10 +245,17 @@ export type Database = {
         Args: { p_current_date: string; p_frequency: string }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       process_recurring_transactions: { Args: never; Returns: number }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "user" | "premium" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -154,6 +382,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["user", "premium", "admin"],
+    },
   },
 } as const
