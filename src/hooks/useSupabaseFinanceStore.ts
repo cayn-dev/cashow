@@ -1,143 +1,214 @@
- import { useState, useEffect, useCallback } from 'react';
- import { supabase } from '@/integrations/supabase/client';
- import { useAuth } from '@/hooks/useAuth';
- import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
- import { toast } from 'sonner';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
+import { toast } from 'sonner';
+
+const CACHE_KEY = 'finance_cache';
+
+// Database row types
+interface DbTransaction {
+  id: string;
+  user_id: string;
+  type: string;
+  amount: number;
+  category: string;
+  description: string;
+  date: string;
+  payment_method: string | null;
+  is_salary: boolean | null;
+  recurring_source_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface DbSavingsGoal {
+  id: string;
+  user_id: string;
+  name: string;
+  target_amount: number;
+  current_amount: number;
+  emoji: string | null;
+  deadline: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface DbProfile {
+  id: string;
+  user_id: string;
+  display_name: string | null;
+  monthly_salary: number | null;
+  currency_symbol: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface FinanceStoreState {
+  transactions: Transaction[];
+  savingsGoals: SavingsGoal[];
+  monthlySalary: number;
+  loading: boolean;
+}
+
+interface CachedData {
+  transactions: Transaction[];
+  savingsGoals: SavingsGoal[];
+  monthlySalary: number;
+  userId: string;
+  cachedAt: string;
+}
+
+// Helper to cast supabase client for untyped tables
+const db = supabase as any;
+
+const loadCache = (userId: string): CachedData | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const cached = JSON.parse(raw) as CachedData;
+    if (cached.userId !== userId) return null;
+    // Rehydrate dates
+    cached.transactions = cached.transactions.map(t => ({
+      ...t,
+      date: new Date(t.date),
+    }));
+    cached.savingsGoals = cached.savingsGoals.map(g => ({
+      ...g,
+      createdAt: new Date(g.createdAt),
+      deadline: g.deadline ? new Date(g.deadline) : undefined,
+    }));
+    return cached;
+  } catch {
+    return null;
+  }
+};
+
+const saveCache = (data: CachedData) => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+  } catch {
+    // Storage full — silently ignore
+  }
+};
+
+export function useSupabaseFinanceStore() {
+  const { user, isAuthenticated } = useAuth();
+  const cacheLoaded = useRef(false);
+
+  const [state, setState] = useState<FinanceStoreState>(() => {
+    // Try loading from cache immediately for instant UI
+    if (typeof window !== 'undefined' && user?.id) {
+      const cached = loadCache(user.id);
+      if (cached) {
+        cacheLoaded.current = true;
+        return {
+          transactions: cached.transactions,
+          savingsGoals: cached.savingsGoals,
+          monthlySalary: cached.monthlySalary,
+          loading: false, // show cached data immediately, sync in background
+        };
+      }
+    }
+    return { transactions: [], savingsGoals: [], monthlySalary: 0, loading: true };
+  });
  
- // Database row types (until types.ts regenerates)
- interface DbTransaction {
-   id: string;
-   user_id: string;
-   type: string;
-   amount: number;
-   category: string;
-   description: string;
-   date: string;
-   payment_method: string | null;
-   is_salary: boolean | null;
-   recurring_source_id: string | null;
-   created_at: string;
-   updated_at: string;
- }
- 
- interface DbSavingsGoal {
-   id: string;
-   user_id: string;
-   name: string;
-   target_amount: number;
-   current_amount: number;
-   emoji: string | null;
-   deadline: string | null;
-   created_at: string;
-   updated_at: string;
- }
- 
- interface DbProfile {
-   id: string;
-   user_id: string;
-   display_name: string | null;
-   monthly_salary: number | null;
-   currency_symbol: string | null;
-   created_at: string;
-   updated_at: string;
- }
- 
- interface FinanceStoreState {
-   transactions: Transaction[];
-   savingsGoals: SavingsGoal[];
-   monthlySalary: number;
-   loading: boolean;
- }
- 
- // Helper to cast supabase client for untyped tables
- const db = supabase as any;
- 
- export function useSupabaseFinanceStore() {
-   const { user, isAuthenticated } = useAuth();
-   const [state, setState] = useState<FinanceStoreState>({
-     transactions: [],
-     savingsGoals: [],
-     monthlySalary: 0,
-     loading: true,
-   });
- 
-   // Fetch all data on mount
-   useEffect(() => {
-     if (!isAuthenticated || !user) {
-       setState(prev => ({ ...prev, loading: false }));
-       return;
-     }
- 
-     const fetchData = async () => {
-       setState(prev => ({ ...prev, loading: true }));
-       
-       try {
-         // Fetch transactions
-         const { data: txData, error: txError } = await db
-           .from('transactions')
-           .select('*')
-           .eq('user_id', user.id)
-           .order('date', { ascending: false }) as { data: DbTransaction[] | null; error: any };
- 
-         if (txError) throw txError;
- 
-         // Fetch savings goals
-         const { data: goalsData, error: goalsError } = await db
-           .from('savings_goals')
-           .select('*')
-           .eq('user_id', user.id)
-           .order('created_at', { ascending: false }) as { data: DbSavingsGoal[] | null; error: any };
- 
-         if (goalsError) throw goalsError;
- 
-         // Fetch profile for salary
-         const { data: profileData, error: profileError } = await db
-           .from('profiles')
-           .select('monthly_salary')
-           .eq('user_id', user.id)
-           .single() as { data: DbProfile | null; error: any };
- 
-         if (profileError && profileError?.code !== 'PGRST116') throw profileError;
- 
-         // Transform data
-         const transactions: Transaction[] = (txData || []).map((t: DbTransaction) => ({
-           id: t.id,
-           type: t.type as 'income' | 'expense',
-           amount: Number(t.amount),
-           category: t.category as CategoryType,
-           description: t.description,
-           date: new Date(t.date),
-           paymentMethod: (t.payment_method || 'cash') as any,
-           recurrence: 'none' as const,
-           isSalary: t.is_salary || false,
-         }));
- 
-         const savingsGoals: SavingsGoal[] = (goalsData || []).map((g: DbSavingsGoal) => ({
-           id: g.id,
-           name: g.name,
-           targetAmount: Number(g.target_amount),
-           currentAmount: Number(g.current_amount),
-           emoji: g.emoji || '🎯',
-           createdAt: new Date(g.created_at),
-           deadline: g.deadline ? new Date(g.deadline) : undefined,
-         }));
- 
-         setState({
-           transactions,
-           savingsGoals,
-           monthlySalary: profileData?.monthly_salary ? Number(profileData.monthly_salary) : 0,
-           loading: false,
-         });
-       } catch (error) {
-         console.error('Error fetching finance data:', error);
-         toast.error('Errore nel caricamento dei dati');
-         setState(prev => ({ ...prev, loading: false }));
-       }
-     };
- 
-     fetchData();
-   }, [user, isAuthenticated]);
- 
+  // Fetch from cloud and update cache
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
+      setState(prev => ({ ...prev, loading: false }));
+      return;
+    }
+
+    const fetchData = async () => {
+      // Only show loading spinner if we have no cached data
+      if (!cacheLoaded.current) {
+        setState(prev => ({ ...prev, loading: true }));
+      }
+      
+      try {
+        const { data: txData, error: txError } = await db
+          .from('transactions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: false }) as { data: DbTransaction[] | null; error: any };
+
+        if (txError) throw txError;
+
+        const { data: goalsData, error: goalsError } = await db
+          .from('savings_goals')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false }) as { data: DbSavingsGoal[] | null; error: any };
+
+        if (goalsError) throw goalsError;
+
+        const { data: profileData, error: profileError } = await db
+          .from('profiles')
+          .select('monthly_salary')
+          .eq('user_id', user.id)
+          .single() as { data: DbProfile | null; error: any };
+
+        if (profileError && profileError?.code !== 'PGRST116') throw profileError;
+
+        const transactions: Transaction[] = (txData || []).map((t: DbTransaction) => ({
+          id: t.id,
+          type: t.type as 'income' | 'expense',
+          amount: Number(t.amount),
+          category: t.category as CategoryType,
+          description: t.description,
+          date: new Date(t.date),
+          paymentMethod: (t.payment_method || 'cash') as any,
+          recurrence: 'none' as const,
+          isSalary: t.is_salary || false,
+        }));
+
+        const savingsGoals: SavingsGoal[] = (goalsData || []).map((g: DbSavingsGoal) => ({
+          id: g.id,
+          name: g.name,
+          targetAmount: Number(g.target_amount),
+          currentAmount: Number(g.current_amount),
+          emoji: g.emoji || '🎯',
+          createdAt: new Date(g.created_at),
+          deadline: g.deadline ? new Date(g.deadline) : undefined,
+        }));
+
+        const monthlySalary = profileData?.monthly_salary ? Number(profileData.monthly_salary) : 0;
+
+        setState({ transactions, savingsGoals, monthlySalary, loading: false });
+
+        // Persist to local cache
+        saveCache({
+          transactions,
+          savingsGoals,
+          monthlySalary,
+          userId: user.id,
+          cachedAt: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error('Error fetching finance data:', error);
+        if (!cacheLoaded.current) {
+          toast.error('Errore nel caricamento dei dati');
+        }
+        setState(prev => ({ ...prev, loading: false }));
+      }
+    };
+
+    fetchData();
+  }, [user, isAuthenticated]);
+
+  // Keep local cache in sync with state changes
+  useEffect(() => {
+    if (!user?.id || state.loading) return;
+    saveCache({
+      transactions: state.transactions,
+      savingsGoals: state.savingsGoals,
+      monthlySalary: state.monthlySalary,
+      userId: user.id,
+      cachedAt: new Date().toISOString(),
+    });
+  }, [state.transactions, state.savingsGoals, state.monthlySalary, user?.id, state.loading]);
+
    // Add transaction
    const addTransaction = useCallback(async (transaction: Omit<Transaction, 'id'>) => {
      if (!user) return;
