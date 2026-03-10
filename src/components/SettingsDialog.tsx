@@ -51,6 +51,8 @@ import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, Fir
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
