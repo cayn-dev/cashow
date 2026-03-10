@@ -2,3 +2,6 @@ project_id = "eyuzazeavwbtdymmviyh"
  
  [functions.process-recurring]
  verify_jwt = false
+
+ [functions.delete-account]
+ verify_jwt = false
