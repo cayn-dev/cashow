@@ -74,6 +74,10 @@ interface SettingsDialogProps {
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const settings = useSettings();
   const financeStore = useFinanceStore();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const financeStore = useFinanceStore();
   const notifications = useNotifications({
     notificationsEnabled: settings.notificationsEnabled,
     dailyReminder: settings.dailyReminder,
