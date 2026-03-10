@@ -130,7 +130,7 @@ import { toast } from 'sonner';
            >
              <Wallet className="w-8 h-8 text-primary-foreground" />
            </motion.div>
-           <h1 className="font-display text-3xl font-bold">FinanzApp</h1>
+           <h1 className="font-display text-3xl font-bold">FinanceFlow</h1>
            <p className="text-muted-foreground mt-2">
              Gestisci le tue finanze in modo intelligente
            </p>
