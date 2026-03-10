@@ -439,6 +439,7 @@ export function useSupabaseFinanceStore() {
      transactions: state.transactions,
      savingsGoals: state.savingsGoals,
       monthlySalary: effectiveMonthlySalary,
+      loading: state.loading,
      addTransaction,
      deleteTransaction,
      addSavingsGoal,
