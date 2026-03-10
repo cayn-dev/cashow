@@ -405,15 +405,22 @@ export function useSupabaseFinanceStore() {
      return t.date.getMonth() === now.getMonth() && t.date.getFullYear() === now.getFullYear();
    });
  
-   const monthlyIncome = currentMonthTransactions
-     .filter(t => t.type === 'income')
-     .reduce((sum, t) => sum + t.amount, 0);
+    const monthlyIncome = currentMonthTransactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
  
-   const monthlyExpenses = currentMonthTransactions
-     .filter(t => t.type === 'expense')
-     .reduce((sum, t) => sum + t.amount, 0);
+    const monthlyExpenses = currentMonthTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
  
-   const monthlyBalance = monthlyIncome - monthlyExpenses;
+    const monthlyBalance = monthlyIncome - monthlyExpenses;
+
+    // Auto-calculate monthly salary from salary transactions in current month
+    const calculatedMonthlySalary = currentMonthTransactions
+      .filter(t => t.isSalary)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const effectiveMonthlySalary = calculatedMonthlySalary > 0 ? calculatedMonthlySalary : state.monthlySalary;
  
    const cumulativeSalary = state.transactions
      .filter(t => t.isSalary)
@@ -431,8 +438,8 @@ export function useSupabaseFinanceStore() {
    return {
      transactions: state.transactions,
      savingsGoals: state.savingsGoals,
-     monthlySalary: state.monthlySalary,
-     loading: state.loading,
+      monthlySalary: effectiveMonthlySalary,
+      loading: state.loading,
      addTransaction,
      deleteTransaction,
      addSavingsGoal,
