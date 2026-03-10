@@ -16,8 +16,8 @@ interface TransactionItemProps {
 
 export function TransactionItem({ transaction, onDelete, currencySymbol = '€' }: TransactionItemProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const category = CATEGORY_CONFIG[transaction.category];
-  const payment = PAYMENT_METHODS[transaction.paymentMethod];
+  const category = CATEGORY_CONFIG[transaction.category] || { label: transaction.category, emoji: '📦', color: 'category-other' };
+  const payment = PAYMENT_METHODS[transaction.paymentMethod] || { label: transaction.paymentMethod, emoji: '💱' };
   const isIncome = transaction.type === 'income';
   const feedback = useFeedback();
 
