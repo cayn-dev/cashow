@@ -1064,6 +1064,112 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </AlertDialog>
           </GlassCard>
 
+          {/* Privacy & Security Info */}
+          <GlassCard className="p-4 border-primary/30 bg-primary/5">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Shield className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">I tuoi dati sono protetti</h3>
+                <p className="text-sm text-muted-foreground">Crittografia AES-256 + TLS/SSL</p>
+              </div>
+            </div>
+            <div className="space-y-1.5 text-xs text-muted-foreground mb-3">
+              <div className="flex items-center gap-2">
+                <Lock className="w-3 h-3 text-primary shrink-0" />
+                <span>Dati crittografati a riposo e in transito</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Database className="w-3 h-3 text-primary shrink-0" />
+                <span>Isolamento completo con Row Level Security</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Eye className="w-3 h-3 text-primary shrink-0" />
+                <span>Nessuna condivisione con terze parti</span>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={() => {
+                onOpenChange(false);
+                navigate('/privacy');
+              }}
+            >
+              <Shield className="w-4 h-4 mr-2" />
+              Leggi la Privacy Policy completa
+            </Button>
+          </GlassCard>
+
+          {/* Account Deletion */}
+          <GlassCard className="p-4 border-destructive/30">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-destructive/20 flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-destructive" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-destructive">Elimina Account</h3>
+                <p className="text-sm text-muted-foreground">Cancella account e tutti i dati</p>
+              </div>
+            </div>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="w-full" disabled={deletingAccount}>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {deletingAccount ? 'Eliminazione in corso...' : 'Elimina il mio account'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>⚠️ Eliminare definitivamente il tuo account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Questa azione è <strong>irreversibile</strong>. Verranno eliminati permanentemente:
+                    <ul className="list-disc list-inside mt-2 space-y-1">
+                      <li>Tutte le transazioni</li>
+                      <li>Tutti gli obiettivi di risparmio</li>
+                      <li>Il tuo profilo e impostazioni</li>
+                      <li>Il tuo account di accesso</li>
+                    </ul>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Annulla</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={async () => {
+                      setDeletingAccount(true);
+                      try {
+                        const { data: { session } } = await supabase.auth.getSession();
+                        if (!session) throw new Error('No session');
+
+                        const { error } = await supabase.functions.invoke('delete-account', {
+                          headers: { Authorization: `Bearer ${session.access_token}` },
+                        });
+
+                        if (error) throw error;
+
+                        notifications.sendToast('👋 Account eliminato', 'Tutti i tuoi dati sono stati cancellati', 'success');
+                        localStorage.clear();
+                        setTimeout(() => {
+                          signOut();
+                        }, 1500);
+                      } catch (err) {
+                        console.error('Error deleting account:', err);
+                        notifications.sendToast('❌ Errore', 'Impossibile eliminare l\'account', 'error');
+                        setDeletingAccount(false);
+                      }
+                    }}
+                  >
+                    Sì, elimina tutto
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </GlassCard>
+
           {/* Version Info */}
           <div className="text-center text-sm text-muted-foreground pt-4">
             <p>FinanceFlow v1.0.0</p>
