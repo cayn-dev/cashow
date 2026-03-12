@@ -2,6 +2,7 @@
  import { useSupabaseFinanceStore } from '@/hooks/useSupabaseFinanceStore';
  import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/hooks/useSettings';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Navigation } from '@/components/Navigation';
 import { DashboardView } from '@/components/views/DashboardView';
 import { TransactionsView } from '@/components/views/TransactionsView';
