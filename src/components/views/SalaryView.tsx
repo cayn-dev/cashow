@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { it, enUS, es, fr, de } from 'date-fns/locale';
 import { useLanguage } from '@/hooks/useLanguage';
 
-const dateFnsLocales: Record<string, Locale> = { it, en: enUS, es, fr, de };
+const dateFnsLocales: Record<string, typeof it> = { it, en: enUS, es, fr, de };
 
 interface SalaryViewProps {
   monthlySalary: number;
