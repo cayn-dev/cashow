@@ -17,8 +17,9 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [settingsOpen, setSettingsOpen] = useState(false);
    const store = useSupabaseFinanceStore();
-  const settings = useSettings();
+   const settings = useSettings();
    const { signOut } = useAuth();
+   const { t } = useLanguage();
 
   const salaryTransactions = store.transactions.filter(t => t.isSalary);
 
