@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/hooks/useLanguage';
 import { 
   LayoutDashboard, 
   ArrowUpDown, 
   Wallet, 
   Target,
   Settings,
-   Lock,
-   LogOut
+  Lock,
+  LogOut
 } from 'lucide-react';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
@@ -17,17 +18,19 @@ interface NavigationProps {
   onOpenSettings: () => void;
   onLock?: () => void;
   pinEnabled?: boolean;
-   onLogout?: () => void;
+  onLogout?: () => void;
 }
 
-const navItems = [
-  { id: 'dashboard' as View, label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'transactions' as View, label: 'Movimenti', icon: ArrowUpDown },
-  { id: 'salary' as View, label: 'Stipendio', icon: Wallet },
-  { id: 'savings' as View, label: 'Risparmi', icon: Target },
-];
+export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, pinEnabled, onLogout }: NavigationProps) {
+  const { t } = useLanguage();
 
- export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, pinEnabled, onLogout }: NavigationProps) {
+  const navItems = [
+    { id: 'dashboard' as View, label: t('nav.dashboard'), icon: LayoutDashboard },
+    { id: 'transactions' as View, label: t('nav.transactions'), icon: ArrowUpDown },
+    { id: 'salary' as View, label: t('nav.salary'), icon: Wallet },
+    { id: 'savings' as View, label: t('nav.savings'), icon: Target },
+  ];
+
   return (
     <nav className="glass-panel p-2 mb-6">
       <div className="flex items-center justify-between">
@@ -61,7 +64,7 @@ const navItems = [
             <button 
               onClick={onLock}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-              title="Blocca app"
+              title={t('nav.lockApp')}
             >
               <Lock className="w-5 h-5" />
             </button>
@@ -76,7 +79,7 @@ const navItems = [
            <button 
              onClick={onLogout}
              className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-             title="Esci"
+             title={t('nav.logout')}
            >
              <LogOut className="w-5 h-5" />
            </button>

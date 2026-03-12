@@ -2,6 +2,7 @@
  import { useSupabaseFinanceStore } from '@/hooks/useSupabaseFinanceStore';
  import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/hooks/useSettings';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Navigation } from '@/components/Navigation';
 import { DashboardView } from '@/components/views/DashboardView';
 import { TransactionsView } from '@/components/views/TransactionsView';
@@ -16,8 +17,9 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [settingsOpen, setSettingsOpen] = useState(false);
    const store = useSupabaseFinanceStore();
-  const settings = useSettings();
+   const settings = useSettings();
    const { signOut } = useAuth();
+   const { t } = useLanguage();
 
   const salaryTransactions = store.transactions.filter(t => t.isSalary);
 
@@ -27,7 +29,7 @@ const Index = () => {
        <div className="min-h-screen bg-background flex items-center justify-center">
          <div className="text-center">
            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-           <p className="text-muted-foreground">Caricamento dati...</p>
+           <p className="text-muted-foreground">{t('loading.data')}</p>
          </div>
        </div>
      );
