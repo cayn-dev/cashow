@@ -176,6 +176,35 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Language Section */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Globe className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.language')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.languageDesc')}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={`flex flex-col items-center gap-1 p-3 rounded-xl border transition-all ${
+                    language === lang.code
+                      ? 'border-primary bg-primary/20'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <span className="text-xl">{lang.flag}</span>
+                  <span className="text-xs font-medium">{lang.code.toUpperCase()}</span>
+                </button>
+              ))}
+            </div>
+          </GlassCard>
+
           {/* Theme Section */}
           <GlassCard className="p-4">
             <div className="flex items-center gap-3 mb-4">
