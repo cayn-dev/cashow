@@ -4,6 +4,7 @@
  import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
  import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
  import { AuthProvider, useAuth } from "@/hooks/useAuth";
+ import { LanguageProvider } from "@/hooks/useLanguage";
  import Index from "./pages/Index";
   import Auth from "./pages/Auth";
   import Privacy from "./pages/Privacy";
@@ -34,22 +35,24 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
      <AuthProvider>
-       <TooltipProvider>
-         <Toaster />
-         <Sonner />
-         <BrowserRouter>
-           <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/" element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              } />
-             <Route path="*" element={<NotFound />} />
-           </Routes>
-         </BrowserRouter>
-       </TooltipProvider>
+       <LanguageProvider>
+         <TooltipProvider>
+           <Toaster />
+           <Sonner />
+           <BrowserRouter>
+             <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/" element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                } />
+               <Route path="*" element={<NotFound />} />
+             </Routes>
+           </BrowserRouter>
+         </TooltipProvider>
+       </LanguageProvider>
      </AuthProvider>
   </QueryClientProvider>
 );
