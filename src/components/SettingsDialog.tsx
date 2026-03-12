@@ -78,6 +78,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const financeStore = useFinanceStore();
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
   const [deletingAccount, setDeletingAccount] = useState(false);
   const notifications = useNotifications({
     notificationsEnabled: settings.notificationsEnabled,
