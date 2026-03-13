@@ -73,6 +73,14 @@ interface SettingsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const LOCALE_MAP: Record<string, string> = {
+  it: 'it-IT',
+  en: 'en-US',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE',
+};
+
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const settings = useSettings();
   const financeStore = useFinanceStore();
@@ -89,6 +97,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   });
   
   const dataStats = financeStore.getDataStats();
+  const locale = LOCALE_MAP[language] || 'it-IT';
   
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
@@ -107,11 +116,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   const handleSetPin = () => {
     if (newPin.length !== 6) {
-      setPinError('Il PIN deve avere esattamente 6 cifre');
+      setPinError(t('settings.pinMustBe6'));
       return;
     }
     if (newPin !== confirmPin) {
-      setPinError('I PIN non coincidono');
+      setPinError(t('settings.pinsDontMatch'));
       return;
     }
     settings.setPin(newPin);
@@ -146,9 +155,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       const granted = await notifications.requestPermission();
       if (granted) {
         settings.toggleNotifications(true);
-        notifications.sendToast('🔔 Notifiche attivate', 'Riceverai aggiornamenti importanti');
+        notifications.sendToast(t('settings.notificationsEnabled'), t('settings.willReceiveUpdates'));
       } else {
-        notifications.sendToast('⚠️ Permesso negato', 'Abilita le notifiche dal browser', 'warning');
+        notifications.sendToast(t('settings.permissionDenied'), t('settings.enableFromBrowser'), 'warning');
       }
     } else {
       settings.toggleNotifications(false);
@@ -156,13 +165,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   };
 
   const currencyOptions: { value: Currency; label: string; symbol: string }[] = [
-    { value: 'EUR', label: currencyNames.EUR, symbol: '€' },
-    { value: 'USD', label: currencyNames.USD, symbol: '$' },
-    { value: 'GBP', label: currencyNames.GBP, symbol: '£' },
-    { value: 'CHF', label: currencyNames.CHF, symbol: 'CHF' },
-    { value: 'JPY', label: currencyNames.JPY, symbol: '¥' },
-    { value: 'CAD', label: currencyNames.CAD, symbol: 'C$' },
-    { value: 'AUD', label: currencyNames.AUD, symbol: 'A$' },
+    { value: 'EUR', label: t('currency.EUR'), symbol: '€' },
+    { value: 'USD', label: t('currency.USD'), symbol: '$' },
+    { value: 'GBP', label: t('currency.GBP'), symbol: '£' },
+    { value: 'CHF', label: t('currency.CHF'), symbol: 'CHF' },
+    { value: 'JPY', label: t('currency.JPY'), symbol: '¥' },
+    { value: 'CAD', label: t('currency.CAD'), symbol: 'C$' },
+    { value: 'AUD', label: t('currency.AUD'), symbol: 'A$' },
   ];
 
   return (
@@ -170,7 +179,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       <DialogContent className="max-w-md bg-card border-border max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-display">
-            ⚙️ Impostazioni
+            {t('settings.title')}
           </DialogTitle>
         </DialogHeader>
 
@@ -211,8 +220,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Palette className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold">Aspetto</h3>
-                <p className="text-sm text-muted-foreground">Personalizza il tema</p>
+                <h3 className="font-semibold">{t('settings.appearance')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.customizeTheme')}</p>
               </div>
             </div>
             
@@ -226,7 +235,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 }`}
               >
                 <Moon className="w-5 h-5" />
-                <span className="font-medium">Scuro</span>
+                <span className="font-medium">{t('settings.dark')}</span>
               </button>
               <button
                 onClick={() => settings.setTheme('light')}
@@ -237,7 +246,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 }`}
               >
                 <Sun className="w-5 h-5" />
-                <span className="font-medium">Chiaro</span>
+                <span className="font-medium">{t('settings.light')}</span>
               </button>
             </div>
           </GlassCard>
@@ -249,8 +258,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <DollarSign className="w-5 h-5 text-success" />
               </div>
               <div>
-                <h3 className="font-semibold">Valuta</h3>
-                <p className="text-sm text-muted-foreground">Seleziona la tua valuta</p>
+                <h3 className="font-semibold">{t('settings.currency')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.selectCurrency')}</p>
               </div>
             </div>
             
@@ -258,7 +267,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               value={settings.currency}
               onValueChange={(value: Currency) => {
                 settings.setCurrency(value);
-                notifications.sendToast('💱 Valuta cambiata', `Ora usi ${currencyNames[value]}`);
+                notifications.sendToast(t('settings.currencyChanged'), t('settings.nowUsing', { currency: t(`currency.${value}`) }));
               }}
             >
               <SelectTrigger className="w-full">
@@ -281,24 +290,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Wallet className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold">Budget e Limiti</h3>
-                <p className="text-sm text-muted-foreground">Controlla le tue spese</p>
+                <h3 className="font-semibold">{t('settings.budgetLimits')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.controlExpenses')}</p>
               </div>
             </div>
 
             <div className="space-y-4">
-              {/* Daily spending limit */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-muted-foreground" />
                     <div>
-                      <Label>Limite giornaliero</Label>
-                      <p className="text-xs text-muted-foreground">Avviso quando superi</p>
+                      <Label>{t('settings.dailyLimit')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.alertWhenExceeded')}</p>
                     </div>
                   </div>
                   <span className="text-sm font-medium">
-                    {settings.dailySpendingLimit > 0 ? `${settings.currencySymbol}${settings.dailySpendingLimit}` : 'Disattivato'}
+                    {settings.dailySpendingLimit > 0 ? `${settings.currencySymbol}${settings.dailySpendingLimit}` : t('settings.disabled')}
                   </span>
                 </div>
                 <Slider
@@ -313,14 +321,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               <Separator />
 
-              {/* Round up savings */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <PiggyBank className="w-4 h-4 text-muted-foreground" />
                     <div>
-                      <Label>Arrotonda per risparmiare</Label>
-                      <p className="text-xs text-muted-foreground">Arrotonda le spese e risparmia la differenza</p>
+                      <Label>{t('settings.roundUpSavings')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.roundUpDesc')}</p>
                     </div>
                   </div>
                   <Switch
@@ -331,7 +338,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 
                 {settings.roundUpSavings && (
                   <div className="pl-6 space-y-2">
-                    <Label className="text-sm">Arrotonda a:</Label>
+                    <Label className="text-sm">{t('settings.roundTo')}</Label>
                     <div className="flex gap-2">
                       {[1, 5, 10].map((amount) => (
                         <Button
@@ -345,7 +352,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                       ))}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Es: Spesa €7.30 → Arrotondata a €{7.30 + settings.calculateRoundUp(7.30)} (+€{settings.calculateRoundUp(7.30).toFixed(2)} risparmiati)
+                      {t('settings.roundUpExample', {
+                        original: '7.30',
+                        rounded: String(7.30 + settings.calculateRoundUp(7.30)),
+                        saved: settings.calculateRoundUp(7.30).toFixed(2),
+                      })}
                     </p>
                   </div>
                 )}
@@ -353,11 +364,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               <Separator />
 
-              {/* Default payment method */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-muted-foreground" />
-                  <Label>Metodo di pagamento predefinito</Label>
+                  <Label>{t('settings.defaultPayment')}</Label>
                 </div>
                 <Select
                   value={settings.defaultPaymentMethod}
@@ -369,7 +379,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <SelectContent>
                     {Object.entries(PAYMENT_METHODS).map(([key, { label, emoji }]) => (
                       <SelectItem key={key} value={key}>
-                        {emoji} {label}
+                        {emoji} {t(`pay.${key}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -385,16 +395,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Zap className="w-5 h-5 text-success" />
               </div>
               <div>
-                <h3 className="font-semibold">Azioni Rapide</h3>
-                <p className="text-sm text-muted-foreground">Velocizza l'inserimento</p>
+                <h3 className="font-semibold">{t('settings.quickActions')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.speedUpEntry')}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Aggiunta rapida</Label>
-                  <p className="text-xs text-muted-foreground">Aggiungi spese con un tap</p>
+                  <Label>{t('settings.quickAdd')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.quickAddDesc')}</p>
                 </div>
                 <Switch
                   checked={settings.quickAddEnabled}
@@ -404,7 +414,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               {settings.quickAddEnabled && (
                 <div className="space-y-2 pl-4 border-l-2 border-muted">
-                  <Label className="text-sm">Importo predefinito</Label>
+                  <Label className="text-sm">{t('settings.defaultAmount')}</Label>
                   <div className="flex items-center gap-3">
                     <Slider
                       value={[settings.quickAddAmount]}
@@ -425,8 +435,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Nascondi piccole spese</Label>
-                  <p className="text-xs text-muted-foreground">Nascondi transazioni minime</p>
+                  <Label>{t('settings.hideSmall')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.hideSmallDesc')}</p>
                 </div>
                 <Switch
                   checked={settings.hideSmallTransactions}
@@ -436,7 +446,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               {settings.hideSmallTransactions && (
                 <div className="space-y-2 pl-4 border-l-2 border-muted">
-                  <Label className="text-sm">Soglia minima</Label>
+                  <Label className="text-sm">{t('settings.minThreshold')}</Label>
                   <div className="flex items-center gap-3">
                     <Slider
                       value={[settings.smallTransactionThreshold]}
@@ -462,14 +472,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Calendar className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h3 className="font-semibold">Data e Formato</h3>
-                <p className="text-sm text-muted-foreground">Personalizza le date</p>
+                <h3 className="font-semibold">{t('settings.dateFormat')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.customizeDates')}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Formato data</Label>
+                <Label>{t('settings.dateFormatLabel')}</Label>
                 <Select
                   value={settings.dateFormat}
                   onValueChange={(value: DateFormat) => settings.setDateFormat(value)}
@@ -480,7 +490,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <SelectContent>
                     {Object.entries(dateFormatLabels).map(([format, label]) => (
                       <SelectItem key={format} value={format}>
-                        {label}
+                        {t(`dateFormat.${format}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -488,21 +498,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </div>
 
               <div className="space-y-2">
-                <Label>Primo giorno della settimana</Label>
+                <Label>{t('settings.firstDayOfWeek')}</Label>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     variant={settings.firstDayOfWeek === 'monday' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => settings.setFirstDayOfWeek('monday')}
                   >
-                    Lunedì
+                    {t('settings.monday')}
                   </Button>
                   <Button
                     variant={settings.firstDayOfWeek === 'sunday' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => settings.setFirstDayOfWeek('sunday')}
                   >
-                    Domenica
+                    {t('settings.sunday')}
                   </Button>
                 </div>
               </div>
@@ -511,8 +521,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Confronto mensile</Label>
-                  <p className="text-xs text-muted-foreground">Mostra variazioni rispetto al mese scorso</p>
+                  <Label>{t('settings.monthlyComparison')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.monthlyComparisonDesc')}</p>
                 </div>
                 <Switch
                   checked={settings.showMonthlyComparison}
@@ -529,16 +539,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Eye className="w-5 h-5 text-info" />
               </div>
               <div>
-                <h3 className="font-semibold">Visualizzazione</h3>
-                <p className="text-sm text-muted-foreground">Personalizza la visualizzazione</p>
+                <h3 className="font-semibold">{t('settings.display')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.customizeDisplay')}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Vista compatta</Label>
-                  <p className="text-xs text-muted-foreground">Mostra più elementi</p>
+                  <Label>{t('settings.compactView')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.showMore')}</p>
                 </div>
                 <Switch
                   checked={settings.compactView}
@@ -548,8 +558,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Mostra decimali</Label>
-                  <p className="text-xs text-muted-foreground">Es: €100.50 vs €100</p>
+                  <Label>{t('settings.showDecimals')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.decimalExample')}</p>
                 </div>
                 <Switch
                   checked={settings.showDecimals}
@@ -563,8 +573,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <div className="flex items-center gap-2">
                   <Volume2 className="w-4 h-4 text-muted-foreground" />
                   <div>
-                    <Label>Suoni</Label>
-                    <p className="text-xs text-muted-foreground">Feedback sonoro</p>
+                    <Label>{t('settings.sounds')}</Label>
+                    <p className="text-xs text-muted-foreground">{t('settings.soundFeedback')}</p>
                   </div>
                 </div>
                 <Switch
@@ -577,8 +587,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <div className="flex items-center gap-2">
                   <Vibrate className="w-4 h-4 text-muted-foreground" />
                   <div>
-                    <Label>Vibrazioni</Label>
-                    <p className="text-xs text-muted-foreground">Feedback haptic</p>
+                    <Label>{t('settings.vibrations')}</Label>
+                    <p className="text-xs text-muted-foreground">{t('settings.hapticFeedback')}</p>
                   </div>
                 </div>
                 <Switch
@@ -596,8 +606,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Shield className="w-5 h-5 text-warning" />
               </div>
               <div>
-                <h3 className="font-semibold">Sicurezza</h3>
-                <p className="text-sm text-muted-foreground">Proteggi i tuoi dati</p>
+                <h3 className="font-semibold">{t('settings.security')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.protectData')}</p>
               </div>
             </div>
 
@@ -606,7 +616,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Lock className="w-4 h-4 text-muted-foreground" />
-                    <Label>Blocco PIN</Label>
+                    <Label>{t('settings.pinLock')}</Label>
                   </div>
                   <Switch
                     checked={settings.pinEnabled}
@@ -627,20 +637,19 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     onClick={() => setShowPinSetup(true)}
                     className="w-full"
                   >
-                    Cambia PIN
+                    {t('settings.changePin')}
                   </Button>
                 )}
 
                 <Separator />
 
-                {/* Biometric Authentication */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Fingerprint className="w-4 h-4 text-muted-foreground" />
                     <div>
-                      <Label>Face ID / Touch ID</Label>
+                      <Label>{t('settings.faceId')}</Label>
                       {!biometricAvailable && (
-                        <p className="text-xs text-muted-foreground">Non disponibile su questo dispositivo</p>
+                        <p className="text-xs text-muted-foreground">{t('settings.notAvailable')}</p>
                       )}
                     </div>
                   </div>
@@ -653,17 +662,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
                 {settings.biometricEnabled && (
                   <p className="text-xs text-muted-foreground text-center">
-                    ✓ Face ID / Touch ID attivo
+                    {t('settings.faceIdActive')}
                   </p>
                 )}
 
                 <Separator />
 
-                {/* Auto-lock timeout */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-muted-foreground" />
-                    <Label>Blocco automatico</Label>
+                    <Label>{t('settings.autoLock')}</Label>
                   </div>
                   <Select
                     value={String(settings.autoLockTimeout)}
@@ -673,11 +681,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0">Disabilitato</SelectItem>
-                      <SelectItem value="1">1 minuto</SelectItem>
-                      <SelectItem value="5">5 minuti</SelectItem>
-                      <SelectItem value="15">15 minuti</SelectItem>
-                      <SelectItem value="30">30 minuti</SelectItem>
+                      <SelectItem value="0">{t('settings.disabled')}</SelectItem>
+                      <SelectItem value="1">{t('settings.minute')}</SelectItem>
+                      <SelectItem value="5">{t('settings.minutes', { n: '5' })}</SelectItem>
+                      <SelectItem value="15">{t('settings.minutes', { n: '15' })}</SelectItem>
+                      <SelectItem value="30">{t('settings.minutes', { n: '30' })}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -685,7 +693,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             ) : (
               <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Nuovo PIN (6 cifre)</Label>
+                <Label>{t('settings.newPin')}</Label>
                   <Input
                     type="password"
                     inputMode="numeric"
@@ -696,7 +704,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Conferma PIN</Label>
+                  <Label>{t('settings.confirmPin')}</Label>
                   <Input
                     type="password"
                     inputMode="numeric"
@@ -721,14 +729,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     }}
                     className="flex-1"
                   >
-                    Annulla
+                    {t('settings.cancel')}
                   </Button>
                   <Button
                     size="sm"
                     onClick={handleSetPin}
                     className="flex-1"
                   >
-                    Salva PIN
+                    {t('settings.savePin')}
                   </Button>
                 </div>
               </div>
@@ -742,14 +750,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Bell className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h3 className="font-semibold">Notifiche</h3>
-                <p className="text-sm text-muted-foreground">Gestisci le notifiche</p>
+                <h3 className="font-semibold">{t('settings.notifications')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.manageNotifications')}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label>Notifiche attive</Label>
+                <Label>{t('settings.notificationsActive')}</Label>
                 <Switch
                   checked={settings.notificationsEnabled}
                   onCheckedChange={handleToggleNotifications}
@@ -760,8 +768,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Promemoria giornaliero</Label>
-                  <p className="text-xs text-muted-foreground">Ricordati di registrare le spese (ore 20:00)</p>
+                  <Label>{t('settings.dailyReminder')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.dailyReminderDesc')}</p>
                 </div>
                 <Switch
                   checked={settings.dailyReminder}
@@ -772,8 +780,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Avvisi spese</Label>
-                  <p className="text-xs text-muted-foreground">Quando superi il limite</p>
+                  <Label>{t('settings.spendingAlerts')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.spendingAlertsDesc')}</p>
                 </div>
                 <Switch
                   checked={settings.spendingAlerts}
@@ -784,7 +792,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               {settings.spendingAlerts && settings.notificationsEnabled && (
                 <div className="space-y-2 pl-4 border-l-2 border-muted">
-                  <Label className="text-sm">Limite mensile spese</Label>
+                  <Label className="text-sm">{t('settings.monthlySpendingLimit')}</Label>
                   <div className="flex items-center gap-3">
                     <Slider
                       value={[settings.spendingLimit]}
@@ -803,8 +811,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Obiettivi risparmi</Label>
-                  <p className="text-xs text-muted-foreground">Quando raggiungi un obiettivo</p>
+                  <Label>{t('settings.savingsGoals')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.savingsGoalsDesc')}</p>
                 </div>
                 <Switch
                   checked={settings.goalAlerts}
@@ -822,43 +830,43 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <BarChart3 className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold">Statistiche Dati</h3>
-                <p className="text-sm text-muted-foreground">Panoramica dei tuoi dati</p>
+                <h3 className="font-semibold">{t('settings.dataStats')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.dataOverview')}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="glass-input rounded-xl p-3 text-center">
                 <p className="text-2xl font-bold text-primary">{dataStats.transactionCount}</p>
-                <p className="text-muted-foreground text-xs">Transazioni</p>
+                <p className="text-muted-foreground text-xs">{t('settings.transactionsCount')}</p>
               </div>
               <div className="glass-input rounded-xl p-3 text-center">
                 <p className="text-2xl font-bold text-success">{dataStats.goalsCount}</p>
-                <p className="text-muted-foreground text-xs">Obiettivi</p>
+                <p className="text-muted-foreground text-xs">{t('settings.goalsCount')}</p>
               </div>
             </div>
 
             <div className="mt-4 space-y-2 text-xs text-muted-foreground">
               {dataStats.oldestTransaction && (
                 <div className="flex justify-between">
-                  <span>Prima transazione:</span>
-                  <span>{dataStats.oldestTransaction.toLocaleDateString('it-IT')}</span>
+                  <span>{t('settings.firstTransaction')}</span>
+                  <span>{dataStats.oldestTransaction.toLocaleDateString(locale)}</span>
                 </div>
               )}
               {dataStats.lastUpdated && (
                 <div className="flex justify-between">
-                  <span>Ultimo aggiornamento:</span>
-                  <span>{dataStats.lastUpdated.toLocaleString('it-IT')}</span>
+                  <span>{t('settings.lastUpdate')}</span>
+                  <span>{dataStats.lastUpdated.toLocaleString(locale)}</span>
                 </div>
               )}
               {dataStats.lastBackup && (
                 <div className="flex justify-between">
-                  <span>Ultimo backup:</span>
-                  <span>{dataStats.lastBackup.toLocaleString('it-IT')}</span>
+                  <span>{t('settings.lastBackup')}</span>
+                  <span>{dataStats.lastBackup.toLocaleString(locale)}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Versione dati:</span>
+                <span>{t('settings.dataVersion')}</span>
                 <span>v{dataStats.dataVersion}</span>
               </div>
             </div>
@@ -871,8 +879,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Database className="w-5 h-5 text-muted-foreground" />
               </div>
               <div>
-                <h3 className="font-semibold">Gestione Dati</h3>
-                <p className="text-sm text-muted-foreground">Backup e ripristino</p>
+                <h3 className="font-semibold">{t('settings.dataManagement')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.backupRestore')}</p>
               </div>
             </div>
 
@@ -882,11 +890,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 className="w-full justify-start"
                 onClick={() => {
                   financeStore.createManualBackup();
-                  notifications.sendToast('✅ Backup creato', 'I tuoi dati sono al sicuro', 'success');
+                  notifications.sendToast(t('settings.backupCreated'), t('settings.dataSafe'), 'success');
                 }}
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Crea Backup Manuale
+                {t('settings.createBackup')}
               </Button>
 
               <Button
@@ -902,11 +910,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     a.download = `financeflow-backup-${new Date().toISOString().split('T')[0]}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
-                    notifications.sendToast('💾 Backup scaricato', 'I tuoi dati sono stati esportati', 'success');
+                    notifications.sendToast(t('settings.backupDownloaded'), t('settings.dataExported'), 'success');
                   }
                 }}
               >
-                📥 Esporta dati (Backup)
+                {t('settings.exportData')}
               </Button>
               
               <Button
@@ -924,10 +932,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                         try {
                           const data = JSON.parse(event.target?.result as string);
                           localStorage.setItem('finance_data', JSON.stringify(data));
-                          notifications.sendToast('✅ Dati importati', 'Ricarico la pagina...', 'success');
+                          notifications.sendToast(t('settings.dataImported'), t('settings.reloading'), 'success');
                           setTimeout(() => window.location.reload(), 1500);
                         } catch {
-                          notifications.sendToast('❌ Errore', 'File non valido', 'error');
+                          notifications.sendToast(t('settings.error'), t('settings.invalidFile'), 'error');
                         }
                       };
                       reader.readAsText(file);
@@ -936,7 +944,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   input.click();
                 }}
               >
-                📤 Importa dati (Ripristino)
+                {t('settings.importData')}
               </Button>
 
               <Separator />
@@ -945,35 +953,35 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-warning">
                     <History className="w-4 h-4 mr-2" />
-                    Ripristina da Backup Automatico
+                    {t('settings.restoreAutoBackup')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Ripristina backup automatico?</AlertDialogTitle>
+                    <AlertDialogTitle>{t('settings.restoreAutoBackupTitle')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Questo ripristinerà i dati dall'ultimo backup automatico.
+                      {t('settings.restoreAutoBackupDesc')}
                       {dataStats.lastBackup && (
                         <span className="block mt-2 font-medium">
-                          Backup del: {dataStats.lastBackup.toLocaleString('it-IT')}
+                          {t('settings.backupDate', { date: dataStats.lastBackup.toLocaleString(locale) })}
                         </span>
                       )}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Annulla</AlertDialogCancel>
+                    <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => {
                         const success = financeStore.restoreFromBackup();
                         if (success) {
-                          notifications.sendToast('✅ Ripristinato', 'Dati recuperati dal backup', 'success');
+                          notifications.sendToast(t('settings.restored'), t('settings.dataRecovered'), 'success');
                           setTimeout(() => window.location.reload(), 1000);
                         } else {
-                          notifications.sendToast('❌ Errore', 'Nessun backup disponibile', 'error');
+                          notifications.sendToast(t('settings.error'), t('settings.noBackup'), 'error');
                         }
                       }}
                     >
-                      Ripristina
+                      {t('settings.restore')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -988,8 +996,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Settings2 className="w-5 h-5 text-warning" />
               </div>
               <div>
-                <h3 className="font-semibold">Pulizia Selettiva</h3>
-                <p className="text-sm text-muted-foreground">Elimina solo ciò che vuoi</p>
+                <h3 className="font-semibold">{t('settings.selectiveClean')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.deleteWhatYouWant')}</p>
               </div>
             </div>
 
@@ -998,27 +1006,26 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Elimina solo transazioni
+                    {t('settings.deleteTransactionsOnly')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Eliminare tutte le transazioni?</AlertDialogTitle>
+                    <AlertDialogTitle>{t('settings.deleteTransactionsTitle')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Verranno eliminate {dataStats.transactionCount} transazioni. Gli obiettivi di risparmio verranno mantenuti.
-                      Un backup automatico verrà creato prima dell'eliminazione.
+                      {t('settings.deleteTransactionsDesc', { count: String(dataStats.transactionCount) })}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Annulla</AlertDialogCancel>
+                    <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => {
                         financeStore.clearTransactions();
-                        notifications.sendToast('🗑️ Transazioni eliminate', 'Backup creato automaticamente', 'success');
+                        notifications.sendToast(t('settings.transactionsDeleted'), t('settings.autoBackupCreated'), 'success');
                       }}
                       className="bg-warning text-warning-foreground hover:bg-warning/90"
                     >
-                      Elimina transazioni
+                      {t('settings.deleteTransactionsOnly')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -1028,27 +1035,26 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Elimina solo obiettivi
+                    {t('settings.deleteGoalsOnly')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Eliminare tutti gli obiettivi?</AlertDialogTitle>
+                    <AlertDialogTitle>{t('settings.deleteGoalsTitle')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Verranno eliminati {dataStats.goalsCount} obiettivi di risparmio. Le transazioni verranno mantenute.
-                      Un backup automatico verrà creato prima dell'eliminazione.
+                      {t('settings.deleteGoalsDesc', { count: String(dataStats.goalsCount) })}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Annulla</AlertDialogCancel>
+                    <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => {
                         financeStore.clearGoals();
-                        notifications.sendToast('🗑️ Obiettivi eliminati', 'Backup creato automaticamente', 'success');
+                        notifications.sendToast(t('settings.goalsDeleted'), t('settings.autoBackupCreated'), 'success');
                       }}
                       className="bg-warning text-warning-foreground hover:bg-warning/90"
                     >
-                      Elimina obiettivi
+                      {t('settings.deleteGoalsOnly')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -1063,8 +1069,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <AlertTriangle className="w-5 h-5 text-destructive" />
               </div>
               <div>
-                <h3 className="font-semibold text-destructive">Zona Pericolosa</h3>
-                <p className="text-sm text-muted-foreground">Azioni irreversibili</p>
+                <h3 className="font-semibold text-destructive">{t('settings.dangerZone')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.irreversibleActions')}</p>
               </div>
             </div>
 
@@ -1072,24 +1078,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" className="w-full">
                   <Trash2 className="w-4 h-4 mr-2" />
-                  Elimina tutti i dati
+                  {t('settings.deleteAllData')}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
+                  <AlertDialogTitle>{t('settings.areYouSure')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Questa azione eliminerà permanentemente tutti i tuoi dati finanziari,
-                    transazioni e obiettivi di risparmio. Non potrai recuperarli.
+                    {t('settings.deleteAllDesc')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Annulla</AlertDialogCancel>
+                  <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={settings.resetData}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Elimina tutto
+                    {t('settings.deleteAll')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -1103,22 +1108,22 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Shield className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold">I tuoi dati sono protetti</h3>
-                <p className="text-sm text-muted-foreground">Crittografia AES-256 + TLS/SSL</p>
+                <h3 className="font-semibold">{t('settings.dataProtected')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.encryption')}</p>
               </div>
             </div>
             <div className="space-y-1.5 text-xs text-muted-foreground mb-3">
               <div className="flex items-center gap-2">
                 <Lock className="w-3 h-3 text-primary shrink-0" />
-                <span>Dati crittografati a riposo e in transito</span>
+                <span>{t('settings.encryptedAtRest')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Database className="w-3 h-3 text-primary shrink-0" />
-                <span>Isolamento completo con Row Level Security</span>
+                <span>{t('settings.rlsIsolation')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Eye className="w-3 h-3 text-primary shrink-0" />
-                <span>Nessuna condivisione con terze parti</span>
+                <span>{t('settings.noThirdParty')}</span>
               </div>
             </div>
             <Button
@@ -1131,7 +1136,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               }}
             >
               <Shield className="w-4 h-4 mr-2" />
-              Leggi la Privacy Policy completa
+              {t('settings.readPrivacy')}
             </Button>
           </GlassCard>
 
@@ -1142,8 +1147,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Trash2 className="w-5 h-5 text-destructive" />
               </div>
               <div>
-                <h3 className="font-semibold text-destructive">Elimina Account</h3>
-                <p className="text-sm text-muted-foreground">Cancella account e tutti i dati</p>
+                <h3 className="font-semibold text-destructive">{t('settings.deleteAccount')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.deleteAccountDesc')}</p>
               </div>
             </div>
 
@@ -1151,24 +1156,24 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" className="w-full" disabled={deletingAccount}>
                   <Trash2 className="w-4 h-4 mr-2" />
-                  {deletingAccount ? 'Eliminazione in corso...' : 'Elimina il mio account'}
+                  {deletingAccount ? t('settings.deleting') : t('settings.deleteMyAccount')}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>⚠️ Eliminare definitivamente il tuo account?</AlertDialogTitle>
+                  <AlertDialogTitle>{t('settings.deleteAccountTitle')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Questa azione è <strong>irreversibile</strong>. Verranno eliminati permanentemente:
+                    {t('settings.deleteAccountWarning')}
                     <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Tutte le transazioni</li>
-                      <li>Tutti gli obiettivi di risparmio</li>
-                      <li>Il tuo profilo e impostazioni</li>
-                      <li>Il tuo account di accesso</li>
+                      <li>{t('settings.allTransactions')}</li>
+                      <li>{t('settings.allGoals')}</li>
+                      <li>{t('settings.yourProfile')}</li>
+                      <li>{t('settings.yourLoginAccount')}</li>
                     </ul>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Annulla</AlertDialogCancel>
+                  <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     onClick={async () => {
@@ -1183,19 +1188,19 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
                         if (error) throw error;
 
-                        notifications.sendToast('👋 Account eliminato', 'Tutti i tuoi dati sono stati cancellati', 'success');
+                        notifications.sendToast(t('settings.accountDeleted'), t('settings.allDataDeleted'), 'success');
                         localStorage.clear();
                         setTimeout(() => {
                           signOut();
                         }, 1500);
                       } catch (err) {
                         console.error('Error deleting account:', err);
-                        notifications.sendToast('❌ Errore', 'Impossibile eliminare l\'account', 'error');
+                        notifications.sendToast(t('settings.deleteError'), t('settings.cantDeleteAccount'), 'error');
                         setDeletingAccount(false);
                       }
                     }}
                   >
-                    Sì, elimina tutto
+                    {t('settings.yesDeleteAll')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

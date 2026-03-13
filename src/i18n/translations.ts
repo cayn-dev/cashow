@@ -125,6 +125,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Destina il 50% alle necessità, 30% ai desideri e 20% ai risparmi.',
     'savings.tip2Title': 'Risparmio Automatico',
     'savings.tip2Desc': 'Imposta un bonifico automatico appena ricevi lo stipendio.',
+    'savings.goalReached': '🎉 Obiettivo raggiunto! Complimenti!',
 
     // Settings
     'settings.title': '⚙️ Impostazioni',
@@ -450,6 +451,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Allocate 50% to needs, 30% to wants, and 20% to savings.',
     'savings.tip2Title': 'Automatic Savings',
     'savings.tip2Desc': 'Set up an automatic transfer right when you receive your salary.',
+    'savings.goalReached': '🎉 Goal reached! Congratulations!',
 
     // Settings
     'settings.title': '⚙️ Settings',
@@ -760,6 +762,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Destina el 50% a necesidades, 30% a deseos y 20% a ahorros.',
     'savings.tip2Title': 'Ahorro automático',
     'savings.tip2Desc': 'Configura una transferencia automática al recibir tu salario.',
+    'savings.goalReached': '🎉 ¡Objetivo alcanzado! ¡Felicidades!',
     'settings.title': '⚙️ Ajustes',
     'settings.language': 'Idioma',
     'settings.languageDesc': 'Selecciona el idioma de la app',
@@ -1027,6 +1030,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Consacrez 50% aux besoins, 30% aux envies et 20% à l\'épargne.',
     'savings.tip2Title': 'Épargne automatique',
     'savings.tip2Desc': 'Mettez en place un virement automatique dès réception du salaire.',
+    'savings.goalReached': '🎉 Objectif atteint ! Félicitations !',
     'settings.title': '⚙️ Paramètres',
     'settings.language': 'Langue',
     'settings.languageDesc': 'Sélectionnez la langue de l\'app',
@@ -1294,6 +1298,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Verwende 50% für Bedürfnisse, 30% für Wünsche und 20% zum Sparen.',
     'savings.tip2Title': 'Automatisches Sparen',
     'savings.tip2Desc': 'Richte einen Dauerauftrag ein, sobald du dein Gehalt erhältst.',
+    'savings.goalReached': '🎉 Ziel erreicht! Herzlichen Glückwunsch!',
     'settings.title': '⚙️ Einstellungen',
     'settings.language': 'Sprache',
     'settings.languageDesc': 'App-Sprache auswählen',

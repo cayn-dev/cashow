@@ -1,4 +1,5 @@
 import { SavingsGoal } from '@/types/finance';
+import { useLanguage } from '@/hooks/useLanguage';
 import { GlassCard } from './GlassCard';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
@@ -14,6 +15,7 @@ interface SavingsGoalCardProps {
 }
 
 export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete, currencySymbol = '€' }: SavingsGoalCardProps) {
+  const { t } = useLanguage();
   const percentage = Math.min((goal.currentAmount / goal.targetAmount) * 100, 100);
   const isComplete = percentage >= 100;
 
@@ -65,7 +67,7 @@ export function SavingsGoalCard({ goal, onDeposit, onWithdraw, onDelete, currenc
       {isComplete && (
         <div className="mb-4 p-3 bg-success/10 rounded-lg border border-success/20">
           <p className="text-sm text-success font-medium text-center">
-            🎉 Obiettivo raggiunto! Complimenti!
+            {t('savings.goalReached')}
           </p>
         </div>
       )}
