@@ -1298,6 +1298,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Verwende 50% für Bedürfnisse, 30% für Wünsche und 20% zum Sparen.',
     'savings.tip2Title': 'Automatisches Sparen',
     'savings.tip2Desc': 'Richte einen Dauerauftrag ein, sobald du dein Gehalt erhältst.',
+    'savings.goalReached': '🎉 Ziel erreicht! Herzlichen Glückwunsch!',
     'settings.title': '⚙️ Einstellungen',
     'settings.language': 'Sprache',
     'settings.languageDesc': 'App-Sprache auswählen',
