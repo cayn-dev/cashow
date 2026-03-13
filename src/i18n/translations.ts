@@ -1030,6 +1030,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Consacrez 50% aux besoins, 30% aux envies et 20% à l\'épargne.',
     'savings.tip2Title': 'Épargne automatique',
     'savings.tip2Desc': 'Mettez en place un virement automatique dès réception du salaire.',
+    'savings.goalReached': '🎉 Objectif atteint ! Félicitations !',
     'settings.title': '⚙️ Paramètres',
     'settings.language': 'Langue',
     'settings.languageDesc': 'Sélectionnez la langue de l\'app',
