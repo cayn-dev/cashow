@@ -451,6 +451,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Allocate 50% to needs, 30% to wants, and 20% to savings.',
     'savings.tip2Title': 'Automatic Savings',
     'savings.tip2Desc': 'Set up an automatic transfer right when you receive your salary.',
+    'savings.goalReached': '🎉 Goal reached! Congratulations!',
 
     // Settings
     'settings.title': '⚙️ Settings',
