@@ -125,6 +125,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'savings.tip1Desc': 'Destina il 50% alle necessità, 30% ai desideri e 20% ai risparmi.',
     'savings.tip2Title': 'Risparmio Automatico',
     'savings.tip2Desc': 'Imposta un bonifico automatico appena ricevi lo stipendio.',
+    'savings.goalReached': '🎉 Obiettivo raggiunto! Complimenti!',
 
     // Settings
     'settings.title': '⚙️ Impostazioni',
