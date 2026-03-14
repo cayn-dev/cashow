@@ -84,7 +84,7 @@ const LOCALE_MAP: Record<string, string> = {
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const settings = useSettings();
   const financeStore = useFinanceStore();
-  const { signOut } = useAuth();
+  const { signOut, isGuest, isAuthenticated, exitGuestMode } = useAuth();
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
   const [deletingAccount, setDeletingAccount] = useState(false);
