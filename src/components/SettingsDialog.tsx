@@ -48,6 +48,8 @@ import {
   TrendingUp,
   Zap,
   Globe,
+  User,
+  Mail,
 } from 'lucide-react';
 import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek } from '@/hooks/useSettings';
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
