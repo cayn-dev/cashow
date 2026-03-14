@@ -36,8 +36,15 @@ export const translations: Record<Language, Record<string, string>> = {
     'auth.passwordMinLength': 'Password deve avere almeno 6 caratteri',
     'auth.socialError': 'Errore con {provider}: {message}',
     'auth.passwordMin': 'Minimo 6 caratteri',
+    'auth.continueWithout': 'Continua senza account',
+    'auth.guestWarning': 'I dati verranno salvati solo sul dispositivo e non saranno sincronizzati',
 
-    // Navigation
+    // Settings - Guest
+    'settings.guestMode': 'Modalità ospite',
+    'settings.guestModeDesc': 'Stai usando l\'app senza account',
+    'settings.guestWarningData': 'I tuoi dati sono salvati solo su questo dispositivo e potrebbero andare persi',
+    'settings.registerOrLogin': 'Registrati o accedi',
+
     'nav.dashboard': 'Dashboard',
     'nav.transactions': 'Movimenti',
     'nav.salary': 'Stipendio',
