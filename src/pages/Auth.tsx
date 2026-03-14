@@ -308,6 +308,23 @@ export default function Auth() {
               </form>
             </TabsContent>
           </Tabs>
+
+          <Separator className="my-4" />
+
+          <Button
+            variant="ghost"
+            className="w-full text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              enterGuestMode();
+              navigate('/', { replace: true });
+            }}
+          >
+            {t('auth.continueWithout')}
+          </Button>
+
+          <p className="text-xs text-muted-foreground text-center mt-2">
+            {t('auth.guestWarning')}
+          </p>
         </GlassCard>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
