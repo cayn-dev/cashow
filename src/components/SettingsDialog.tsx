@@ -48,6 +48,8 @@ import {
   TrendingUp,
   Zap,
   Globe,
+  User,
+  Mail,
 } from 'lucide-react';
 import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek } from '@/hooks/useSettings';
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
@@ -84,7 +86,7 @@ const LOCALE_MAP: Record<string, string> = {
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const settings = useSettings();
   const financeStore = useFinanceStore();
-  const { signOut } = useAuth();
+  const { signOut, isGuest, isAuthenticated, exitGuestMode } = useAuth();
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -212,6 +214,40 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               ))}
             </div>
           </GlassCard>
+
+          {/* Guest Account Section - only for guests */}
+          {isGuest && (
+            <GlassCard className="p-4 border-primary/30 bg-primary/5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                  <User className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t('settings.guestMode')}</h3>
+                  <p className="text-sm text-muted-foreground">{t('settings.guestModeDesc')}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-xs text-warning">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{t('settings.guestWarningData')}</span>
+                </div>
+              </div>
+
+              <Button
+                className="w-full"
+                onClick={() => {
+                  exitGuestMode();
+                  onOpenChange(false);
+                  navigate('/auth');
+                }}
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                {t('settings.registerOrLogin')}
+              </Button>
+            </GlassCard>
+          )}
 
           {/* Theme Section */}
           <GlassCard className="p-4">
@@ -1140,7 +1176,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </Button>
           </GlassCard>
 
-          {/* Account Deletion */}
+          {/* Account Deletion - only for authenticated users */}
+          {isAuthenticated && !isGuest && (
           <GlassCard className="p-4 border-destructive/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-destructive/20 flex items-center justify-center">
@@ -1206,8 +1243,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </AlertDialogContent>
             </AlertDialog>
           </GlassCard>
+          )}
 
-          {/* Version Info */}
+
           <div className="text-center text-sm text-muted-foreground pt-4">
             <p>FinanceFlow v1.0.0</p>
             <p className="text-xs mt-1">Made with ❤️</p>

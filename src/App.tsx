@@ -13,9 +13,9 @@
 
 const queryClient = new QueryClient();
 
- // Protected route wrapper
+ // Protected route wrapper - allows authenticated users AND guests
  function ProtectedRoute({ children }: { children: React.ReactNode }) {
-   const { isAuthenticated, loading } = useAuth();
+   const { isAuthenticated, loading, isGuest } = useAuth();
    
    if (loading) {
      return (
@@ -25,7 +25,7 @@ const queryClient = new QueryClient();
      );
    }
    
-   if (!isAuthenticated) {
+   if (!isAuthenticated && !isGuest) {
      return <Navigate to="/auth" replace />;
    }
    
