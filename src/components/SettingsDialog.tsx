@@ -1243,8 +1243,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </AlertDialogContent>
             </AlertDialog>
           </GlassCard>
+          )}
 
-          {/* Version Info */}
+
           <div className="text-center text-sm text-muted-foreground pt-4">
             <p>FinanceFlow v1.0.0</p>
             <p className="text-xs mt-1">Made with ❤️</p>
