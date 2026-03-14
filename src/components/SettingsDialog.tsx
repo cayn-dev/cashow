@@ -1176,7 +1176,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </Button>
           </GlassCard>
 
-          {/* Account Deletion */}
+          {/* Account Deletion - only for authenticated users */}
+          {isAuthenticated && !isGuest && (
           <GlassCard className="p-4 border-destructive/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-destructive/20 flex items-center justify-center">
