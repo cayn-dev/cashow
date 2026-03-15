@@ -15,33 +15,55 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
   return outputArray;
 }
 
+// Check if we're in an iframe (Lovable preview) where push doesn't work
+function isInIframe(): boolean {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
 export function usePushNotifications() {
   const { user, isAuthenticated, isGuest } = useAuth();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
+  const [isIframe, setIsIframe] = useState(false);
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
   useEffect(() => {
-    const supported = 'serviceWorker' in navigator && 'PushManager' in window;
+    const inIframe = isInIframe();
+    setIsIframe(inIframe);
+    
+    const supported = 'serviceWorker' in navigator && 'PushManager' in window && !inIframe;
     setIsSupported(supported);
 
     if (supported) {
       navigator.serviceWorker.register('/sw.js').then((reg) => {
         setRegistration(reg);
-        // Check existing subscription
         reg.pushManager.getSubscription().then((sub) => {
           setIsSubscribed(!!sub);
         });
-      }).catch(console.error);
+      }).catch((err) => {
+        console.warn('Service Worker registration failed:', err);
+      });
     }
   }, []);
 
-  const subscribe = useCallback(async (): Promise<boolean> => {
-    if (!registration || !isAuthenticated || isGuest || !user) return false;
+  const subscribe = useCallback(async (): Promise<{ success: boolean; reason?: string }> => {
+    if (isIframe) {
+      return { success: false, reason: 'iframe' };
+    }
+    
+    if (!registration || !isAuthenticated || isGuest || !user) {
+      return { success: false, reason: 'not_ready' };
+    }
 
     try {
       const permission = await Notification.requestPermission();
-      if (permission !== 'granted') return false;
+      if (permission !== 'granted') {
+        return { success: false, reason: 'permission_denied' };
+      }
 
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
@@ -52,7 +74,6 @@ export function usePushNotifications() {
       const p256dh = json.keys?.p256dh || '';
       const auth = json.keys?.auth || '';
 
-      // Save to database
       const { error } = await (supabase as any)
         .from('push_subscriptions')
         .upsert({
@@ -64,16 +85,16 @@ export function usePushNotifications() {
 
       if (error) {
         console.error('Error saving push subscription:', error);
-        return false;
+        return { success: false, reason: 'db_error' };
       }
 
       setIsSubscribed(true);
-      return true;
+      return { success: true };
     } catch (err) {
       console.error('Push subscription error:', err);
-      return false;
+      return { success: false, reason: 'error' };
     }
-  }, [registration, isAuthenticated, isGuest, user]);
+  }, [registration, isAuthenticated, isGuest, user, isIframe]);
 
   const unsubscribe = useCallback(async (): Promise<boolean> => {
     if (!registration) return false;
@@ -100,7 +121,6 @@ export function usePushNotifications() {
     }
   }, [registration, user]);
 
-  // Send a push notification via edge function
   const sendPush = useCallback(async (title: string, body: string, type?: string) => {
     if (!isAuthenticated || isGuest) return;
 

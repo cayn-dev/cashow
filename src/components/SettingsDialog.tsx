@@ -802,21 +802,30 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 />
               </div>
 
-              {settings.notificationsEnabled && pushNotifications.isSupported && isAuthenticated && !isGuest && (
+              {settings.notificationsEnabled && isAuthenticated && !isGuest && (
                 <>
                   <Separator />
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>{t('settings.pushNotifications')}</Label>
-                      <p className="text-xs text-muted-foreground">{t('settings.pushNotificationsDesc')}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {pushNotifications.isSupported 
+                          ? t('settings.pushNotificationsDesc')
+                          : t('settings.pushNotAvailable')}
+                      </p>
                     </div>
                     <Switch
                       checked={pushNotifications.isSubscribed}
+                      disabled={!pushNotifications.isSupported}
                       onCheckedChange={async (checked) => {
                         if (checked) {
-                          const success = await pushNotifications.subscribe();
-                          if (success) {
+                          const result = await pushNotifications.subscribe();
+                          if (result.success) {
                             notifications.sendToast(t('settings.pushEnabled'), t('settings.pushEnabledDesc'), 'success');
+                          } else if (result.reason === 'iframe') {
+                            notifications.sendToast(t('settings.pushError'), t('settings.pushIframeError'), 'warning');
+                          } else if (result.reason === 'permission_denied') {
+                            notifications.sendToast(t('settings.pushError'), t('settings.pushPermissionDenied'), 'error');
                           } else {
                             notifications.sendToast(t('settings.pushError'), t('settings.pushErrorDesc'), 'error');
                           }
