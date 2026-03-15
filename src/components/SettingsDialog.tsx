@@ -57,6 +57,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
@@ -100,6 +101,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   
   const dataStats = financeStore.getDataStats();
   const locale = LOCALE_MAP[language] || 'it-IT';
+  const pushNotifications = usePushNotifications();
   
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
@@ -799,6 +801,34 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   onCheckedChange={handleToggleNotifications}
                 />
               </div>
+
+              {settings.notificationsEnabled && pushNotifications.isSupported && isAuthenticated && !isGuest && (
+                <>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>{t('settings.pushNotifications')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.pushNotificationsDesc')}</p>
+                    </div>
+                    <Switch
+                      checked={pushNotifications.isSubscribed}
+                      onCheckedChange={async (checked) => {
+                        if (checked) {
+                          const success = await pushNotifications.subscribe();
+                          if (success) {
+                            notifications.sendToast(t('settings.pushEnabled'), t('settings.pushEnabledDesc'), 'success');
+                          } else {
+                            notifications.sendToast(t('settings.pushError'), t('settings.pushErrorDesc'), 'error');
+                          }
+                        } else {
+                          await pushNotifications.unsubscribe();
+                          notifications.sendToast(t('settings.pushDisabled'), '', 'info');
+                        }
+                      }}
+                    />
+                  </div>
+                </>
+              )}
               
               <Separator />
               
