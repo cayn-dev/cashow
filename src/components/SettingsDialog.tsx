@@ -101,6 +101,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   
   const dataStats = financeStore.getDataStats();
   const locale = LOCALE_MAP[language] || 'it-IT';
+  const pushNotifications = usePushNotifications();
   
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
