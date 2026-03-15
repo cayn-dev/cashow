@@ -57,6 +57,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
