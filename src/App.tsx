@@ -41,7 +41,8 @@ const App = () => (
            <Toaster />
            <Sonner />
            <BrowserRouter>
-             <Routes>
+              <Routes>
+                <Route path="/welcome" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/" element={
@@ -49,8 +50,8 @@ const App = () => (
                     <Index />
                   </ProtectedRoute>
                 } />
-               <Route path="*" element={<NotFound />} />
-             </Routes>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
            </BrowserRouter>
          </TooltipProvider>
        </LanguageProvider>
