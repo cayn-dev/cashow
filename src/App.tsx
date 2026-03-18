@@ -8,6 +8,7 @@
  import Index from "./pages/Index";
   import Auth from "./pages/Auth";
   import Privacy from "./pages/Privacy";
+  import Landing from "./pages/Landing";
   import NotFound from "./pages/NotFound";
  import { Loader2 } from "lucide-react";
 
