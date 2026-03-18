@@ -1,0 +1,19 @@
+{
+  "name": "FinanceFlow - Gestione Finanziaria",
+  "short_name": "FinanceFlow",
+  "description": "Gestisci le tue finanze personali: traccia spese, monitora risparmi e analizza il tuo budget.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["finance", "productivity"],
+  "lang": "it"
+}

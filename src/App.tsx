@@ -8,6 +8,7 @@
  import Index from "./pages/Index";
   import Auth from "./pages/Auth";
   import Privacy from "./pages/Privacy";
+  import Landing from "./pages/Landing";
   import NotFound from "./pages/NotFound";
  import { Loader2 } from "lucide-react";
 
@@ -26,7 +27,7 @@ const queryClient = new QueryClient();
    }
    
    if (!isAuthenticated && !isGuest) {
-     return <Navigate to="/auth" replace />;
+     return <Navigate to="/welcome" replace />;
    }
    
    return <>{children}</>;
@@ -40,7 +41,8 @@ const App = () => (
            <Toaster />
            <Sonner />
            <BrowserRouter>
-             <Routes>
+              <Routes>
+                <Route path="/welcome" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/" element={
@@ -48,8 +50,8 @@ const App = () => (
                     <Index />
                   </ProtectedRoute>
                 } />
-               <Route path="*" element={<NotFound />} />
-             </Routes>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
            </BrowserRouter>
          </TooltipProvider>
        </LanguageProvider>
