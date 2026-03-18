@@ -27,7 +27,7 @@ const queryClient = new QueryClient();
    }
    
    if (!isAuthenticated && !isGuest) {
-     return <Navigate to="/auth" replace />;
+     return <Navigate to="/welcome" replace />;
    }
    
    return <>{children}</>;
