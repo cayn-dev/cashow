@@ -108,16 +108,16 @@ export default function Auth() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[128px]" />
       </div>
 
-      {/* Language Selector - top right */}
-      <div className="fixed top-4 right-4 z-20">
-        <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-xl p-1">
+      {/* Language Selector - bottom center, non-overlapping */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
+        <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-xl p-1 shadow-lg">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
               onClick={() => setLanguage(lang.code)}
-              className={`px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
                 language === lang.code
-                  ? 'bg-primary/20 text-primary'
+                  ? 'bg-primary/20 text-primary scale-110'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
               title={lang.name}

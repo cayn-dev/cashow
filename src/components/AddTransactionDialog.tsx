@@ -36,26 +36,43 @@ import {
 } from '@/types/finance';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS, es, fr, de } from 'date-fns/locale';
 import { useFeedback } from '@/hooks/useFeedback';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useSettings } from '@/hooks/useSettings';
+
+const DATE_LOCALES: Record<string, Locale> = { it, en: enUS, es, fr, de };
 
 interface AddTransactionDialogProps {
   onAdd: (transaction: Omit<Transaction, 'id'>) => void;
 }
 
 export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
+  const { t, language } = useLanguage();
+  const settings = useSettings();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<TransactionType>('expense');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<CategoryType>('other');
   const [description, setDescription] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    (settings.defaultPaymentMethod as PaymentMethod) || 'card'
+  );
   const [recurrence, setRecurrence] = useState<RecurrenceType>('none');
   const [customRecurrenceDays, setCustomRecurrenceDays] = useState('');
   const [isSalary, setIsSalary] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
   const [autoSuggested, setAutoSuggested] = useState(false);
   const feedback = useFeedback();
+
+  const dateLocale = DATE_LOCALES[language] || it;
+
+  // Reset payment method from settings when dialog opens
+  useEffect(() => {
+    if (open) {
+      setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
+    }
+  }, [open, settings.defaultPaymentMethod]);
 
   // Auto-categorization effect
   useEffect(() => {
@@ -65,15 +82,11 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
         setCategory(result.category);
         setType(result.type);
         setAutoSuggested(true);
-        
-        // Check if it's salary-related
         if (result.category === 'salary') {
           setIsSalary(true);
         }
       }
     }
-    
-    // Reset auto-suggestion when description is cleared
     if (description.length < 3) {
       setAutoSuggested(false);
     }
@@ -95,14 +108,12 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
       isSalary,
     });
 
-    // Trigger success feedback
     feedback.success();
 
-    // Reset form
     setAmount('');
     setDescription('');
     setCategory('other');
-    setPaymentMethod('card');
+    setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
     setRecurrence('none');
     setCustomRecurrenceDays('');
     setIsSalary(false);
@@ -123,12 +134,12 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
       <DialogTrigger asChild>
         <Button className="apple-button text-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />
-          Nuova Transazione
+          {t('addTransaction.button')}
         </Button>
       </DialogTrigger>
       <DialogContent className="glass-panel border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl">Aggiungi Transazione</DialogTitle>
+          <DialogTitle className="font-display text-xl">{t('addTransaction.title')}</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
@@ -139,24 +150,24 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
               variant={type === 'expense' ? 'default' : 'outline'}
               onClick={() => { setType('expense'); setIsSalary(false); }}
               className={cn(
-                'flex-1 transition-all duration-300',
+                'flex-1 transition-all duration-500',
                 type === 'expense' && 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_0_20px_hsl(var(--destructive)/0.3)]'
               )}
             >
               <TrendingDown className="w-4 h-4 mr-2" />
-              Uscita
+              {t('addTransaction.expense')}
             </Button>
             <Button
               type="button"
               variant={type === 'income' ? 'default' : 'outline'}
               onClick={() => setType('income')}
               className={cn(
-                'flex-1 transition-all duration-300',
+                'flex-1 transition-all duration-500',
                 type === 'income' && 'bg-success text-success-foreground hover:bg-success/90 shadow-[0_0_20px_hsl(var(--success)/0.3)]'
               )}
             >
               <TrendingUp className="w-4 h-4 mr-2" />
-              Entrata
+              {t('addTransaction.income')}
             </Button>
           </div>
 
@@ -171,14 +182,14 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
                 className="w-5 h-5 rounded-lg border-border accent-primary"
               />
               <Label htmlFor="isSalary" className="text-sm cursor-pointer">
-                💰 Questo è uno stipendio
+                {t('addTransaction.isSalary')}
               </Label>
             </div>
           )}
 
           {/* Date Picker */}
           <div className="space-y-2">
-            <Label>Data</Label>
+            <Label>{t('addTransaction.date')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -189,7 +200,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, 'PPP', { locale: it }) : 'Seleziona una data'}
+                  {date ? format(date, 'PPP', { locale: dateLocale }) : t('addTransaction.selectDate')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 glass-panel" align="start">
@@ -199,6 +210,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
                   onSelect={(d) => d && setDate(d)}
                   initialFocus
                   className="pointer-events-auto"
+                  locale={dateLocale}
                 />
               </PopoverContent>
             </Popover>
@@ -206,7 +218,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
 
           {/* Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount">Importo (€)</Label>
+            <Label htmlFor="amount">{t('addTransaction.amount')} ({settings.currencySymbol})</Label>
             <Input
               id="amount"
               type="number"
@@ -222,17 +234,17 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
           {/* Description with auto-categorization indicator */}
           <div className="space-y-2">
             <Label htmlFor="description" className="flex items-center gap-2">
-              Descrizione
+              {t('addTransaction.description')}
               {autoSuggested && (
                 <span className="flex items-center gap-1 text-xs text-primary">
                   <Sparkles className="w-3 h-3" />
-                  Auto-categorizzato
+                  {t('addTransaction.autoCategorized')}
                 </span>
               )}
             </Label>
             <Input
               id="description"
-              placeholder="Es: Spesa al supermercato, Amazon, Netflix..."
+              placeholder={t('addTransaction.descPlaceholder')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="glass-input"
@@ -243,18 +255,18 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
           {/* Category (hidden if salary) */}
           {!isSalary && (
             <div className="space-y-2">
-              <Label>Categoria</Label>
+              <Label>{t('addTransaction.category')}</Label>
               <Select value={category} onValueChange={(v) => setCategory(v as CategoryType)}>
                 <SelectTrigger className="glass-input">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="glass-panel border-card-border max-h-[200px]">
+                <SelectContent className="glass-panel border-card-border max-h-[250px] overflow-y-auto">
                   {displayCategories.map((key) => {
                     const config = CATEGORY_CONFIG[key as CategoryType];
                     if (!config) return null;
                     return (
                       <SelectItem key={key} value={key}>
-                        {config.emoji} {config.label}
+                        {config.emoji} {t(`cat.${key}`)}
                       </SelectItem>
                     );
                   })}
@@ -265,15 +277,15 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
 
           {/* Payment Method */}
           <div className="space-y-2">
-            <Label>Metodo di Pagamento</Label>
+            <Label>{t('addTransaction.paymentMethod')}</Label>
             <Select value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as PaymentMethod)}>
               <SelectTrigger className="glass-input">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="glass-panel border-card-border">
-                {Object.entries(PAYMENT_METHODS).map(([key, config]) => (
+                {Object.entries(PAYMENT_METHODS).map(([key]) => (
                   <SelectItem key={key} value={key}>
-                    {config.emoji} {config.label}
+                    {PAYMENT_METHODS[key as PaymentMethod].emoji} {t(`pay.${key}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -282,15 +294,15 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
 
           {/* Recurrence */}
           <div className="space-y-2">
-            <Label>Ricorrenza</Label>
+            <Label>{t('addTransaction.recurrence')}</Label>
             <Select value={recurrence} onValueChange={(v) => setRecurrence(v as RecurrenceType)}>
               <SelectTrigger className="glass-input">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="glass-panel border-card-border">
-                {Object.entries(RECURRENCE_CONFIG).map(([key, config]) => (
+                {Object.entries(RECURRENCE_CONFIG).map(([key]) => (
                   <SelectItem key={key} value={key}>
-                    {config.label}
+                    {t(`rec.${key}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -300,12 +312,12 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
           {/* Custom Recurrence Days */}
           {recurrence === 'custom' && (
             <div className="space-y-2">
-              <Label htmlFor="customDays">Ogni quanti giorni?</Label>
+              <Label htmlFor="customDays">{t('addTransaction.customDays')}</Label>
               <Input
                 id="customDays"
                 type="number"
                 min="1"
-                placeholder="Es: 45"
+                placeholder={t('addTransaction.customDaysPlaceholder')}
                 value={customRecurrenceDays}
                 onChange={(e) => setCustomRecurrenceDays(e.target.value)}
                 className="glass-input"
@@ -315,7 +327,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
           )}
 
           <Button type="submit" className="w-full apple-button text-primary-foreground">
-            Aggiungi
+            {t('addTransaction.submit')}
           </Button>
         </form>
       </DialogContent>
