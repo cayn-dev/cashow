@@ -1,29 +1,41 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useLanguage, LANGUAGES } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { 
   Wallet, TrendingUp, PiggyBank, BarChart3, Bell, Bot, 
-  Shield, Smartphone, ArrowRight, Star, Zap, Globe 
+  Shield, ArrowRight, Star, Zap, Globe 
 } from 'lucide-react';
 
-const features = [
-  { icon: BarChart3, title: 'Grafici Intelligenti', desc: 'Visualizza entrate e uscite con grafici interattivi per categoria e periodo.' },
-  { icon: PiggyBank, title: 'Obiettivi di Risparmio', desc: 'Imposta obiettivi e traccia i progressi verso i tuoi traguardi finanziari.' },
-  { icon: Bell, title: 'Notifiche Smart', desc: 'Ricevi avvisi quando superi il budget o raggiungi un obiettivo.' },
-  { icon: Bot, title: 'AI Assistente', desc: 'Chiedi consigli finanziari personalizzati al nostro assistente AI.' },
-  { icon: Shield, title: 'Sicuro & Privato', desc: 'I tuoi dati sono protetti con crittografia end-to-end.' },
-  { icon: Globe, title: 'Multi-lingua', desc: 'Disponibile in italiano, inglese, spagnolo, francese e tedesco.' },
-];
-
-const stats = [
-  { value: '100%', label: 'Gratuito' },
-  { value: '5', label: 'Lingue' },
-  { value: '∞', label: 'Transazioni' },
-  { value: '24/7', label: 'Disponibile' },
-];
+const spring = { type: 'spring' as const, stiffness: 100, damping: 20 };
+const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { enterGuestMode } = useAuth();
+  const { t, language, setLanguage } = useLanguage();
+
+  const features = [
+    { icon: BarChart3, title: t('landing.feat1Title'), desc: t('landing.feat1Desc') },
+    { icon: PiggyBank, title: t('landing.feat2Title'), desc: t('landing.feat2Desc') },
+    { icon: Bell, title: t('landing.feat3Title'), desc: t('landing.feat3Desc') },
+    { icon: Bot, title: t('landing.feat4Title'), desc: t('landing.feat4Desc') },
+    { icon: Shield, title: t('landing.feat5Title'), desc: t('landing.feat5Desc') },
+    { icon: Globe, title: t('landing.feat6Title'), desc: t('landing.feat6Desc') },
+  ];
+
+  const stats = [
+    { value: '100%', label: t('landing.statFree') },
+    { value: '5', label: t('landing.statLangs') },
+    { value: '∞', label: t('landing.statTransactions') },
+    { value: '24/7', label: t('landing.statAvailable') },
+  ];
+
+  const handleGuestMode = () => {
+    enterGuestMode();
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -41,12 +53,29 @@ export default function Landing() {
           </div>
           <span className="font-bold text-lg">FinanceFlow</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {/* Language selector */}
+          <div className="flex items-center gap-0.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl p-0.5 mr-2">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => setLanguage(lang.code)}
+                className={`px-2 py-1.5 rounded-lg text-sm transition-all duration-300 ${
+                  language === lang.code
+                    ? 'bg-primary/20 text-primary scale-110'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                }`}
+                title={lang.name}
+              >
+                {lang.flag}
+              </button>
+            ))}
+          </div>
           <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
-            Accedi
+            {t('landing.login')}
           </Button>
           <Button size="sm" onClick={() => navigate('/auth')}>
-            Inizia Gratis <ArrowRight className="w-4 h-4 ml-1" />
+            {t('landing.startFree')} <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
       </nav>
@@ -54,33 +83,33 @@ export default function Landing() {
       {/* Hero */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-20 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ ...spring, delay: 0.1 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8">
             <Zap className="w-3.5 h-3.5" />
-            100% Gratuito — Nessuna carta richiesta
+            {t('landing.badge')}
           </div>
           
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-            Le tue finanze,{' '}
+            {t('landing.heroTitle')}{' '}
             <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              sotto controllo.
+              {t('landing.heroHighlight')}
             </span>
           </h1>
           
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Traccia spese, monitora risparmi e raggiungi i tuoi obiettivi finanziari 
-            con un'app elegante e intelligente.
+            {t('landing.heroDesc')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" className="text-base px-8" onClick={() => navigate('/auth')}>
-              Crea Account Gratuito <ArrowRight className="w-5 h-5 ml-2" />
+              {t('landing.createAccount')} <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button size="lg" variant="outline" className="text-base px-8" onClick={() => navigate('/auth')}>
-              Prova senza account
+            <Button size="lg" variant="outline" className="text-base px-8" onClick={handleGuestMode}>
+              {t('landing.tryWithout')}
             </Button>
           </div>
         </motion.div>
@@ -88,9 +117,10 @@ export default function Landing() {
         {/* Stats */}
         <motion.div 
           className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-20 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ ...spring, delay: 0.3 }}
         >
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
@@ -104,28 +134,31 @@ export default function Landing() {
       {/* Features */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 py-20">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
+          variants={fadeUp}
+          transition={spring}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Tutto ciò che ti serve</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t('landing.featuresTitle')}</h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Funzionalità potenti in un'interfaccia semplice e moderna.
+            {t('landing.featuresDesc')}
           </p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, i) => (
             <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              key={i}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="group p-6 rounded-2xl border border-border/50 bg-card backdrop-blur-sm hover:border-primary/30 transition-all duration-300"
+              variants={fadeUp}
+              transition={{ ...spring, delay: i * 0.08 }}
+              className="group p-6 rounded-2xl border border-border/50 bg-card backdrop-blur-sm hover:border-primary/30 transition-all duration-500"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-500">
                 <feature.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
@@ -138,20 +171,22 @@ export default function Landing() {
       {/* CTA */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
+          variants={fadeUp}
+          transition={spring}
           className="p-10 sm:p-16 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5"
         >
           <Star className="w-10 h-10 text-primary mx-auto mb-6" />
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Prendi il controllo delle tue finanze oggi
+            {t('landing.ctaTitle')}
           </h2>
           <p className="text-muted-foreground text-lg mb-8 max-w-lg mx-auto">
-            Unisciti a chi ha già scelto FinanceFlow per gestire il proprio denaro in modo smart.
+            {t('landing.ctaDesc')}
           </p>
           <Button size="lg" className="text-base px-10" onClick={() => navigate('/auth')}>
-            Inizia Ora — È Gratis <ArrowRight className="w-5 h-5 ml-2" />
+            {t('landing.ctaButton')} <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </motion.div>
       </section>
@@ -161,11 +196,11 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Wallet className="w-4 h-4" />
-            <span>© 2026 FinanceFlow. Tutti i diritti riservati.</span>
+            <span>© 2026 FinanceFlow. {t('landing.rights')}</span>
           </div>
           <div className="flex items-center gap-6 text-sm">
-            <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</a>
-            <a href="/auth" className="text-muted-foreground hover:text-foreground transition-colors">Accedi</a>
+            <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.privacy')}</a>
+            <a href="/auth" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.login')}</a>
           </div>
         </div>
       </footer>
