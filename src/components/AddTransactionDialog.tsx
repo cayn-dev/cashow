@@ -41,7 +41,7 @@ import { useFeedback } from '@/hooks/useFeedback';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSettings } from '@/hooks/useSettings';
 
-const DATE_LOCALES: Record<string, Locale> = { it, en: enUS, es, fr, de };
+const DATE_LOCALES: Record<string, typeof it> = { it, en: enUS, es, fr, de };
 
 interface AddTransactionDialogProps {
   onAdd: (transaction: Omit<Transaction, 'id'>) => void;

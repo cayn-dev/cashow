@@ -8,7 +8,7 @@ import {
   Shield, ArrowRight, Star, Zap, Globe 
 } from 'lucide-react';
 
-const spring = { type: 'spring', stiffness: 100, damping: 20 };
+const spring = { type: 'spring' as const, stiffness: 100, damping: 20 };
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
 export default function Landing() {
