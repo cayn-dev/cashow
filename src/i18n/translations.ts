@@ -389,6 +389,30 @@ export const translations: Record<Language, Record<string, string>> = {
     'dateFormat.dd/MM/yyyy': 'Europeo (31/12/2024)',
     'dateFormat.MM/dd/yyyy': 'Americano (12/31/2024)',
     'dateFormat.yyyy-MM-dd': 'ISO (2024-12-31)',
+
+    // Chart
+    'chart.expensesByCategory': 'Spese per Categoria',
+    'chart.noExpenses': 'Nessuna spesa questo mese',
+    'chart.donut': 'Ciambella',
+    'chart.bar': 'Barre',
+    'chart.total': 'Totale',
+
+    // AI Chat
+    'ai.title': 'Assistente Finanziario AI',
+    'ai.welcome': 'Ciao! Sono il tuo assistente finanziario',
+    'ai.welcomeDesc': 'Posso aiutarti ad analizzare le tue finanze, darti consigli personalizzati e suggerimenti per risparmiare.',
+    'ai.placeholder': 'Chiedi qualcosa sulle tue finanze...',
+    'ai.error': 'Mi dispiace, si è verificato un errore. Riprova più tardi.',
+    'ai.suggestAnalyze': 'Analizza le mie spese',
+    'ai.suggestSave': 'Come posso risparmiare di più?',
+    'ai.suggestGoals': 'Aiutami con i miei obiettivi',
+    'ai.suggestOverspend': 'Dove sto spendendo troppo?',
+    'ai.canAttachImages': 'Puoi allegare immagini per farle analizzare',
+    'ai.attachImage': 'Allega immagine',
+    'ai.screenshotAttached': 'Screenshot allegato',
+    'ai.screenshotReady': 'Screenshot pronto da inviare',
+    'ai.imageReady': 'Immagine pronta da inviare',
+    'ai.analyzingImage': 'Analizza questa immagine',
   },
 
   en: {
