@@ -49,7 +49,7 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
   }, []);
 
   return (
-    <nav className="glass-panel p-2 mb-6">
+    <nav className="glass-panel p-2 mb-6" style={{ overflow: 'visible' }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 px-3">
           <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
@@ -70,7 +70,14 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
           </button>
 
           {menuOpen && (
-            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 min-w-[200px] glass-panel rounded-xl border border-card-border shadow-xl z-50 overflow-hidden animate-fade-in">
+            <div
+              className="absolute top-full mt-2 left-1/2 -translate-x-1/2 min-w-[200px] rounded-xl border border-card-border shadow-xl z-50 animate-fade-in"
+              style={{
+                background: 'hsl(0 0% 8%)',
+                backdropFilter: 'blur(80px) saturate(200%)',
+                WebkitBackdropFilter: 'blur(80px) saturate(200%)',
+              }}
+            >
               {navItems.map((item) => (
                 <button
                   key={item.id}
@@ -79,7 +86,7 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
                     setMenuOpen(false);
                   }}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-3 transition-all text-left',
+                    'w-full flex items-center gap-3 px-4 py-3 transition-all text-left first:rounded-t-xl last:rounded-b-xl',
                     currentView === item.id
                       ? 'bg-primary/15 text-primary'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
