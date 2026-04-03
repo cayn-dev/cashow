@@ -787,6 +787,30 @@ export const translations: Record<Language, Record<string, string>> = {
     'dateFormat.dd/MM/yyyy': 'European (31/12/2024)',
     'dateFormat.MM/dd/yyyy': 'American (12/31/2024)',
     'dateFormat.yyyy-MM-dd': 'ISO (2024-12-31)',
+
+    // Chart
+    'chart.expensesByCategory': 'Expenses by Category',
+    'chart.noExpenses': 'No expenses this month',
+    'chart.donut': 'Donut',
+    'chart.bar': 'Bars',
+    'chart.total': 'Total',
+
+    // AI Chat
+    'ai.title': 'AI Financial Assistant',
+    'ai.welcome': 'Hi! I\'m your financial assistant',
+    'ai.welcomeDesc': 'I can help you analyze your finances, give personalized advice and savings tips.',
+    'ai.placeholder': 'Ask something about your finances...',
+    'ai.error': 'Sorry, an error occurred. Please try again later.',
+    'ai.suggestAnalyze': 'Analyze my expenses',
+    'ai.suggestSave': 'How can I save more?',
+    'ai.suggestGoals': 'Help me with my goals',
+    'ai.suggestOverspend': 'Where am I overspending?',
+    'ai.canAttachImages': 'You can attach images for analysis',
+    'ai.attachImage': 'Attach image',
+    'ai.screenshotAttached': 'Screenshot attached',
+    'ai.screenshotReady': 'Screenshot ready to send',
+    'ai.imageReady': 'Image ready to send',
+    'ai.analyzingImage': 'Analyze this image',
   },
 
   es: {
