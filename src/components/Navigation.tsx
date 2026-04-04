@@ -49,7 +49,7 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
   }, []);
 
   return (
-    <nav className="glass-panel p-2 mb-6" style={{ overflow: 'visible' }}>
+    <nav className="glass-panel p-2 mb-6 relative z-50" style={{ overflow: 'visible' }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 px-3">
           <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
