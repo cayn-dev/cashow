@@ -798,6 +798,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'chart.donut': 'Donut',
     'chart.bar': 'Bars',
     'chart.total': 'Total',
+    'chart.trend': 'Last 30 Days Trend',
+    'chart.trendLabel': 'Trend',
+    'chart.expenses': 'Expenses',
+    'chart.income': 'Income',
 
     // AI Chat
     'ai.title': 'AI Financial Assistant',
