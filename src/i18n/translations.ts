@@ -396,6 +396,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'chart.donut': 'Ciambella',
     'chart.bar': 'Barre',
     'chart.total': 'Totale',
+    'chart.trend': 'Andamento Ultimi 30 Giorni',
+    'chart.trendLabel': 'Trend',
+    'chart.expenses': 'Uscite',
+    'chart.income': 'Entrate',
 
     // AI Chat
     'ai.title': 'Assistente Finanziario AI',
