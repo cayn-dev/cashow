@@ -2,69 +2,71 @@ import { Shield, Lock, Database, Eye, Trash2, Server, ArrowLeft } from 'lucide-r
 import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const Privacy = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const sections = [
     {
       icon: Lock,
-      title: 'Crittografia dei dati',
+      title: t('privacy.encryption'),
       items: [
-        'Tutti i dati sono crittografati a riposo con AES-256',
-        'Le connessioni sono protette con TLS/SSL (HTTPS)',
-        'Le password sono hashate con bcrypt e mai salvate in chiaro',
-        'I token di autenticazione sono gestiti in modo sicuro',
+        t('privacy.encryption1'),
+        t('privacy.encryption2'),
+        t('privacy.encryption3'),
+        t('privacy.encryption4'),
       ],
     },
     {
       icon: Database,
-      title: 'Archiviazione sicura',
+      title: t('privacy.storage'),
       items: [
-        'I dati sono archiviati in data center europei conformi GDPR',
-        'Backup automatici e ridondanti per prevenire perdite di dati',
-        'Isolamento completo: ogni utente accede solo ai propri dati',
-        'Row Level Security (RLS) su ogni tabella del database',
+        t('privacy.storage1'),
+        t('privacy.storage2'),
+        t('privacy.storage3'),
+        t('privacy.storage4'),
       ],
     },
     {
       icon: Eye,
-      title: 'Privacy e trasparenza',
+      title: t('privacy.transparency'),
       items: [
-        'Non vendiamo né condividiamo i tuoi dati con terze parti',
-        'Non utilizziamo i tuoi dati finanziari per profilazione pubblicitaria',
-        'Nessun tracciamento invasivo: solo analytics anonimi essenziali',
-        'Puoi esportare tutti i tuoi dati in qualsiasi momento',
+        t('privacy.transparency1'),
+        t('privacy.transparency2'),
+        t('privacy.transparency3'),
+        t('privacy.transparency4'),
       ],
     },
     {
       icon: Shield,
-      title: 'Controllo dell\'accesso',
+      title: t('privacy.access'),
       items: [
-        'Autenticazione sicura tramite Google, Apple o email',
-        'Protezione PIN opzionale e biometria (Face ID / Touch ID)',
-        'Blocco automatico dopo inattività configurabile',
-        'Audit log di tutte le operazioni sul tuo account',
+        t('privacy.access1'),
+        t('privacy.access2'),
+        t('privacy.access3'),
+        t('privacy.access4'),
       ],
     },
     {
       icon: Trash2,
-      title: 'I tuoi diritti',
+      title: t('privacy.rights'),
       items: [
-        'Diritto di accesso: puoi vedere tutti i tuoi dati',
-        'Diritto di portabilità: esporta i dati in formato JSON',
-        'Diritto all\'oblio: cancella il tuo account e tutti i dati associati',
-        'Diritto di rettifica: modifica i tuoi dati in qualsiasi momento',
+        t('privacy.rights1'),
+        t('privacy.rights2'),
+        t('privacy.rights3'),
+        t('privacy.rights4'),
       ],
     },
     {
       icon: Server,
-      title: 'Infrastruttura',
+      title: t('privacy.infrastructure'),
       items: [
-        'Infrastruttura cloud sicura e monitorata 24/7',
-        'Aggiornamenti di sicurezza applicati automaticamente',
-        'Protezione DDoS e firewall avanzati',
-        'Nessun accesso ai dati da parte del personale senza autorizzazione',
+        t('privacy.infrastructure1'),
+        t('privacy.infrastructure2'),
+        t('privacy.infrastructure3'),
+        t('privacy.infrastructure4'),
       ],
     },
   ];
@@ -83,22 +85,22 @@ const Privacy = () => {
           className="mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna all'app
+          {t('privacy.back')}
         </Button>
 
         <div className="text-center mb-10">
           <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="font-display text-3xl font-bold mb-2">Privacy & Sicurezza</h1>
+          <h1 className="font-display text-3xl font-bold mb-2">{t('privacy.title')}</h1>
           <p className="text-muted-foreground max-w-lg mx-auto">
-            La tua privacy è la nostra priorità. Ecco come proteggiamo i tuoi dati finanziari.
+            {t('privacy.subtitle')}
           </p>
         </div>
 
         <div className="space-y-6">
-          {sections.map((section) => (
-            <GlassCard key={section.title} className="p-6">
+          {sections.map((section, idx) => (
+            <GlassCard key={idx} className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                   <section.icon className="w-5 h-5 text-primary" />
@@ -118,8 +120,8 @@ const Privacy = () => {
         </div>
 
         <div className="text-center mt-10 text-sm text-muted-foreground">
-          <p>Ultimo aggiornamento: Marzo 2026</p>
-          <p className="mt-1">FinanceFlow v1.0.0 — I tuoi dati, la tua sicurezza.</p>
+          <p>{t('privacy.lastUpdate')}</p>
+          <p className="mt-1">{t('privacy.footer')}</p>
         </div>
       </div>
     </div>
