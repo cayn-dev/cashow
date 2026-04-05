@@ -88,7 +88,7 @@ export function TransactionItem({ transaction, onDelete, currencySymbol = '€' 
       <div className="flex items-center gap-2 shrink-0">
         <motion.span 
           className={cn(
-            'font-display font-bold text-base sm:text-xl whitespace-nowrap tracking-tight',
+            'font-display font-bold text-lg sm:text-2xl whitespace-nowrap tracking-tight',
             isIncome ? 'text-success' : 'text-destructive'
           )}
           initial={{ scale: 0.8 }}
