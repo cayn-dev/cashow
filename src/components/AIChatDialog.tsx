@@ -13,6 +13,7 @@ import { Bot, Send, User, Sparkles, Loader2, Zap, TrendingUp, Target, PiggyBank,
 import { Transaction, SavingsGoal } from '@/types/finance';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   role: 'user' | 'assistant';
