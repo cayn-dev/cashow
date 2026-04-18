@@ -50,6 +50,17 @@ interface Settings {
 
 const SETTINGS_KEY = 'finance_settings';
 const PIN_VERIFIED_KEY = 'pin_verified';
+const PIN_SALT = 'financeflow:v1:pin';
+
+// Hash a PIN using SHA-256 with a static app-level salt.
+// This prevents storing the raw PIN in localStorage; verification compares hashes.
+async function hashPin(pin: string): Promise<string> {
+  const data = new TextEncoder().encode(`${PIN_SALT}:${pin}`);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
 
 const currencySymbols: Record<Currency, string> = {
   EUR: '€',
@@ -182,26 +193,40 @@ export function useSettings() {
     updateSettings({ currency, currencySymbol: currencySymbols[currency] });
   }, [updateSettings]);
 
-  const setPin = useCallback((pin: string | null) => {
+  const setPin = useCallback(async (pin: string | null) => {
     if (pin === null) {
       updateSettings({ pinEnabled: false, pin: null });
       sessionStorage.removeItem(PIN_VERIFIED_KEY);
       setIsLocked(false);
     } else {
-      updateSettings({ pinEnabled: true, pin });
+      const hashed = await hashPin(pin);
+      updateSettings({ pinEnabled: true, pin: hashed });
       sessionStorage.setItem(PIN_VERIFIED_KEY, 'true');
       setIsLocked(false);
     }
   }, [updateSettings]);
 
-  const verifyPin = useCallback((inputPin: string): boolean => {
-    if (inputPin === settings.pin) {
+  const verifyPin = useCallback(async (inputPin: string): Promise<boolean> => {
+    if (!settings.pin) return false;
+    // Support legacy plaintext PINs by upgrading them on first successful verify
+    if (settings.pin.length === 6 && /^\d{6}$/.test(settings.pin)) {
+      if (inputPin === settings.pin) {
+        const hashed = await hashPin(inputPin);
+        updateSettings({ pin: hashed });
+        sessionStorage.setItem(PIN_VERIFIED_KEY, 'true');
+        setIsLocked(false);
+        return true;
+      }
+      return false;
+    }
+    const hashed = await hashPin(inputPin);
+    if (hashed === settings.pin) {
       sessionStorage.setItem(PIN_VERIFIED_KEY, 'true');
       setIsLocked(false);
       return true;
     }
     return false;
-  }, [settings.pin]);
+  }, [settings.pin, updateSettings]);
 
   const lockApp = useCallback(() => {
     if (settings.pinEnabled && settings.pin) {
