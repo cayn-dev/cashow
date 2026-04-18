@@ -5,7 +5,7 @@ import { GlassCard } from './GlassCard';
 import { useLanguage } from '@/hooks/useLanguage';
 
 interface PinLockScreenProps {
-  onUnlock: (pin: string) => boolean;
+  onUnlock: (pin: string) => boolean | Promise<boolean>;
   onBiometricUnlock?: () => Promise<boolean>;
   biometricEnabled?: boolean;
   pinEnabled?: boolean;
@@ -24,13 +24,13 @@ export function PinLockScreen({ onUnlock, onBiometricUnlock, biometricEnabled = 
     }
   }, []);
 
-  const handleNumberClick = (num: string) => {
+  const handleNumberClick = async (num: string) => {
     if (pin.length < 6) {
       const newPin = pin + num;
       setPin(newPin);
       setError(false);
       if (newPin.length === 6) {
-        const success = onUnlock(newPin);
+        const success = await onUnlock(newPin);
         if (!success) {
           setError(true);
           setShake(true);
@@ -42,9 +42,9 @@ export function PinLockScreen({ onUnlock, onBiometricUnlock, biometricEnabled = 
 
   const handleDelete = () => { setPin(pin.slice(0, -1)); setError(false); };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (pin.length === 6) {
-      const success = onUnlock(pin);
+      const success = await onUnlock(pin);
       if (!success) {
         setError(true);
         setShake(true);
