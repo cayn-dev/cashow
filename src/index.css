@@ -105,8 +105,15 @@
 
     --card: 0 0% 100% / 0.6;
     --card-foreground: 0 0% 10%;
-    --card-glass: 0 0% 100% / 0.7;
-    --card-border: 0 0% 0% / 0.04;
+    --card-glass: 0 0% 100% / 0.55;
+    --card-border: 0 0% 100% / 0.6;
+    --glass-blur: 80px;
+    --glass-saturation: 200%;
+    --glass-brightness: 1.05;
+    --glass-contrast: 1;
+    --glass-tint-1: 211 100% 60%;
+    --glass-tint-2: 280 70% 65%;
+    --glass-edge-light: 0 0% 100%;
 
     --popover: 0 0% 100% / 0.8;
     --popover-foreground: 0 0% 10%;
