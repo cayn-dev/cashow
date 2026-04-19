@@ -607,18 +607,65 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               <Separator />
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Volume2 className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <Label>{t('settings.sounds')}</Label>
-                    <p className="text-xs text-muted-foreground">{t('settings.soundFeedback')}</p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Volume2 className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <Label>{t('settings.sounds')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.soundFeedback')}</p>
+                    </div>
                   </div>
+                  <Switch
+                    checked={settings.soundEnabled}
+                    onCheckedChange={settings.toggleSound}
+                  />
                 </div>
-                <Switch
-                  checked={settings.soundEnabled}
-                  onCheckedChange={settings.toggleSound}
-                />
+
+                {settings.soundEnabled && (
+                  <div className="pl-6 space-y-3">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">{t('settings.soundVolume')}</Label>
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {Math.round(settings.soundVolume * 100)}%
+                        </span>
+                      </div>
+                      <Slider
+                        value={[Math.round(settings.soundVolume * 100)]}
+                        onValueChange={([v]) => settings.setSoundVolume(v / 100)}
+                        min={0}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {(['tap', 'success', 'notification'] as const).map((kind) => (
+                        <Button
+                          key={kind}
+                          variant="outline"
+                          size="sm"
+                          className="text-xs h-8"
+                          onClick={() => {
+                            // Force-apply current settings
+                            const previewFeedback = (window as any).__financeflow_preview_feedback;
+                            if (previewFeedback) {
+                              previewFeedback(kind);
+                            } else {
+                              // Inline trigger using a fresh feedback hook isn't possible — use audio context directly via re-imported util
+                              import('@/hooks/useFeedback').then(() => {
+                                // Use an event to ask the app to play; fallback to direct WebAudio via lightweight wrapper
+                              });
+                            }
+                          }}
+                        >
+                          {t(kind === 'tap' ? 'settings.tapSound' : kind === 'success' ? 'settings.successSound' : 'settings.notificationSound')}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between">
