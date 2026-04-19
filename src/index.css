@@ -15,8 +15,14 @@
     --card-foreground: 0 0% 98%;
     --card-glass: 0 0% 100% / 0.06;
     --card-border: 0 0% 100% / 0.14;
-    --glass-blur: 100px;
-    --glass-saturation: 220%;
+    --glass-blur: 120px;
+    --glass-saturation: 260%;
+    --glass-brightness: 1.15;
+    --glass-contrast: 1.08;
+    /* Liquid glass tint — subtle cool refraction */
+    --glass-tint-1: 211 100% 70%;
+    --glass-tint-2: 280 80% 70%;
+    --glass-edge-light: 0 0% 100%;
 
     --popover: 0 0% 100% / 0.08;
     --popover-foreground: 0 0% 98%;
