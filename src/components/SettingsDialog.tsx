@@ -58,6 +58,7 @@ import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useFeedback } from '@/hooks/useFeedback';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
@@ -102,6 +103,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const dataStats = financeStore.getDataStats();
   const locale = LOCALE_MAP[language] || 'it-IT';
   const pushNotifications = usePushNotifications();
+  const previewFeedback = useFeedback({
+    soundEnabled: true,
+    hapticEnabled: settings.hapticEnabled,
+    soundVolume: settings.soundVolume,
+  });
   
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
@@ -607,18 +613,54 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
               <Separator />
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Volume2 className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <Label>{t('settings.sounds')}</Label>
-                    <p className="text-xs text-muted-foreground">{t('settings.soundFeedback')}</p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Volume2 className="w-4 h-4 text-muted-foreground" />
+                    <div>
+                      <Label>{t('settings.sounds')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.soundFeedback')}</p>
+                    </div>
                   </div>
+                  <Switch
+                    checked={settings.soundEnabled}
+                    onCheckedChange={settings.toggleSound}
+                  />
                 </div>
-                <Switch
-                  checked={settings.soundEnabled}
-                  onCheckedChange={settings.toggleSound}
-                />
+
+                {settings.soundEnabled && (
+                  <div className="pl-6 space-y-3">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">{t('settings.soundVolume')}</Label>
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {Math.round(settings.soundVolume * 100)}%
+                        </span>
+                      </div>
+                      <Slider
+                        value={[Math.round(settings.soundVolume * 100)]}
+                        onValueChange={([v]) => settings.setSoundVolume(v / 100)}
+                        min={0}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {(['tap', 'success', 'notification'] as const).map((kind) => (
+                        <Button
+                          key={kind}
+                          variant="outline"
+                          size="sm"
+                          className="text-xs h-8"
+                          onClick={() => previewFeedback.trigger(kind)}
+                        >
+                          {t(kind === 'tap' ? 'settings.tapSound' : kind === 'success' ? 'settings.successSound' : 'settings.notificationSound')}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between">

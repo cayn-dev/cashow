@@ -30,6 +30,7 @@ interface Settings {
   showDecimals: boolean;
   soundEnabled: boolean;
   hapticEnabled: boolean;
+  soundVolume: number; // 0..1
   // New useful settings
   dailySpendingLimit: number; // 0 = disabled
   dailySpendingAlerts: boolean;
@@ -106,6 +107,7 @@ const defaultSettings: Settings = {
   showDecimals: true,
   soundEnabled: true,
   hapticEnabled: true,
+  soundVolume: 0.6,
   // New defaults
   dailySpendingLimit: 0,
   dailySpendingAlerts: false,
@@ -273,6 +275,10 @@ export function useSettings() {
 
   const toggleHaptic = useCallback((enabled: boolean) => {
     updateSettings({ hapticEnabled: enabled });
+  }, [updateSettings]);
+
+  const setSoundVolume = useCallback((volume: number) => {
+    updateSettings({ soundVolume: Math.max(0, Math.min(1, volume)) });
   }, [updateSettings]);
 
   const resetData = useCallback(() => {
@@ -498,6 +504,7 @@ export function useSettings() {
     toggleShowDecimals,
     toggleSound,
     toggleHaptic,
+    setSoundVolume,
     updateSettings,
     resetData,
     isBiometricAvailable,

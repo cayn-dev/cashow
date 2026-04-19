@@ -14,9 +14,9 @@
     --card: 0 0% 100% / 0.04;
     --card-foreground: 0 0% 98%;
     --card-glass: 0 0% 100% / 0.06;
-    --card-border: 0 0% 100% / 0.12;
-    --glass-blur: 80px;
-    --glass-saturation: 200%;
+    --card-border: 0 0% 100% / 0.14;
+    --glass-blur: 100px;
+    --glass-saturation: 220%;
 
     --popover: 0 0% 100% / 0.08;
     --popover-foreground: 0 0% 98%;
@@ -166,39 +166,43 @@
 }
 
 @layer components {
-  /* Apple Liquid Glass Panel - Authentic */
+  /* Apple Liquid Glass Panel — authentic multi-layer translucency */
   .glass-panel {
     @apply relative overflow-hidden;
-    background: hsl(var(--card-glass));
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.06) 0%, hsl(0 0% 100% / 0.02) 100%),
+      hsl(var(--card-glass));
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     border-radius: var(--radius);
     border: 0.5px solid hsl(var(--card-border));
-    box-shadow: 
-      0 0 0 0.5px hsl(0 0% 100% / 0.05) inset,
-      0 0.5px 0 0 hsl(0 0% 100% / 0.1) inset,
-      0 4px 16px hsl(0 0% 0% / 0.12),
-      0 8px 32px hsl(0 0% 0% / 0.08);
+    box-shadow:
+      0 0 0 0.5px hsl(0 0% 100% / 0.06) inset,
+      0 1px 0 0 hsl(0 0% 100% / 0.14) inset,
+      0 -1px 0 0 hsl(0 0% 0% / 0.18) inset,
+      0 4px 16px hsl(0 0% 0% / 0.14),
+      0 12px 40px hsl(0 0% 0% / 0.10);
   }
 
-  /* Top highlight for 3D depth */
+  /* Top sheen — Apple specular highlight */
   .glass-panel::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 50%;
+    height: 60%;
     background: linear-gradient(
       180deg,
-      hsl(0 0% 100% / 0.08) 0%,
+      hsl(0 0% 100% / 0.10) 0%,
+      hsl(0 0% 100% / 0.02) 50%,
       transparent 100%
     );
     pointer-events: none;
     border-radius: var(--radius) var(--radius) 0 0;
   }
 
-  /* Subtle edge glow */
+  /* Diagonal edge light — gives the "liquid" curvature feel */
   .glass-panel::after {
     content: '';
     position: absolute;
@@ -207,28 +211,29 @@
     padding: 0.5px;
     background: linear-gradient(
       135deg,
-      hsl(0 0% 100% / 0.15) 0%,
-      transparent 40%,
+      hsl(0 0% 100% / 0.22) 0%,
+      hsl(0 0% 100% / 0.06) 35%,
       transparent 60%,
-      hsl(0 0% 100% / 0.05) 100%
+      hsl(0 0% 100% / 0.04) 100%
     );
-    -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
-    mask-composite: exclude;
+            mask-composite: exclude;
     pointer-events: none;
   }
 
-  /* Elevated glass panel for cards */
+  /* Elevated glass panel — for floating cards / dialogs */
   .glass-panel-elevated {
     @apply glass-panel;
-    box-shadow: 
-      0 0 0 0.5px hsl(0 0% 100% / 0.08) inset,
-      0 1px 0 0 hsl(0 0% 100% / 0.12) inset,
-      0 8px 24px hsl(0 0% 0% / 0.16),
-      0 16px 48px hsl(0 0% 0% / 0.12),
-      0 24px 64px hsl(0 0% 0% / 0.08);
+    box-shadow:
+      0 0 0 0.5px hsl(0 0% 100% / 0.10) inset,
+      0 1px 0 0 hsl(0 0% 100% / 0.18) inset,
+      0 -1px 0 0 hsl(0 0% 0% / 0.2) inset,
+      0 8px 24px hsl(0 0% 0% / 0.18),
+      0 16px 48px hsl(0 0% 0% / 0.14),
+      0 32px 80px hsl(0 0% 0% / 0.10);
   }
 
   /* Liquid glass input - Apple style */
