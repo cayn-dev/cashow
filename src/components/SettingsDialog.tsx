@@ -58,6 +58,7 @@ import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useFeedback } from '@/hooks/useFeedback';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
@@ -102,6 +103,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const dataStats = financeStore.getDataStats();
   const locale = LOCALE_MAP[language] || 'it-IT';
   const pushNotifications = usePushNotifications();
+  const previewFeedback = useFeedback({
+    soundEnabled: true,
+    hapticEnabled: settings.hapticEnabled,
+    soundVolume: settings.soundVolume,
+  });
   
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [newPin, setNewPin] = useState('');
@@ -647,18 +653,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                           variant="outline"
                           size="sm"
                           className="text-xs h-8"
-                          onClick={() => {
-                            // Force-apply current settings
-                            const previewFeedback = (window as any).__financeflow_preview_feedback;
-                            if (previewFeedback) {
-                              previewFeedback(kind);
-                            } else {
-                              // Inline trigger using a fresh feedback hook isn't possible — use audio context directly via re-imported util
-                              import('@/hooks/useFeedback').then(() => {
-                                // Use an event to ask the app to play; fallback to direct WebAudio via lightweight wrapper
-                              });
-                            }
-                          }}
+                          onClick={() => previewFeedback.trigger(kind)}
                         >
                           {t(kind === 'tap' ? 'settings.tapSound' : kind === 'success' ? 'settings.successSound' : 'settings.notificationSound')}
                         </Button>
