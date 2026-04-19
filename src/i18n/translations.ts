@@ -1210,6 +1210,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dateFormat.dd/MM/yyyy': 'Europeo (31/12/2024)',
     'dateFormat.MM/dd/yyyy': 'Americano (12/31/2024)',
     'dateFormat.yyyy-MM-dd': 'ISO (2024-12-31)',
+    'transactions.type': 'Tipo',
+    'transactions.category': 'Categoría',
 
     'chart.expensesByCategory': 'Gastos por Categoría',
     'chart.noExpenses': 'Sin gastos este mes',
@@ -1589,6 +1591,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dateFormat.dd/MM/yyyy': 'Européen (31/12/2024)',
     'dateFormat.MM/dd/yyyy': 'Américain (12/31/2024)',
     'dateFormat.yyyy-MM-dd': 'ISO (2024-12-31)',
+    'transactions.type': 'Type',
+    'transactions.category': 'Catégorie',
 
     'chart.expensesByCategory': 'Dépenses par Catégorie',
     'chart.noExpenses': 'Aucune dépense ce mois-ci',
@@ -1968,6 +1972,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dateFormat.dd/MM/yyyy': 'Europäisch (31.12.2024)',
     'dateFormat.MM/dd/yyyy': 'Amerikanisch (12/31/2024)',
     'dateFormat.yyyy-MM-dd': 'ISO (2024-12-31)',
+    'transactions.type': 'Typ',
+    'transactions.category': 'Kategorie',
 
     'chart.expensesByCategory': 'Ausgaben nach Kategorie',
     'chart.noExpenses': 'Keine Ausgaben diesen Monat',
