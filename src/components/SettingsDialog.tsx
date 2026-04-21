@@ -51,7 +51,7 @@ import {
   User,
   Mail,
 } from 'lucide-react';
-import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek } from '@/hooks/useSettings';
+import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek, ACCENT_PRESETS } from '@/hooks/useSettings';
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
@@ -257,7 +257,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </GlassCard>
           )}
 
-          {/* Theme Section */}
+          {/* Theme & Accent Color Section */}
           <GlassCard className="p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
@@ -268,8 +268,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <p className="text-sm text-muted-foreground">{t('settings.customizeTheme')}</p>
               </div>
             </div>
-            
-            <div className="grid grid-cols-2 gap-3">
+
+            <div className="grid grid-cols-2 gap-3 mb-5">
               <button
                 onClick={() => settings.setTheme('dark')}
                 className={`flex items-center gap-2 p-3 rounded-xl border transition-all ${
@@ -292,6 +292,41 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Sun className="w-5 h-5" />
                 <span className="font-medium">{t('settings.light')}</span>
               </button>
+            </div>
+
+            {/* Accent color picker */}
+            <div>
+              <Label className="text-sm mb-3 block">{t('settings.accentColor')}</Label>
+              <div className="grid grid-cols-5 gap-3">
+                {ACCENT_PRESETS.map((preset) => {
+                  const isActive = settings.accentColorId === preset.id;
+                  const swatch = `hsl(${preset.hue} ${preset.sat}% ${preset.light}%)`;
+                  return (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        settings.setAccentColor(preset.id);
+                        notifications.sendToast(t('settings.accentColorChanged'), preset.name);
+                      }}
+                      className={`aspect-square rounded-2xl relative transition-all ${
+                        isActive ? 'scale-110 ring-2 ring-foreground/80 ring-offset-2 ring-offset-background' : 'hover:scale-105'
+                      }`}
+                      style={{
+                        background: `radial-gradient(circle at 35% 30%, hsl(${preset.hue} ${preset.sat}% ${Math.min(preset.light + 15, 75)}%), ${swatch})`,
+                        boxShadow: `0 4px 14px hsl(${preset.hue} ${preset.sat}% ${preset.light}% / 0.45)`,
+                      }}
+                      aria-label={preset.name}
+                      title={preset.name}
+                    >
+                      {isActive && (
+                        <span className="absolute inset-0 flex items-center justify-center">
+                          <span className="w-2 h-2 rounded-full bg-white shadow-sm" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </GlassCard>
 
