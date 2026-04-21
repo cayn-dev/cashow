@@ -677,3 +677,16 @@
   outline: none;
   box-shadow: 0 0 0 3px hsl(var(--primary) / 0.25);
 }
+
+/* Disable tilt for users who prefer reduced motion or on touch devices */
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .glass-panel[data-tilt="true"] {
+    transform: none !important;
+  }
+  .glass-panel[data-tilt="true"]::before {
+    background:
+      linear-gradient(115deg, transparent 35%, hsl(0 0% 100% / 0.18) 50%, transparent 65%),
+      radial-gradient(140% 60% at 50% -10%, hsl(0 0% 100% / 0.18) 0%, transparent 70%) !important;
+    opacity: 0.85 !important;
+  }
+}
