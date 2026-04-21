@@ -194,6 +194,22 @@ export function useSettings() {
     }
   }, [settings.theme]);
 
+  // Apply accent color → updates --primary, --primary-glow, --accent, --ring, --info, --glass-tint-1
+  useEffect(() => {
+    const preset = ACCENT_PRESETS.find(p => p.id === settings.accentColorId) ?? ACCENT_PRESETS[0];
+    const root = document.documentElement;
+    const base = `${preset.hue} ${preset.sat}% ${preset.light}%`;
+    const glow = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 10, 75)}%`;
+    const accent = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`;
+    const tint = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 20, 80)}%`;
+    root.style.setProperty('--primary', base);
+    root.style.setProperty('--primary-glow', glow);
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--ring', base);
+    root.style.setProperty('--info', accent);
+    root.style.setProperty('--glass-tint-1', tint);
+  }, [settings.accentColorId]);
+
   // Persist settings
   useEffect(() => {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
@@ -202,7 +218,6 @@ export function useSettings() {
   const updateSettings = useCallback((updates: Partial<Settings>) => {
     setSettings(prev => {
       const newSettings = { ...prev, ...updates };
-      // Update currency symbol when currency changes
       if (updates.currency) {
         newSettings.currencySymbol = currencySymbols[updates.currency];
       }
@@ -212,6 +227,10 @@ export function useSettings() {
 
   const setTheme = useCallback((theme: Theme) => {
     updateSettings({ theme });
+  }, [updateSettings]);
+
+  const setAccentColor = useCallback((accentColorId: string) => {
+    updateSettings({ accentColorId });
   }, [updateSettings]);
 
   const setCurrency = useCallback((currency: Currency) => {
