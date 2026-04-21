@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { Loader2, Mail, Lock, User, Wallet, Globe } from 'lucide-react';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { AuroraBackground } from '@/components/AuroraBackground';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -102,11 +103,9 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[128px]" />
-      </div>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative">
+      {/* Animated aurora background */}
+      <AuroraBackground intensity="medium" />
 
       {/* Language Selector - bottom center, non-overlapping */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">
