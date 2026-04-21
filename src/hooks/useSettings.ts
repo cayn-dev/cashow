@@ -532,6 +532,7 @@ export function useSettings() {
     ...settings,
     isLocked,
     setTheme,
+    setAccentColor,
     setCurrency,
     setPin,
     verifyPin,
