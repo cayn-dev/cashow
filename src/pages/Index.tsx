@@ -11,6 +11,7 @@ import { SalaryView } from '@/components/views/SalaryView';
 import { SavingsView } from '@/components/views/SavingsView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
+import { AuroraBackground } from '@/components/AuroraBackground';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
 
@@ -55,12 +56,9 @@ const Index = () => {
   const handleLogout = isGuest ? undefined : signOut;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Background glow effects */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[128px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[128px]" />
-      </div>
+    <div className="min-h-screen bg-background relative">
+      {/* Animated aurora background — drifts behind the glass for live refraction */}
+      <AuroraBackground intensity="medium" />
 
       <div className="relative z-10 container max-w-7xl mx-auto py-6 px-4">
         <Navigation 

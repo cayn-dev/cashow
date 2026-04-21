@@ -7,6 +7,7 @@ import {
   Wallet, TrendingUp, PiggyBank, BarChart3, Bell, Bot, 
   Shield, ArrowRight, Star, Zap, Globe 
 } from 'lucide-react';
+import { AuroraBackground } from '@/components/AuroraBackground';
 
 const spring = { type: 'spring' as const, stiffness: 100, damping: 20 };
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
@@ -38,12 +39,9 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* Background effects */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[180px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[150px]" />
-      </div>
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+      {/* Animated aurora background */}
+      <AuroraBackground intensity="vivid" />
 
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
