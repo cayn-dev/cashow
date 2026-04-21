@@ -113,6 +113,7 @@ export const dateFormatLabels: Record<DateFormat, string> = {
 
 const defaultSettings: Settings = {
   theme: 'dark',
+  accentColorId: 'blue',
   currency: 'EUR',
   currencySymbol: '€',
   pinEnabled: false,
