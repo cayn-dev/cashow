@@ -244,13 +244,9 @@
   .glass-panel-elevated {
     @apply glass-panel;
     box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.28) inset,
-      0 -1px 0 0 hsl(0 0% 0% / 0.24) inset,
-      0 0 0 0.5px hsl(0 0% 100% / 0.10) inset,
-      0 2px 4px hsl(0 0% 0% / 0.10),
-      0 16px 40px hsl(0 0% 0% / 0.24),
-      0 40px 96px hsl(0 0% 0% / 0.20),
-      0 80px 160px hsl(0 0% 0% / 0.14);
+      0 1px 0 0 hsl(0 0% 100% / 0.10) inset,
+      0 4px 12px hsl(0 0% 0% / 0.18),
+      0 16px 40px hsl(0 0% 0% / 0.22);
   }
 
   /* Liquid glass input - Apple style */
