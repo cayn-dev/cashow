@@ -10,16 +10,16 @@
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
 
-    /* Liquid Glass panels - Apple-authentic translucency */
-    --card: 0 0% 100% / 0.04;
+    /* Liquid Glass panels — toned down for cleaner look */
+    --card: 0 0% 100% / 0.03;
     --card-foreground: 0 0% 98%;
-    --card-glass: 0 0% 100% / 0.06;
-    --card-border: 0 0% 100% / 0.14;
-    --glass-blur: 120px;
-    --glass-saturation: 260%;
-    --glass-brightness: 1.15;
-    --glass-contrast: 1.08;
-    /* Liquid glass tint — subtle cool refraction */
+    --card-glass: 0 0% 100% / 0.045;
+    --card-border: 0 0% 100% / 0.08;
+    --glass-blur: 40px;
+    --glass-saturation: 160%;
+    --glass-brightness: 1.05;
+    --glass-contrast: 1.02;
+    /* Subtle refraction tints */
     --glass-tint-1: 211 100% 70%;
     --glass-tint-2: 280 80% 70%;
     --glass-edge-light: 0 0% 100%;
@@ -179,7 +179,7 @@
 }
 
 @layer components {
-  /* ===== APPLE LIQUID GLASS — visionOS-grade multi-layer translucency ===== */
+  /* ===== Subtle Glass Panel — clean, no diagonal sheen ===== */
   .glass-panel {
     @apply relative overflow-hidden;
     /* Cursor-tracking vars (updated via JS in GlassCard / AnimatedCard) */
@@ -188,35 +188,25 @@
     --rx: 0deg;
     --ry: 0deg;
     --tilt-active: 0;
-    /* Base: cool-tinted refraction layer + glass body */
     background:
-      radial-gradient(120% 80% at 0% 0%, hsl(var(--glass-tint-1) / 0.08) 0%, transparent 55%),
-      radial-gradient(120% 80% at 100% 100%, hsl(var(--glass-tint-2) / 0.06) 0%, transparent 55%),
-      linear-gradient(180deg, hsl(0 0% 100% / 0.08) 0%, hsl(0 0% 100% / 0.02) 60%, hsl(0 0% 100% / 0.04) 100%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.04) 0%, hsl(0 0% 100% / 0.015) 100%),
       hsl(var(--card-glass));
     backdrop-filter:
       blur(var(--glass-blur))
       saturate(var(--glass-saturation))
-      brightness(var(--glass-brightness))
-      contrast(var(--glass-contrast));
+      brightness(var(--glass-brightness));
     -webkit-backdrop-filter:
       blur(var(--glass-blur))
       saturate(var(--glass-saturation))
-      brightness(var(--glass-brightness))
-      contrast(var(--glass-contrast));
+      brightness(var(--glass-brightness));
     border-radius: var(--radius);
     border: 0.5px solid hsl(var(--card-border));
     box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.22) inset,
-      0 -1px 0 0 hsl(0 0% 0% / 0.22) inset,
-      0 0 0 0.5px hsl(0 0% 100% / 0.06) inset,
-      0 1px 2px hsl(0 0% 0% / 0.08),
-      0 8px 24px hsl(0 0% 0% / 0.18),
-      0 24px 64px hsl(0 0% 0% / 0.18),
-      0 48px 120px hsl(0 0% 0% / 0.12);
+      0 1px 0 0 hsl(0 0% 100% / 0.08) inset,
+      0 1px 2px hsl(0 0% 0% / 0.10),
+      0 8px 24px hsl(0 0% 0% / 0.18);
     isolation: isolate;
     transform-style: preserve-3d;
-    perspective: 1200px;
     will-change: transform;
     transform:
       perspective(1200px)
@@ -224,106 +214,30 @@
       rotateY(var(--ry))
       translateZ(0);
     transition:
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Tilt-enabled card — bigger lift on hover (toggled by JS via data attr) */
   .glass-panel[data-tilt="true"] {
     transition:
       transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Cursor-following specular highlight — Apple Vision Pro style */
+  /* Cursor-following soft highlight (only when tilt active) — no diagonal sheen */
   .glass-panel[data-tilt="true"]::before {
-    background:
-      radial-gradient(
-        260px circle at var(--mx) var(--my),
-        hsl(0 0% 100% / 0.35) 0%,
-        hsl(0 0% 100% / 0.12) 25%,
-        transparent 60%
-      ),
-      radial-gradient(
-        500px circle at var(--mx) var(--my),
-        hsl(var(--glass-tint-1) / 0.18) 0%,
-        transparent 55%
-      ),
-      radial-gradient(
-        140% 60% at 50% -10%,
-        hsl(0 0% 100% / 0.18) 0%,
-        hsl(0 0% 100% / 0.04) 40%,
-        transparent 70%
-      );
-    background-size: 100% 100%, 100% 100%, 100% 100%;
-    background-position: 0 0, 0 0, center;
-    opacity: calc(0.55 + var(--tilt-active) * 0.45);
-    transition: opacity 0.35s ease;
-  }
-
-  .glass-panel[data-tilt="true"]:hover::before {
-    background-position: 0 0, 0 0, center;
-  }
-
-  /* Top specular sheen — bright "lens curvature" highlight that sweeps on hover */
-  .glass-panel::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background:
-      linear-gradient(
-        115deg,
-        transparent 0%,
-        transparent 35%,
-        hsl(0 0% 100% / 0.10) 47%,
-        hsl(0 0% 100% / 0.22) 50%,
-        hsl(0 0% 100% / 0.10) 53%,
-        transparent 65%,
-        transparent 100%
-      ),
-      radial-gradient(
-        140% 60% at 50% -10%,
-        hsl(0 0% 100% / 0.20) 0%,
-        hsl(0 0% 100% / 0.04) 40%,
-        transparent 70%
-      );
-    background-size: 220% 220%, 100% 100%;
-    background-position: 0% 0%, center;
-    pointer-events: none;
-    mix-blend-mode: overlay;
-    opacity: 0.95;
-    transition: background-position 1.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-  }
-
-  .glass-panel:hover::before {
-    background-position: 100% 0%, center;
-    opacity: 1;
-  }
-
-  /* Animated rim light — chromatic edge simulating refraction */
-  .glass-panel::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 0.5px;
-    background: conic-gradient(
-      from 220deg at 50% 50%,
-      hsl(0 0% 100% / 0.05) 0deg,
-      hsl(var(--glass-tint-1) / 0.35) 60deg,
-      hsl(0 0% 100% / 0.50) 120deg,
-      hsl(var(--glass-tint-2) / 0.30) 200deg,
-      hsl(0 0% 100% / 0.28) 280deg,
-      hsl(0 0% 100% / 0.05) 360deg
+    background: radial-gradient(
+      300px circle at var(--mx) var(--my),
+      hsl(0 0% 100% / 0.10) 0%,
+      transparent 60%
     );
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: var(--tilt-active);
+    transition: opacity 0.3s ease;
   }
 
   /* Elevated glass — for floating dialogs and cards */
