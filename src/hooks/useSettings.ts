@@ -5,6 +5,28 @@ export type Currency = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY' | 'CAD' | 'AUD';
 export type DateFormat = 'dd/MM/yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
 export type FirstDayOfWeek = 'monday' | 'sunday';
 
+// Accent color presets — name + HSL hue + saturation + lightness
+export interface AccentPreset {
+  id: string;
+  name: string;
+  hue: number;
+  sat: number;
+  light: number;
+}
+
+export const ACCENT_PRESETS: AccentPreset[] = [
+  { id: 'blue',    name: 'Apple Blue',  hue: 211, sat: 100, light: 50 },
+  { id: 'indigo',  name: 'Indigo',      hue: 240, sat: 80,  light: 60 },
+  { id: 'purple',  name: 'Purple',      hue: 280, sat: 75,  light: 58 },
+  { id: 'pink',    name: 'Pink',        hue: 330, sat: 85,  light: 60 },
+  { id: 'red',     name: 'Red',         hue: 0,   sat: 75,  light: 55 },
+  { id: 'orange',  name: 'Orange',      hue: 25,  sat: 95,  light: 55 },
+  { id: 'yellow',  name: 'Yellow',      hue: 45,  sat: 95,  light: 55 },
+  { id: 'green',   name: 'Green',       hue: 142, sat: 70,  light: 45 },
+  { id: 'teal',    name: 'Teal',        hue: 175, sat: 75,  light: 45 },
+  { id: 'mono',    name: 'Graphite',    hue: 220, sat: 8,   light: 60 },
+];
+
 // Budget per category
 export interface CategoryBudget {
   category: string;
@@ -14,6 +36,7 @@ export interface CategoryBudget {
 
 interface Settings {
   theme: Theme;
+  accentColorId: string; // matches AccentPreset.id
   currency: Currency;
   currencySymbol: string;
   pinEnabled: boolean;
@@ -25,24 +48,23 @@ interface Settings {
   spendingAlerts: boolean;
   goalAlerts: boolean;
   spendingLimit: number;
-  autoLockTimeout: number; // minutes, 0 = disabled
+  autoLockTimeout: number;
   compactView: boolean;
   showDecimals: boolean;
   soundEnabled: boolean;
   hapticEnabled: boolean;
-  soundVolume: number; // 0..1
-  // New useful settings
-  dailySpendingLimit: number; // 0 = disabled
+  soundVolume: number;
+  dailySpendingLimit: number;
   dailySpendingAlerts: boolean;
-  roundUpSavings: boolean; // Round up to nearest euro for savings
-  roundUpAmount: number; // 1 = next euro, 5 = next 5 euros, 10 = next 10
+  roundUpSavings: boolean;
+  roundUpAmount: number;
   dateFormat: DateFormat;
   firstDayOfWeek: FirstDayOfWeek;
   categoryBudgets: CategoryBudget[];
   showMonthlyComparison: boolean;
   defaultPaymentMethod: string;
   weeklyReportEnabled: boolean;
-  weeklyReportDay: number; // 0 = Sunday, 1 = Monday, etc.
+  weeklyReportDay: number;
   hideSmallTransactions: boolean;
   smallTransactionThreshold: number;
   quickAddEnabled: boolean;
@@ -91,6 +113,7 @@ export const dateFormatLabels: Record<DateFormat, string> = {
 
 const defaultSettings: Settings = {
   theme: 'dark',
+  accentColorId: 'blue',
   currency: 'EUR',
   currencySymbol: '€',
   pinEnabled: false,
@@ -171,6 +194,22 @@ export function useSettings() {
     }
   }, [settings.theme]);
 
+  // Apply accent color → updates --primary, --primary-glow, --accent, --ring, --info, --glass-tint-1
+  useEffect(() => {
+    const preset = ACCENT_PRESETS.find(p => p.id === settings.accentColorId) ?? ACCENT_PRESETS[0];
+    const root = document.documentElement;
+    const base = `${preset.hue} ${preset.sat}% ${preset.light}%`;
+    const glow = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 10, 75)}%`;
+    const accent = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`;
+    const tint = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 20, 80)}%`;
+    root.style.setProperty('--primary', base);
+    root.style.setProperty('--primary-glow', glow);
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--ring', base);
+    root.style.setProperty('--info', accent);
+    root.style.setProperty('--glass-tint-1', tint);
+  }, [settings.accentColorId]);
+
   // Persist settings
   useEffect(() => {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
@@ -179,7 +218,6 @@ export function useSettings() {
   const updateSettings = useCallback((updates: Partial<Settings>) => {
     setSettings(prev => {
       const newSettings = { ...prev, ...updates };
-      // Update currency symbol when currency changes
       if (updates.currency) {
         newSettings.currencySymbol = currencySymbols[updates.currency];
       }
@@ -189,6 +227,10 @@ export function useSettings() {
 
   const setTheme = useCallback((theme: Theme) => {
     updateSettings({ theme });
+  }, [updateSettings]);
+
+  const setAccentColor = useCallback((accentColorId: string) => {
+    updateSettings({ accentColorId });
   }, [updateSettings]);
 
   const setCurrency = useCallback((currency: Currency) => {
@@ -490,6 +532,7 @@ export function useSettings() {
     ...settings,
     isLocked,
     setTheme,
+    setAccentColor,
     setCurrency,
     setPin,
     verifyPin,
