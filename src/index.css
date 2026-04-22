@@ -179,65 +179,18 @@
 }
 
 @layer components {
-  /* ===== Subtle Glass Panel — clean, no diagonal sheen ===== */
+  /* ===== Subtle Glass Panel — clean, flat, no tilt ===== */
   .glass-panel {
     @apply relative overflow-hidden;
-    /* Cursor-tracking vars (updated via JS in GlassCard / AnimatedCard) */
-    --mx: 50%;
-    --my: 50%;
-    --rx: 0deg;
-    --ry: 0deg;
-    --tilt-active: 0;
-    background:
-      linear-gradient(180deg, hsl(0 0% 100% / 0.04) 0%, hsl(0 0% 100% / 0.015) 100%),
-      hsl(var(--card-glass));
-    backdrop-filter:
-      blur(var(--glass-blur))
-      saturate(var(--glass-saturation))
-      brightness(var(--glass-brightness));
-    -webkit-backdrop-filter:
-      blur(var(--glass-blur))
-      saturate(var(--glass-saturation))
-      brightness(var(--glass-brightness));
+    background: hsl(var(--card-glass));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     border-radius: var(--radius);
     border: 0.5px solid hsl(var(--card-border));
     box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.08) inset,
-      0 1px 2px hsl(0 0% 0% / 0.10),
-      0 8px 24px hsl(0 0% 0% / 0.18);
-    isolation: isolate;
-    transform-style: preserve-3d;
-    will-change: transform;
-    transform:
-      perspective(1200px)
-      rotateX(var(--rx))
-      rotateY(var(--ry))
-      translateZ(0);
-    transition:
-      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .glass-panel[data-tilt="true"] {
-    transition:
-      transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* Cursor-following soft highlight (only when tilt active) — no diagonal sheen */
-  .glass-panel[data-tilt="true"]::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      300px circle at var(--mx) var(--my),
-      hsl(0 0% 100% / 0.10) 0%,
-      transparent 60%
-    );
-    pointer-events: none;
-    opacity: var(--tilt-active);
-    transition: opacity 0.3s ease;
+      0 1px 2px hsl(0 0% 0% / 0.08),
+      0 4px 16px hsl(0 0% 0% / 0.12);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   /* Elevated glass — for floating dialogs and cards */
