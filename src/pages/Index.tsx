@@ -9,11 +9,13 @@ import { DashboardView } from '@/components/views/DashboardView';
 import { TransactionsView } from '@/components/views/TransactionsView';
 import { SalaryView } from '@/components/views/SalaryView';
 import { SavingsView } from '@/components/views/SavingsView';
+import { BudgetView } from '@/components/views/BudgetView';
+import { CalendarView } from '@/components/views/CalendarView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
 
-type View = 'dashboard' | 'transactions' | 'salary' | 'savings';
+type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -114,6 +116,20 @@ const Index = () => {
             onAddGoal={store.addSavingsGoal}
             onUpdateGoal={store.updateSavingsGoal}
             onDeleteGoal={store.deleteSavingsGoal}
+            currencySymbol={settings.currencySymbol}
+          />
+        )}
+
+        {currentView === 'budget' && (
+          <BudgetView
+            transactions={store.transactions}
+            currencySymbol={settings.currencySymbol}
+          />
+        )}
+
+        {currentView === 'calendar' && (
+          <CalendarView
+            transactions={store.transactions}
             currencySymbol={settings.currencySymbol}
           />
         )}
