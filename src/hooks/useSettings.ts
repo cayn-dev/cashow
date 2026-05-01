@@ -15,16 +15,16 @@ export interface AccentPreset {
 }
 
 export const ACCENT_PRESETS: AccentPreset[] = [
-  { id: 'blue',    name: 'Apple Blue',  hue: 211, sat: 100, light: 50 },
-  { id: 'indigo',  name: 'Indigo',      hue: 240, sat: 80,  light: 60 },
-  { id: 'purple',  name: 'Purple',      hue: 280, sat: 75,  light: 58 },
-  { id: 'pink',    name: 'Pink',        hue: 330, sat: 85,  light: 60 },
-  { id: 'red',     name: 'Red',         hue: 0,   sat: 75,  light: 55 },
-  { id: 'orange',  name: 'Orange',      hue: 25,  sat: 95,  light: 55 },
-  { id: 'yellow',  name: 'Yellow',      hue: 45,  sat: 95,  light: 55 },
-  { id: 'green',   name: 'Green',       hue: 142, sat: 70,  light: 45 },
-  { id: 'teal',    name: 'Teal',        hue: 175, sat: 75,  light: 45 },
-  { id: 'mono',    name: 'Graphite',    hue: 220, sat: 8,   light: 60 },
+  { id: 'mono',    name: 'Monochrome',  hue: 0,   sat: 0,   light: 100 },
+  { id: 'blue',    name: 'Apple Blue',  hue: 211, sat: 100, light: 55 },
+  { id: 'indigo',  name: 'Indigo',      hue: 240, sat: 80,  light: 65 },
+  { id: 'purple',  name: 'Purple',      hue: 280, sat: 75,  light: 62 },
+  { id: 'pink',    name: 'Pink',        hue: 330, sat: 85,  light: 65 },
+  { id: 'red',     name: 'Red',         hue: 0,   sat: 75,  light: 58 },
+  { id: 'orange',  name: 'Orange',      hue: 25,  sat: 95,  light: 58 },
+  { id: 'yellow',  name: 'Yellow',      hue: 45,  sat: 95,  light: 58 },
+  { id: 'green',   name: 'Green',       hue: 142, sat: 70,  light: 50 },
+  { id: 'teal',    name: 'Teal',        hue: 175, sat: 75,  light: 50 },
 ];
 
 // Budget per category
