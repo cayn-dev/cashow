@@ -137,6 +137,14 @@ const Index = () => {
             currencySymbol={settings.currencySymbol}
           />
         )}
+
+        {currentView === 'accounts' && (
+          <AccountsView currencySymbol={settings.currencySymbol} />
+        )}
+
+        {currentView === 'groups' && (
+          <GroupsView currencySymbol={settings.currencySymbol} />
+        )}
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
