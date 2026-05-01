@@ -47,6 +47,256 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_accounts: {
+        Row: {
+          bank_name: string | null
+          color: string | null
+          created_at: string
+          currency: string | null
+          current_balance: number
+          icon: string | null
+          id: string
+          initial_balance: number
+          is_active: boolean | null
+          name: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bank_name?: string | null
+          color?: string | null
+          created_at?: string
+          currency?: string | null
+          current_balance?: number
+          icon?: string | null
+          id?: string
+          initial_balance?: number
+          is_active?: boolean | null
+          name: string
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bank_name?: string | null
+          color?: string | null
+          created_at?: string
+          currency?: string | null
+          current_balance?: number
+          icon?: string | null
+          id?: string
+          initial_balance?: number
+          is_active?: boolean | null
+          name?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      csv_imports: {
+        Row: {
+          bank_account_id: string | null
+          created_at: string
+          filename: string
+          hash: string | null
+          id: string
+          rows_imported: number | null
+          rows_skipped: number | null
+          user_id: string
+        }
+        Insert: {
+          bank_account_id?: string | null
+          created_at?: string
+          filename: string
+          hash?: string | null
+          id?: string
+          rows_imported?: number | null
+          rows_skipped?: number | null
+          user_id: string
+        }
+        Update: {
+          bank_account_id?: string | null
+          created_at?: string
+          filename?: string
+          hash?: string | null
+          id?: string
+          rows_imported?: number | null
+          rows_skipped?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "csv_imports_bank_account_id_fkey"
+            columns: ["bank_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expense_splits: {
+        Row: {
+          amount: number
+          created_at: string
+          expense_id: string
+          id: string
+          paid: boolean | null
+          paid_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          expense_id: string
+          id?: string
+          paid?: boolean | null
+          paid_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          expense_id?: string
+          id?: string
+          paid?: boolean | null
+          paid_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expense_splits_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "group_expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_expenses: {
+        Row: {
+          amount: number
+          category: string | null
+          created_at: string
+          date: string
+          description: string
+          group_id: string
+          id: string
+          notes: string | null
+          paid_by: string
+          split_type: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          category?: string | null
+          created_at?: string
+          date?: string
+          description: string
+          group_id: string
+          id?: string
+          notes?: string | null
+          paid_by: string
+          split_type?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          date?: string
+          description?: string
+          group_id?: string
+          id?: string
+          notes?: string | null
+          paid_by?: string
+          split_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_expenses_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "shared_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_invites: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          group_id: string
+          id: string
+          token: string
+          used: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at?: string | null
+          group_id: string
+          id?: string
+          token?: string
+          used?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string | null
+          group_id?: string
+          id?: string
+          token?: string
+          used?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_invites_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "shared_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          display_name: string | null
+          group_id: string
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          display_name?: string | null
+          group_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          display_name?: string | null
+          group_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "shared_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -197,9 +447,46 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_groups: {
+        Row: {
+          created_at: string
+          currency: string | null
+          description: string | null
+          emoji: string | null
+          id: string
+          name: string
+          owner_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
+          bank_account_id: string | null
           category: string
           created_at: string
           date: string
@@ -214,6 +501,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          bank_account_id?: string | null
           category: string
           created_at?: string
           date?: string
@@ -228,6 +516,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          bank_account_id?: string | null
           category?: string
           created_at?: string
           date?: string
@@ -240,7 +529,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "transactions_bank_account_id_fkey"
+            columns: ["bank_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -272,11 +569,20 @@ export type Database = {
         Args: { p_current_date: string; p_frequency: string }
         Returns: string
       }
+      expense_group_id: { Args: { _expense_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_group_member: {
+        Args: { _group_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_group_owner: {
+        Args: { _group_id: string; _user_id: string }
         Returns: boolean
       }
       process_recurring_transactions: { Args: never; Returns: number }
