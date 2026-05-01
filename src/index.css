@@ -178,27 +178,28 @@
 }
 
 @layer components {
-  /* ===== Subtle Glass Panel — clean, flat, no tilt ===== */
+  /* ===== Pure Black surface card ===== */
   .glass-panel {
     @apply relative overflow-hidden;
-    background: hsl(var(--card-glass));
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background: hsl(0 0% 100% / 0.025);
     border-radius: var(--radius);
-    border: 0.5px solid hsl(var(--card-border));
-    box-shadow:
-      0 1px 2px hsl(0 0% 0% / 0.08),
-      0 4px 16px hsl(0 0% 0% / 0.12);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border: 0.5px solid hsl(0 0% 100% / 0.08);
+    box-shadow: 0 1px 0 0 hsl(0 0% 100% / 0.04) inset;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
 
-  /* Elevated glass — for floating dialogs and cards */
+  .glass-panel:hover {
+    background: hsl(0 0% 100% / 0.04);
+    border-color: hsl(0 0% 100% / 0.12);
+  }
+
   .glass-panel-elevated {
     @apply glass-panel;
+    background: hsl(0 0% 6%);
+    border: 0.5px solid hsl(0 0% 100% / 0.10);
     box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.10) inset,
-      0 4px 12px hsl(0 0% 0% / 0.18),
-      0 16px 40px hsl(0 0% 0% / 0.22);
+      0 1px 0 0 hsl(0 0% 100% / 0.06) inset,
+      0 8px 32px hsl(0 0% 0% / 0.6);
   }
 
   /* Liquid glass input - Apple style */
