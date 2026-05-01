@@ -28,6 +28,38 @@ const Index = () => {
   const settings = useSettings();
   const { t } = useLanguage();
 
+  // Handle invite link: /?invite=TOKEN
+  useEffect(() => {
+    if (!isAuthenticated || isGuest) return;
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('invite');
+    if (!token) return;
+    (async () => {
+      const db = supabase as any;
+      const { data: invite } = await db.from('group_invites').select('*').eq('token', token).maybeSingle();
+      if (!invite || invite.used) { toast.error('Invito non valido o scaduto'); }
+      else {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { error } = await db.from('group_members').insert({
+            group_id: invite.group_id, user_id: user.id, role: 'member',
+          });
+          if (!error) {
+            await db.from('group_invites').update({ used: true }).eq('id', invite.id);
+            toast.success('Sei stato aggiunto al gruppo!');
+            setCurrentView('groups');
+          } else if (error.code === '23505') {
+            toast.info('Sei già membro di questo gruppo');
+            setCurrentView('groups');
+          } else {
+            toast.error('Errore: ' + error.message);
+          }
+        }
+      }
+      window.history.replaceState({}, '', window.location.pathname);
+    })();
+  }, [isAuthenticated, isGuest]);
+
   // Use cloud store for authenticated users, local store for guests
   const cloudStore = useSupabaseFinanceStore();
   const localStore = useFinanceStore();
