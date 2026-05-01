@@ -1,44 +1,24 @@
 import { cn } from '@/lib/utils';
 
 interface AuroraBackgroundProps {
-  /** Visual intensity preset */
   intensity?: 'subtle' | 'medium' | 'vivid';
   className?: string;
 }
 
 /**
- * Apple visionOS-style animated aurora: 5 colored blobs slowly drifting,
- * scaling and rotating behind the glass surfaces. Pure CSS, GPU-accelerated.
- * Disabled automatically for `prefers-reduced-motion`.
+ * Pure Black OLED background with subtle film grain.
+ * No animated blobs — keeps the monochrome aesthetic clean.
  */
-export function AuroraBackground({ intensity = 'medium', className }: AuroraBackgroundProps) {
-  const opacityMap = {
-    subtle: 'opacity-40',
-    medium: 'opacity-60',
-    vivid: 'opacity-80',
-  };
-
+export function AuroraBackground({ className }: AuroraBackgroundProps) {
   return (
     <div
       aria-hidden="true"
-      className={cn(
-        'fixed inset-0 -z-10 overflow-hidden pointer-events-none',
-        opacityMap[intensity],
-        className,
-      )}
+      className={cn('fixed inset-0 -z-10 overflow-hidden pointer-events-none', className)}
     >
-      {/* Deep base gradient for cohesion */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)]" />
-
-      {/* Aurora blobs */}
-      <div className="aurora-blob aurora-blob-1" />
-      <div className="aurora-blob aurora-blob-2" />
-      <div className="aurora-blob aurora-blob-3" />
-      <div className="aurora-blob aurora-blob-4" />
-      <div className="aurora-blob aurora-blob-5" />
-
-      {/* Subtle film grain to break up gradient banding */}
-      <div className="absolute inset-0 aurora-grain mix-blend-overlay opacity-[0.04]" />
+      {/* Subtle vignette so edges feel deeper */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(0_0%_0%/0.6)_100%)]" />
+      {/* Tiny grain texture to break OLED banding */}
+      <div className="absolute inset-0 aurora-grain mix-blend-overlay opacity-[0.025]" />
     </div>
   );
 }

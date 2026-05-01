@@ -15,9 +15,11 @@ import {
   ChevronDown,
   PiggyBank,
   CalendarDays,
+  Building2,
+  Users,
 } from 'lucide-react';
 
-type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
+type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts' | 'groups';
 
 interface NavigationProps {
   currentView: View;
@@ -39,6 +41,8 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
   const navItems = [
     { id: 'dashboard' as View, label: t('nav.dashboard'), icon: LayoutDashboard },
     { id: 'transactions' as View, label: t('nav.transactions'), icon: ArrowUpDown },
+    { id: 'accounts' as View, label: 'Conti', icon: Building2 },
+    { id: 'groups' as View, label: 'Gruppi', icon: Users },
     { id: 'calendar' as View, label: t('nav.calendar'), icon: CalendarDays },
     { id: 'budget' as View, label: t('nav.budget'), icon: PiggyBank },
     { id: 'salary' as View, label: t('nav.salary'), icon: Wallet },

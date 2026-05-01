@@ -15,16 +15,16 @@ export interface AccentPreset {
 }
 
 export const ACCENT_PRESETS: AccentPreset[] = [
-  { id: 'blue',    name: 'Apple Blue',  hue: 211, sat: 100, light: 50 },
-  { id: 'indigo',  name: 'Indigo',      hue: 240, sat: 80,  light: 60 },
-  { id: 'purple',  name: 'Purple',      hue: 280, sat: 75,  light: 58 },
-  { id: 'pink',    name: 'Pink',        hue: 330, sat: 85,  light: 60 },
-  { id: 'red',     name: 'Red',         hue: 0,   sat: 75,  light: 55 },
-  { id: 'orange',  name: 'Orange',      hue: 25,  sat: 95,  light: 55 },
-  { id: 'yellow',  name: 'Yellow',      hue: 45,  sat: 95,  light: 55 },
-  { id: 'green',   name: 'Green',       hue: 142, sat: 70,  light: 45 },
-  { id: 'teal',    name: 'Teal',        hue: 175, sat: 75,  light: 45 },
-  { id: 'mono',    name: 'Graphite',    hue: 220, sat: 8,   light: 60 },
+  { id: 'mono',    name: 'Monochrome',  hue: 0,   sat: 0,   light: 100 },
+  { id: 'blue',    name: 'Apple Blue',  hue: 211, sat: 100, light: 55 },
+  { id: 'indigo',  name: 'Indigo',      hue: 240, sat: 80,  light: 65 },
+  { id: 'purple',  name: 'Purple',      hue: 280, sat: 75,  light: 62 },
+  { id: 'pink',    name: 'Pink',        hue: 330, sat: 85,  light: 65 },
+  { id: 'red',     name: 'Red',         hue: 0,   sat: 75,  light: 58 },
+  { id: 'orange',  name: 'Orange',      hue: 25,  sat: 95,  light: 58 },
+  { id: 'yellow',  name: 'Yellow',      hue: 45,  sat: 95,  light: 58 },
+  { id: 'green',   name: 'Green',       hue: 142, sat: 70,  light: 50 },
+  { id: 'teal',    name: 'Teal',        hue: 175, sat: 75,  light: 50 },
 ];
 
 // Budget per category
@@ -113,7 +113,7 @@ export const dateFormatLabels: Record<DateFormat, string> = {
 
 const defaultSettings: Settings = {
   theme: 'dark',
-  accentColorId: 'blue',
+  accentColorId: 'mono',
   currency: 'EUR',
   currencySymbol: '€',
   pinEnabled: false,
@@ -194,20 +194,29 @@ export function useSettings() {
     }
   }, [settings.theme]);
 
-  // Apply accent color → updates --primary, --primary-glow, --accent, --ring, --info, --glass-tint-1
+  // Apply accent color → updates --primary, --primary-glow, --accent, --ring
   useEffect(() => {
     const preset = ACCENT_PRESETS.find(p => p.id === settings.accentColorId) ?? ACCENT_PRESETS[0];
     const root = document.documentElement;
-    const base = `${preset.hue} ${preset.sat}% ${preset.light}%`;
-    const glow = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 10, 75)}%`;
-    const accent = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`;
-    const tint = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 20, 80)}%`;
-    root.style.setProperty('--primary', base);
-    root.style.setProperty('--primary-glow', glow);
-    root.style.setProperty('--accent', accent);
-    root.style.setProperty('--ring', base);
-    root.style.setProperty('--info', accent);
-    root.style.setProperty('--glass-tint-1', tint);
+    if (preset.id === 'mono') {
+      // Pure white on black
+      root.style.setProperty('--primary', '0 0% 100%');
+      root.style.setProperty('--primary-foreground', '0 0% 0%');
+      root.style.setProperty('--primary-glow', '0 0% 90%');
+      root.style.setProperty('--ring', '0 0% 100%');
+      root.style.setProperty('--info', '0 0% 90%');
+      root.style.setProperty('--accent', '0 0% 100% / 0.08');
+    } else {
+      const base = `${preset.hue} ${preset.sat}% ${preset.light}%`;
+      const glow = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 10, 75)}%`;
+      const accent = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`;
+      root.style.setProperty('--primary', base);
+      root.style.setProperty('--primary-foreground', '0 0% 100%');
+      root.style.setProperty('--primary-glow', glow);
+      root.style.setProperty('--ring', base);
+      root.style.setProperty('--info', accent);
+      root.style.setProperty('--accent', `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`);
+    }
   }, [settings.accentColorId]);
 
   // Persist settings

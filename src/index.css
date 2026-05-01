@@ -6,96 +6,95 @@
 
 @layer base {
   :root {
-    /* Apple Liquid Glass - True Dark Mode */
+    /* ===== PURE BLACK OLED THEME ===== */
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
 
-    /* Liquid Glass panels — toned down for cleaner look */
-    --card: 0 0% 100% / 0.03;
+    /* Surfaces — flat neutrals, minimal glass */
+    --card: 0 0% 100% / 0.025;
     --card-foreground: 0 0% 98%;
-    --card-glass: 0 0% 100% / 0.045;
-    --card-border: 0 0% 100% / 0.08;
-    --glass-blur: 40px;
-    --glass-saturation: 160%;
-    --glass-brightness: 1.05;
-    --glass-contrast: 1.02;
-    /* Subtle refraction tints */
-    --glass-tint-1: 211 100% 70%;
-    --glass-tint-2: 280 80% 70%;
+    --card-glass: 0 0% 100% / 0.03;
+    --card-border: 0 0% 100% / 0.06;
+    --glass-blur: 24px;
+    --glass-saturation: 130%;
+    --glass-brightness: 1;
+    --glass-contrast: 1;
+    --glass-tint-1: 0 0% 100%;
+    --glass-tint-2: 0 0% 100%;
     --glass-edge-light: 0 0% 100%;
 
-    --popover: 0 0% 100% / 0.08;
+    --popover: 0 0% 6%;
     --popover-foreground: 0 0% 98%;
 
-    /* Primary accent - Apple Blue */
-    --primary: 211 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 211 100% 60%;
+    /* Primary = WHITE on black (monochrome default) */
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --primary-glow: 0 0% 90%;
 
-    /* Secondary - soft translucent */
-    --secondary: 0 0% 100% / 0.08;
-    --secondary-foreground: 0 0% 85%;
+    /* Secondary - subtle gray */
+    --secondary: 0 0% 100% / 0.05;
+    --secondary-foreground: 0 0% 90%;
 
-    /* Muted for subtle elements */
-    --muted: 0 0% 100% / 0.06;
-    --muted-foreground: 0 0% 60%;
+    /* Muted */
+    --muted: 0 0% 100% / 0.04;
+    --muted-foreground: 0 0% 55%;
 
-    /* Accent for highlights */
-    --accent: 211 100% 55%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent = soft white */
+    --accent: 0 0% 100% / 0.08;
+    --accent-foreground: 0 0% 98%;
 
-    /* Status colors - Apple-authentic */
-    --success: 142 71% 45%;
+    /* Status colors — only data uses color */
+    --success: 142 70% 48%;
     --success-foreground: 0 0% 100%;
-    --warning: 32 95% 55%;
+    --warning: 38 92% 55%;
     --warning-foreground: 0 0% 10%;
-    --destructive: 0 72% 55%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
-    --info: 211 100% 55%;
-    --info-foreground: 0 0% 100%;
+    --info: 0 0% 90%;
+    --info-foreground: 0 0% 0%;
 
-    /* Income/Expense colors */
-    --income: 142 71% 45%;
-    --expense: 0 72% 55%;
-    --freelance: 271 81% 56%;
-    --investments: 211 100% 55%;
+    /* Income/Expense */
+    --income: 142 70% 48%;
+    --expense: 0 75% 55%;
+    --freelance: 0 0% 80%;
+    --investments: 0 0% 80%;
 
-    --border: 0 0% 100% / 0.08;
-    --input: 0 0% 100% / 0.08;
-    --ring: 211 100% 50%;
+    --border: 0 0% 100% / 0.06;
+    --input: 0 0% 100% / 0.05;
+    --ring: 0 0% 100%;
 
-    --radius: 1.5rem;
+    --radius: 1rem;
 
-    /* Extended category colors */
-    --category-food: 25 95% 53%;
-    --category-groceries: 142 71% 45%;
-    --category-restaurant: 340 75% 55%;
-    --category-transport: 211 100% 55%;
-    --category-fuel: 32 95% 55%;
-    --category-shopping: 271 81% 56%;
-    --category-online-shopping: 262 83% 58%;
-    --category-bills: 45 93% 47%;
-    --category-utilities: 32 95% 55%;
-    --category-rent: 211 100% 55%;
-    --category-entertainment: 328 85% 57%;
-    --category-subscriptions: 271 81% 56%;
-    --category-health: 142 71% 45%;
-    --category-pharmacy: 162 73% 46%;
-    --category-travel: 211 100% 55%;
-    --category-education: 211 100% 55%;
-    --category-gifts: 340 75% 55%;
-    --category-insurance: 211 100% 55%;
+    /* Category colors — restrained, mostly grays with hint of hue */
+    --category-food: 25 70% 55%;
+    --category-groceries: 142 50% 50%;
+    --category-restaurant: 340 60% 58%;
+    --category-transport: 200 60% 55%;
+    --category-fuel: 32 75% 55%;
+    --category-shopping: 271 55% 60%;
+    --category-online-shopping: 262 55% 62%;
+    --category-bills: 45 75% 55%;
+    --category-utilities: 32 75% 55%;
+    --category-rent: 200 60% 55%;
+    --category-entertainment: 328 60% 60%;
+    --category-subscriptions: 271 55% 60%;
+    --category-health: 142 50% 50%;
+    --category-pharmacy: 162 55% 50%;
+    --category-travel: 200 60% 55%;
+    --category-education: 200 60% 55%;
+    --category-gifts: 340 60% 58%;
+    --category-insurance: 200 60% 55%;
     --category-other: 0 0% 50%;
 
     /* Sidebar */
-    --sidebar-background: 0 0% 100% / 0.03;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 211 100% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 100% / 0.06;
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 0 0% 75%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 100% / 0.05;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 100% / 0.08;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-border: 0 0% 100% / 0.06;
+    --sidebar-ring: 0 0% 100%;
   }
 
   /* Light theme - Apple Frosted Glass */
@@ -179,27 +178,28 @@
 }
 
 @layer components {
-  /* ===== Subtle Glass Panel — clean, flat, no tilt ===== */
+  /* ===== Pure Black surface card ===== */
   .glass-panel {
     @apply relative overflow-hidden;
-    background: hsl(var(--card-glass));
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background: hsl(0 0% 100% / 0.025);
     border-radius: var(--radius);
-    border: 0.5px solid hsl(var(--card-border));
-    box-shadow:
-      0 1px 2px hsl(0 0% 0% / 0.08),
-      0 4px 16px hsl(0 0% 0% / 0.12);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border: 0.5px solid hsl(0 0% 100% / 0.08);
+    box-shadow: 0 1px 0 0 hsl(0 0% 100% / 0.04) inset;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
 
-  /* Elevated glass — for floating dialogs and cards */
+  .glass-panel:hover {
+    background: hsl(0 0% 100% / 0.04);
+    border-color: hsl(0 0% 100% / 0.12);
+  }
+
   .glass-panel-elevated {
     @apply glass-panel;
+    background: hsl(0 0% 6%);
+    border: 0.5px solid hsl(0 0% 100% / 0.10);
     box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.10) inset,
-      0 4px 12px hsl(0 0% 0% / 0.18),
-      0 16px 40px hsl(0 0% 0% / 0.22);
+      0 1px 0 0 hsl(0 0% 100% / 0.06) inset,
+      0 8px 32px hsl(0 0% 0% / 0.6);
   }
 
   /* Liquid glass input - Apple style */

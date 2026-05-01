@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSupabaseFinanceStore } from '@/hooks/useSupabaseFinanceStore';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,11 +11,15 @@ import { SalaryView } from '@/components/views/SalaryView';
 import { SavingsView } from '@/components/views/SavingsView';
 import { BudgetView } from '@/components/views/BudgetView';
 import { CalendarView } from '@/components/views/CalendarView';
+import { AccountsView } from '@/components/views/AccountsView';
+import { GroupsView } from '@/components/views/GroupsView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
+type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts' | 'groups';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -23,6 +27,38 @@ const Index = () => {
   const { isAuthenticated, isGuest, signOut } = useAuth();
   const settings = useSettings();
   const { t } = useLanguage();
+
+  // Handle invite link: /?invite=TOKEN
+  useEffect(() => {
+    if (!isAuthenticated || isGuest) return;
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('invite');
+    if (!token) return;
+    (async () => {
+      const db = supabase as any;
+      const { data: invite } = await db.from('group_invites').select('*').eq('token', token).maybeSingle();
+      if (!invite || invite.used) { toast.error('Invito non valido o scaduto'); }
+      else {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { error } = await db.from('group_members').insert({
+            group_id: invite.group_id, user_id: user.id, role: 'member',
+          });
+          if (!error) {
+            await db.from('group_invites').update({ used: true }).eq('id', invite.id);
+            toast.success('Sei stato aggiunto al gruppo!');
+            setCurrentView('groups');
+          } else if (error.code === '23505') {
+            toast.info('Sei già membro di questo gruppo');
+            setCurrentView('groups');
+          } else {
+            toast.error('Errore: ' + error.message);
+          }
+        }
+      }
+      window.history.replaceState({}, '', window.location.pathname);
+    })();
+  }, [isAuthenticated, isGuest]);
 
   // Use cloud store for authenticated users, local store for guests
   const cloudStore = useSupabaseFinanceStore();
@@ -132,6 +168,14 @@ const Index = () => {
             transactions={store.transactions}
             currencySymbol={settings.currencySymbol}
           />
+        )}
+
+        {currentView === 'accounts' && (
+          <AccountsView currencySymbol={settings.currencySymbol} />
+        )}
+
+        {currentView === 'groups' && (
+          <GroupsView currencySymbol={settings.currencySymbol} />
         )}
       </div>
 
