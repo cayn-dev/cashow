@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSupabaseFinanceStore } from '@/hooks/useSupabaseFinanceStore';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,11 +11,15 @@ import { SalaryView } from '@/components/views/SalaryView';
 import { SavingsView } from '@/components/views/SavingsView';
 import { BudgetView } from '@/components/views/BudgetView';
 import { CalendarView } from '@/components/views/CalendarView';
+import { AccountsView } from '@/components/views/AccountsView';
+import { GroupsView } from '@/components/views/GroupsView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
+type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts' | 'groups';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
