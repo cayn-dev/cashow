@@ -6,31 +6,30 @@
 
 @layer base {
   :root {
-    /* Apple Liquid Glass - True Dark Mode */
+    /* ===== PURE BLACK OLED THEME ===== */
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
 
-    /* Liquid Glass panels — toned down for cleaner look */
-    --card: 0 0% 100% / 0.03;
+    /* Surfaces — flat neutrals, minimal glass */
+    --card: 0 0% 100% / 0.025;
     --card-foreground: 0 0% 98%;
-    --card-glass: 0 0% 100% / 0.045;
-    --card-border: 0 0% 100% / 0.08;
-    --glass-blur: 40px;
-    --glass-saturation: 160%;
-    --glass-brightness: 1.05;
-    --glass-contrast: 1.02;
-    /* Subtle refraction tints */
-    --glass-tint-1: 211 100% 70%;
-    --glass-tint-2: 280 80% 70%;
+    --card-glass: 0 0% 100% / 0.03;
+    --card-border: 0 0% 100% / 0.06;
+    --glass-blur: 24px;
+    --glass-saturation: 130%;
+    --glass-brightness: 1;
+    --glass-contrast: 1;
+    --glass-tint-1: 0 0% 100%;
+    --glass-tint-2: 0 0% 100%;
     --glass-edge-light: 0 0% 100%;
 
-    --popover: 0 0% 100% / 0.08;
+    --popover: 0 0% 6%;
     --popover-foreground: 0 0% 98%;
 
-    /* Primary accent - Apple Blue */
-    --primary: 211 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 211 100% 60%;
+    /* Primary = WHITE on black (monochrome default) */
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --primary-glow: 0 0% 90%;
 
     /* Secondary - soft translucent */
     --secondary: 0 0% 100% / 0.08;
