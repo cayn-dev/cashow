@@ -56,21 +56,26 @@ export function DashboardView({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold">{t('dashboard.title')}</h1>
+          <h1 className="font-display text-3xl xl:text-4xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
         </div>
         <AddTransactionDialog onAdd={onAddTransaction} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Quick add widget — fast entry/exit logging right from the home */}
+      <QuickAddWidget onAddTransaction={onAddTransaction} currencySymbol={currencySymbol} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard title={t('dashboard.monthlyIncome')} value={`${currencySymbol}${monthlyIncome.toLocaleString()}`} icon={TrendingUp} variant="income" delay={0} />
         <StatCard title={t('dashboard.monthlyExpenses')} value={`${currencySymbol}${monthlyExpenses.toLocaleString()}`} icon={TrendingDown} variant="expense" delay={100} />
         <StatCard title={t('dashboard.monthlyBalance')} value={`${currencySymbol}${monthlyBalance.toLocaleString()}`} subtitle={monthlyBalance >= 0 ? t('dashboard.saving') : t('dashboard.warning')} icon={Wallet} variant={monthlyBalance >= 0 ? 'income' : 'expense'} delay={200} />
         <StatCard title={t('dashboard.totalSavings')} value={`${currencySymbol}${totalSavings.toLocaleString()}`} icon={PiggyBank} variant="primary" delay={300} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ExpenseChart data={expensesByCategory} transactions={allTransactions} />
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2">
+          <ExpenseChart data={expensesByCategory} transactions={allTransactions} />
+        </div>
         <GlassCard className="animate-fade-in">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-display font-semibold text-lg">{t('dashboard.recentTransactions')}</h3>
@@ -79,7 +84,7 @@ export function DashboardView({
             </Button>
           </div>
           <div className="space-y-3">
-            {recentTransactions.slice(0, 4).map((transaction) => (
+            {recentTransactions.slice(0, 5).map((transaction) => (
               <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} />
             ))}
             {recentTransactions.length === 0 && (
