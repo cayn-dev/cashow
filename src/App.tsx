@@ -1,16 +1,26 @@
- import { Toaster } from "@/components/ui/toaster";
- import { Toaster as Sonner } from "@/components/ui/sonner";
- import { TooltipProvider } from "@/components/ui/tooltip";
- import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
- import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
- import { AuthProvider, useAuth } from "@/hooks/useAuth";
- import { LanguageProvider } from "@/hooks/useLanguage";
- import Index from "./pages/Index";
-  import Auth from "./pages/Auth";
-  import Privacy from "./pages/Privacy";
-  import Landing from "./pages/Landing";
-  import NotFound from "./pages/NotFound";
- import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { LanguageProvider } from "@/hooks/useLanguage";
+import Index from "./pages/Index";
+ import Auth from "./pages/Auth";
+ import Privacy from "./pages/Privacy";
+ import Landing from "./pages/Landing";
+ import NotFound from "./pages/NotFound";
+import { Loader2 } from "lucide-react";
+
+// Capture invite token immediately so it survives the auth/landing redirect
+if (typeof window !== 'undefined') {
+  const params = new URLSearchParams(window.location.search);
+  const inviteToken = params.get('invite');
+  if (inviteToken) {
+    sessionStorage.setItem('pendingInvite', inviteToken);
+  }
+}
 
 const queryClient = new QueryClient();
 

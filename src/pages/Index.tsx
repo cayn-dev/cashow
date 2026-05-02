@@ -28,17 +28,19 @@ const Index = () => {
   const settings = useSettings();
   const { t } = useLanguage();
 
-  // Handle invite link: /?invite=TOKEN
+  // Handle invite link: /?invite=TOKEN (also from sessionStorage if redirected via login)
   useEffect(() => {
     if (!isAuthenticated || isGuest) return;
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('invite');
+    const token = params.get('invite') || sessionStorage.getItem('pendingInvite');
     if (!token) return;
+    sessionStorage.removeItem('pendingInvite');
     (async () => {
       const db = supabase as any;
       const { data: invite } = await db.from('group_invites').select('*').eq('token', token).maybeSingle();
-      if (!invite || invite.used) { toast.error('Invito non valido o scaduto'); }
-      else {
+      if (!invite || invite.used) {
+        toast.error(t('groups.inviteInvalid'));
+      } else {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const { error } = await db.from('group_members').insert({
@@ -46,19 +48,19 @@ const Index = () => {
           });
           if (!error) {
             await db.from('group_invites').update({ used: true }).eq('id', invite.id);
-            toast.success('Sei stato aggiunto al gruppo!');
+            toast.success(t('groups.inviteAccepted'));
             setCurrentView('groups');
           } else if (error.code === '23505') {
-            toast.info('Sei già membro di questo gruppo');
+            toast.info(t('groups.inviteAlready'));
             setCurrentView('groups');
           } else {
-            toast.error('Errore: ' + error.message);
+            toast.error(t('groups.error', { message: error.message }));
           }
         }
       }
       window.history.replaceState({}, '', window.location.pathname);
     })();
-  }, [isAuthenticated, isGuest]);
+  }, [isAuthenticated, isGuest, t]);
 
   // Use cloud store for authenticated users, local store for guests
   const cloudStore = useSupabaseFinanceStore();
@@ -98,7 +100,7 @@ const Index = () => {
       {/* Animated aurora background — drifts behind the glass for live refraction */}
       <AuroraBackground intensity="medium" />
 
-      <div className="relative z-10 container max-w-7xl mx-auto py-6 px-4">
+      <div className="relative z-10 container max-w-7xl 2xl:max-w-[1480px] mx-auto py-6 px-4 lg:px-6">
         <Navigation 
           currentView={currentView} 
           onViewChange={setCurrentView}
