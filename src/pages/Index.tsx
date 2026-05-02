@@ -98,7 +98,7 @@ const Index = () => {
       {/* Animated aurora background — drifts behind the glass for live refraction */}
       <AuroraBackground intensity="medium" />
 
-      <div className="relative z-10 container max-w-7xl mx-auto py-6 px-4">
+      <div className="relative z-10 container max-w-7xl 2xl:max-w-[1480px] mx-auto py-6 px-4 lg:px-6">
         <Navigation 
           currentView={currentView} 
           onViewChange={setCurrentView}
