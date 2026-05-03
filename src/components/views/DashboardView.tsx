@@ -3,7 +3,7 @@ import { ExpenseChart } from '@/components/ExpenseChart';
 import { TransactionItem } from '@/components/TransactionItem';
 import { GlassCard } from '@/components/GlassCard';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
-import { QuickAddWidget } from '@/components/QuickAddWidget';
+
 import { InsightsPanel } from '@/components/InsightsPanel';
 import { AIChatDialog } from '@/components/AIChatDialog';
 import { useInsights } from '@/hooks/useInsights';
@@ -61,9 +61,6 @@ export function DashboardView({
         </div>
         <AddTransactionDialog onAdd={onAddTransaction} />
       </div>
-
-      {/* Quick add widget — fast entry/exit logging right from the home */}
-      <QuickAddWidget onAddTransaction={onAddTransaction} currencySymbol={currencySymbol} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard title={t('dashboard.monthlyIncome')} value={`${currencySymbol}${monthlyIncome.toLocaleString()}`} icon={TrendingUp} variant="income" delay={0} />
