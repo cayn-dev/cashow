@@ -18,6 +18,7 @@ import {
   Building2,
   Users,
 } from 'lucide-react';
+import { InstallPWAButton } from '@/components/InstallPWAButton';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts' | 'groups';
 
@@ -184,7 +185,8 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
         </div>
 
         {/* Actions */}
-        <div className="relative flex items-center gap-0.5">
+        <div className="relative flex items-center gap-1">
+          <InstallPWAButton />
           {pinEnabled && onLock && (
             <ActionButton
               onClick={() => { feedback.tap(); onLock(); }}
