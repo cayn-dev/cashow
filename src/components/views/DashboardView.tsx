@@ -62,9 +62,6 @@ export function DashboardView({
         <AddTransactionDialog onAdd={onAddTransaction} />
       </div>
 
-      {/* Quick add widget — fast entry/exit logging right from the home */}
-      <QuickAddWidget onAddTransaction={onAddTransaction} currencySymbol={currencySymbol} />
-
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard title={t('dashboard.monthlyIncome')} value={`${currencySymbol}${monthlyIncome.toLocaleString()}`} icon={TrendingUp} variant="income" delay={0} />
         <StatCard title={t('dashboard.monthlyExpenses')} value={`${currencySymbol}${monthlyExpenses.toLocaleString()}`} icon={TrendingDown} variant="expense" delay={100} />
