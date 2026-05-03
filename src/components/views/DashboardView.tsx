@@ -3,7 +3,7 @@ import { ExpenseChart } from '@/components/ExpenseChart';
 import { TransactionItem } from '@/components/TransactionItem';
 import { GlassCard } from '@/components/GlassCard';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
-import { QuickAddWidget } from '@/components/QuickAddWidget';
+
 import { InsightsPanel } from '@/components/InsightsPanel';
 import { AIChatDialog } from '@/components/AIChatDialog';
 import { useInsights } from '@/hooks/useInsights';
