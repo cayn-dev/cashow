@@ -41,7 +41,7 @@ export function StatCard({
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground font-medium">{title}</p>
-          <p className={cn('text-2xl font-display font-bold tracking-tight', variantStyles[variant])}>
+          <p data-sensitive className={cn('text-2xl font-display font-bold tracking-tight sensitive-amount', variantStyles[variant])}>
             {value}
           </p>
           {subtitle && (
