@@ -258,6 +258,34 @@ export function useSettings() {
     }
   }, [settings.accentColorId]);
 
+  // Apply advanced visual flags
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('privacy-mode', settings.privacyMode);
+    root.classList.toggle('amoled', settings.pureBlackAmoled && settings.theme === 'dark');
+    root.classList.toggle('high-contrast', settings.highContrast);
+    root.classList.toggle('reduced-motion', settings.reducedMotion);
+    root.style.setProperty('--text-scale', String(settings.textScale));
+  }, [settings.privacyMode, settings.pureBlackAmoled, settings.highContrast, settings.reducedMotion, settings.textScale, settings.theme]);
+
+  useEffect(() => {
+    if (!settings.blurOnBlur) {
+      document.documentElement.classList.remove('app-blurred');
+      return;
+    }
+    const onBlur = () => document.documentElement.classList.add('app-blurred');
+    const onFocus = () => document.documentElement.classList.remove('app-blurred');
+    const onVis = () => { if (document.hidden) onBlur(); else onFocus(); };
+    window.addEventListener('blur', onBlur);
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      window.removeEventListener('blur', onBlur);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [settings.blurOnBlur]);
+
   // Persist settings
   useEffect(() => {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
