@@ -68,6 +68,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useFeedback } from '@/hooks/useFeedback';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
