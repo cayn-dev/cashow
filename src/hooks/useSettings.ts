@@ -69,6 +69,28 @@ interface Settings {
   smallTransactionThreshold: number;
   quickAddEnabled: boolean;
   quickAddAmount: number;
+  // ==== Advanced ====
+  // Privacy
+  privacyMode: boolean;        // hide amounts globally
+  blurOnBlur: boolean;         // blur sensitive UI when window loses focus
+  hideOnScreenshot: boolean;   // attempt blur during screen capture
+  // Theme advanced
+  pureBlackAmoled: boolean;    // even darker surfaces
+  highContrast: boolean;       // stronger borders & text
+  textScale: number;           // 0.85 - 1.3
+  reducedMotion: boolean;
+  // Gestures
+  swipeToDeleteEnabled: boolean;
+  shakeToUndoEnabled: boolean;
+  keyboardShortcutsEnabled: boolean;
+  // Smart notifications
+  weeklyDigestEnabled: boolean;
+  categoryAlertsEnabled: boolean;
+  recurringBillsReminder: boolean;
+  // Beta / experiments
+  betaFeaturesEnabled: boolean;
+  experimentalAI: boolean;
+  experimentalCharts: boolean;
 }
 
 const SETTINGS_KEY = 'finance_settings';
