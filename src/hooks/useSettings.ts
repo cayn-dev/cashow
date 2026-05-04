@@ -69,6 +69,28 @@ interface Settings {
   smallTransactionThreshold: number;
   quickAddEnabled: boolean;
   quickAddAmount: number;
+  // ==== Advanced ====
+  // Privacy
+  privacyMode: boolean;        // hide amounts globally
+  blurOnBlur: boolean;         // blur sensitive UI when window loses focus
+  hideOnScreenshot: boolean;   // attempt blur during screen capture
+  // Theme advanced
+  pureBlackAmoled: boolean;    // even darker surfaces
+  highContrast: boolean;       // stronger borders & text
+  textScale: number;           // 0.85 - 1.3
+  reducedMotion: boolean;
+  // Gestures
+  swipeToDeleteEnabled: boolean;
+  shakeToUndoEnabled: boolean;
+  keyboardShortcutsEnabled: boolean;
+  // Smart notifications
+  weeklyDigestEnabled: boolean;
+  categoryAlertsEnabled: boolean;
+  recurringBillsReminder: boolean;
+  // Beta / experiments
+  betaFeaturesEnabled: boolean;
+  experimentalAI: boolean;
+  experimentalCharts: boolean;
 }
 
 const SETTINGS_KEY = 'finance_settings';
@@ -147,6 +169,23 @@ const defaultSettings: Settings = {
   smallTransactionThreshold: 1,
   quickAddEnabled: true,
   quickAddAmount: 10,
+  // Advanced defaults
+  privacyMode: false,
+  blurOnBlur: false,
+  hideOnScreenshot: false,
+  pureBlackAmoled: true,
+  highContrast: false,
+  textScale: 1,
+  reducedMotion: false,
+  swipeToDeleteEnabled: true,
+  shakeToUndoEnabled: false,
+  keyboardShortcutsEnabled: true,
+  weeklyDigestEnabled: false,
+  categoryAlertsEnabled: true,
+  recurringBillsReminder: true,
+  betaFeaturesEnabled: false,
+  experimentalAI: false,
+  experimentalCharts: false,
 };
 
 export function useSettings() {
@@ -218,6 +257,34 @@ export function useSettings() {
       root.style.setProperty('--accent', `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`);
     }
   }, [settings.accentColorId]);
+
+  // Apply advanced visual flags
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('privacy-mode', settings.privacyMode);
+    root.classList.toggle('amoled', settings.pureBlackAmoled && settings.theme === 'dark');
+    root.classList.toggle('high-contrast', settings.highContrast);
+    root.classList.toggle('reduced-motion', settings.reducedMotion);
+    root.style.setProperty('--text-scale', String(settings.textScale));
+  }, [settings.privacyMode, settings.pureBlackAmoled, settings.highContrast, settings.reducedMotion, settings.textScale, settings.theme]);
+
+  useEffect(() => {
+    if (!settings.blurOnBlur) {
+      document.documentElement.classList.remove('app-blurred');
+      return;
+    }
+    const onBlur = () => document.documentElement.classList.add('app-blurred');
+    const onFocus = () => document.documentElement.classList.remove('app-blurred');
+    const onVis = () => { if (document.hidden) onBlur(); else onFocus(); };
+    window.addEventListener('blur', onBlur);
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      window.removeEventListener('blur', onBlur);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [settings.blurOnBlur]);
 
   // Persist settings
   useEffect(() => {

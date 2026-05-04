@@ -50,6 +50,15 @@ import {
   Globe,
   User,
   Mail,
+  EyeOff,
+  Type,
+  Sparkles,
+  KeyRound,
+  Download,
+  Upload,
+  Plus,
+  X,
+  FlaskConical,
 } from 'lucide-react';
 import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek, ACCENT_PRESETS } from '@/hooks/useSettings';
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
@@ -59,6 +68,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useFeedback } from '@/hooks/useFeedback';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { GlassCard } from './GlassCard';
 import {
   AlertDialog,
@@ -115,6 +125,69 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [pinError, setPinError] = useState('');
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricLoading, setBiometricLoading] = useState(false);
+  const customCats = useCustomCategories();
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatEmoji, setNewCatEmoji] = useState('🏷️');
+  const [newCatColor, setNewCatColor] = useState('#888888');
+  const [importingFile, setImportingFile] = useState(false);
+
+  const handleExportJson = () => {
+    try {
+      const json = financeStore.exportDataJson();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `financeflow-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      notifications.sendToast('✅ Backup', t('settings.exportJson'), 'success');
+    } catch {
+      notifications.sendToast(t('settings.error'), '', 'error');
+    }
+  };
+
+  const handleImportJson = async (file: File) => {
+    setImportingFile(true);
+    try {
+      const text = await file.text();
+      const ok = financeStore.importDataJson(text);
+      if (ok) {
+        notifications.sendToast('✅', t('settings.importSuccess'), 'success');
+        setTimeout(() => window.location.reload(), 800);
+      } else {
+        notifications.sendToast(t('settings.error'), t('settings.importError'), 'error');
+      }
+    } finally {
+      setImportingFile(false);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user?.email) return;
+      await supabase.auth.resetPasswordForEmail(user.email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+      notifications.sendToast(t('settings.passwordResetSent'), t('settings.passwordResetDesc'), 'success');
+    } catch {
+      notifications.sendToast(t('settings.error'), '', 'error');
+    }
+  };
+
+  const handleSignOutAllDevices = async () => {
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+      notifications.sendToast('✅', t('settings.signedOutAll'), 'success');
+      setTimeout(() => signOut(), 500);
+    } catch {
+      notifications.sendToast(t('settings.error'), '', 'error');
+    }
+  };
+
 
   useEffect(() => {
     const checkBiometric = async () => {
@@ -1251,6 +1324,379 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          </GlassCard>
+
+          {/* ===== Advanced — Privacy ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <EyeOff className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.privacyMode')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.privacyModeDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <Label className="flex-1">{t('settings.privacyMode')}</Label>
+                <Switch
+                  checked={settings.privacyMode}
+                  onCheckedChange={(v) => settings.updateSettings({ privacyMode: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.blurOnBlur')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.blurOnBlurDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.blurOnBlur}
+                  onCheckedChange={(v) => settings.updateSettings({ blurOnBlur: v })}
+                />
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* ===== Advanced — Theme ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.advanced')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.advancedDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.amoled')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.amoledDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.pureBlackAmoled}
+                  onCheckedChange={(v) => settings.updateSettings({ pureBlackAmoled: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.highContrast')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.highContrastDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.highContrast}
+                  onCheckedChange={(v) => settings.updateSettings({ highContrast: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.reducedMotion')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.reducedMotionDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.reducedMotion}
+                  onCheckedChange={(v) => settings.updateSettings({ reducedMotion: v })}
+                />
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Type className="w-4 h-4 text-muted-foreground" />
+                    <Label>{t('settings.textSize')}</Label>
+                  </div>
+                  <span className="text-sm font-medium">{Math.round(settings.textScale * 100)}%</span>
+                </div>
+                <Slider
+                  value={[settings.textScale]}
+                  onValueChange={([v]) => settings.updateSettings({ textScale: v })}
+                  min={0.85}
+                  max={1.3}
+                  step={0.05}
+                />
+                <p className="text-xs text-muted-foreground">{t('settings.textSizeDesc')}</p>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* ===== Gestures & Shortcuts ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.gestures')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.gesturesDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.swipeToDelete')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.swipeToDeleteDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.swipeToDeleteEnabled}
+                  onCheckedChange={(v) => settings.updateSettings({ swipeToDeleteEnabled: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.shakeToUndo')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.shakeToUndoDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.shakeToUndoEnabled}
+                  onCheckedChange={(v) => settings.updateSettings({ shakeToUndoEnabled: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.keyboardShortcuts')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.keyboardShortcutsDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.keyboardShortcutsEnabled}
+                  onCheckedChange={(v) => settings.updateSettings({ keyboardShortcutsEnabled: v })}
+                />
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* ===== Smart Notifications ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Bell className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.smartNotif')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.smartNotifDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.weeklyDigest')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.weeklyDigestDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.weeklyDigestEnabled}
+                  onCheckedChange={(v) => settings.updateSettings({ weeklyDigestEnabled: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.categoryAlerts')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.categoryAlertsDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.categoryAlertsEnabled}
+                  onCheckedChange={(v) => settings.updateSettings({ categoryAlertsEnabled: v })}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.recurringBills')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.recurringBillsDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.recurringBillsReminder}
+                  onCheckedChange={(v) => settings.updateSettings({ recurringBillsReminder: v })}
+                />
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* ===== Custom Categories ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Palette className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.customCategories')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.customCategoriesDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {customCats.categories.length === 0 && (
+                <p className="text-xs text-muted-foreground text-center py-2">{t('settings.noCustomCategories')}</p>
+              )}
+              {customCats.categories.map((c) => (
+                <div key={c.id} className="flex items-center gap-2 p-2 rounded-lg bg-muted/40">
+                  <span className="text-xl">{c.emoji}</span>
+                  <span className="flex-1 text-sm font-medium">{c.name}</span>
+                  <span className="w-4 h-4 rounded-full" style={{ background: c.color }} />
+                  <Button size="icon" variant="ghost" onClick={() => customCats.removeCategory(c.id)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+              <div className="grid grid-cols-[60px_60px_1fr_auto] gap-2 items-center">
+                <Input
+                  value={newCatEmoji}
+                  onChange={(e) => setNewCatEmoji(e.target.value.slice(0, 2))}
+                  className="text-center"
+                  placeholder="🏷️"
+                />
+                <Input
+                  type="color"
+                  value={newCatColor}
+                  onChange={(e) => setNewCatColor(e.target.value)}
+                  className="p-1 h-10"
+                />
+                <Input
+                  value={newCatName}
+                  onChange={(e) => setNewCatName(e.target.value)}
+                  placeholder={t('settings.categoryName')}
+                  maxLength={30}
+                />
+                <Button
+                  size="icon"
+                  disabled={!newCatName.trim()}
+                  onClick={() => {
+                    customCats.addCategory({ name: newCatName.trim(), emoji: newCatEmoji || '🏷️', color: newCatColor, keywords: [] });
+                    setNewCatName('');
+                    setNewCatEmoji('🏷️');
+                    setNewCatColor('#888888');
+                  }}
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* ===== Backup JSON ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Database className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.fullBackupRestore')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.fullBackupRestoreDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <Button variant="outline" className="w-full justify-start" onClick={handleExportJson}>
+                <Download className="w-4 h-4 mr-2" />
+                {t('settings.exportJson')}
+              </Button>
+              <label className="block">
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleImportJson(f);
+                    e.target.value = '';
+                  }}
+                />
+                <Button asChild variant="outline" className="w-full justify-start" disabled={importingFile}>
+                  <span>
+                    <Upload className="w-4 h-4 mr-2" />
+                    {t('settings.importJson')}
+                  </span>
+                </Button>
+              </label>
+            </div>
+          </GlassCard>
+
+          {/* ===== Profile & Security ===== */}
+          {isAuthenticated && !isGuest && (
+            <GlassCard className="p-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                  <KeyRound className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t('settings.profileSecurity')}</h3>
+                  <p className="text-sm text-muted-foreground">{t('settings.profileSecurityDesc')}</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <Button variant="outline" className="w-full justify-start" onClick={handlePasswordReset}>
+                  <KeyRound className="w-4 h-4 mr-2" />
+                  {t('settings.changePassword')}
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-warning">
+                      <Lock className="w-4 h-4 mr-2" />
+                      {t('settings.signOutAllDevices')}
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t('settings.signOutAllDevices')}</AlertDialogTitle>
+                      <AlertDialogDescription>{t('settings.signedOutAll')}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleSignOutAllDevices}>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </GlassCard>
+          )}
+
+          {/* ===== Beta features ===== */}
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
+                <FlaskConical className="w-5 h-5 text-warning" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.beta')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.betaDesc')}</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label>{t('settings.betaEnable')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('settings.betaEnableDesc')}</p>
+                </div>
+                <Switch
+                  checked={settings.betaFeaturesEnabled}
+                  onCheckedChange={(v) => settings.updateSettings({ betaFeaturesEnabled: v })}
+                />
+              </div>
+              {settings.betaFeaturesEnabled && (
+                <>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <Label>{t('settings.expAI')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.expAIDesc')}</p>
+                    </div>
+                    <Switch
+                      checked={settings.experimentalAI}
+                      onCheckedChange={(v) => settings.updateSettings({ experimentalAI: v })}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <Label>{t('settings.expCharts')}</Label>
+                      <p className="text-xs text-muted-foreground">{t('settings.expChartsDesc')}</p>
+                    </div>
+                    <Switch
+                      checked={settings.experimentalCharts}
+                      onCheckedChange={(v) => settings.updateSettings({ experimentalCharts: v })}
+                    />
+                  </div>
+                  <p className="text-xs text-warning flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
+                    {t('settings.betaWarning')}
+                  </p>
+                </>
+              )}
+            </div>
           </GlassCard>
 
           {/* Privacy & Security Info */}

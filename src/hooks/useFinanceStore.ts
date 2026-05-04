@@ -380,8 +380,54 @@ export function useFinanceStore() {
     }));
   }, []);
 
+  // Export all data as JSON string
+  const exportDataJson = useCallback((): string => {
+    const payload = {
+      app: 'FinanceFlow',
+      exportedAt: new Date().toISOString(),
+      version: CURRENT_VERSION,
+      settings: localStorage.getItem('finance_settings'),
+      customCategories: localStorage.getItem('finance_custom_categories'),
+      data,
+    };
+    return JSON.stringify(payload, null, 2);
+  }, [data]);
+
+  // Import data from JSON string. Returns true on success.
+  const importDataJson = useCallback((json: string): boolean => {
+    try {
+      const parsed = JSON.parse(json);
+      const incoming = parsed.data ?? parsed;
+      if (!incoming || !Array.isArray(incoming.transactions)) return false;
+      createBackup();
+      const restored: FinanceData = {
+        transactions: incoming.transactions.map((t: any) => ({ ...t, date: new Date(t.date) })),
+        savingsGoals: (incoming.savingsGoals || []).map((g: any) => ({
+          ...g,
+          createdAt: new Date(g.createdAt),
+          deadline: g.deadline ? new Date(g.deadline) : undefined,
+        })),
+        monthlySalary: typeof incoming.monthlySalary === 'number' ? incoming.monthlySalary : 0,
+        version: CURRENT_VERSION,
+        lastUpdated: new Date().toISOString(),
+      };
+      setData(restored);
+      if (typeof parsed.settings === 'string') {
+        localStorage.setItem('finance_settings', parsed.settings);
+      }
+      if (typeof parsed.customCategories === 'string') {
+        localStorage.setItem('finance_custom_categories', parsed.customCategories);
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
   return {
     transactions: data.transactions,
+    exportDataJson,
+    importDataJson,
     savingsGoals: data.savingsGoals,
     monthlySalary: data.monthlySalary,
     addTransaction,
