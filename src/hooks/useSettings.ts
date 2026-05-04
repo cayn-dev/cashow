@@ -169,6 +169,23 @@ const defaultSettings: Settings = {
   smallTransactionThreshold: 1,
   quickAddEnabled: true,
   quickAddAmount: 10,
+  // Advanced defaults
+  privacyMode: false,
+  blurOnBlur: false,
+  hideOnScreenshot: false,
+  pureBlackAmoled: true,
+  highContrast: false,
+  textScale: 1,
+  reducedMotion: false,
+  swipeToDeleteEnabled: true,
+  shakeToUndoEnabled: false,
+  keyboardShortcutsEnabled: true,
+  weeklyDigestEnabled: false,
+  categoryAlertsEnabled: true,
+  recurringBillsReminder: true,
+  betaFeaturesEnabled: false,
+  experimentalAI: false,
+  experimentalCharts: false,
 };
 
 export function useSettings() {
