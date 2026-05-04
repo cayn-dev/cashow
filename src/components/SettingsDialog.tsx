@@ -50,6 +50,15 @@ import {
   Globe,
   User,
   Mail,
+  EyeOff,
+  Type,
+  Sparkles,
+  KeyRound,
+  Download,
+  Upload,
+  Plus,
+  X,
+  FlaskConical,
 } from 'lucide-react';
 import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek, ACCENT_PRESETS } from '@/hooks/useSettings';
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
