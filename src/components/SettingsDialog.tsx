@@ -125,6 +125,69 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [pinError, setPinError] = useState('');
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricLoading, setBiometricLoading] = useState(false);
+  const customCats = useCustomCategories();
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatEmoji, setNewCatEmoji] = useState('🏷️');
+  const [newCatColor, setNewCatColor] = useState('#888888');
+  const [importingFile, setImportingFile] = useState(false);
+
+  const handleExportJson = () => {
+    try {
+      const json = financeStore.exportDataJson();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `financeflow-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      notifications.sendToast('✅ Backup', t('settings.exportJson'), 'success');
+    } catch {
+      notifications.sendToast(t('settings.error'), '', 'error');
+    }
+  };
+
+  const handleImportJson = async (file: File) => {
+    setImportingFile(true);
+    try {
+      const text = await file.text();
+      const ok = financeStore.importDataJson(text);
+      if (ok) {
+        notifications.sendToast('✅', t('settings.importSuccess'), 'success');
+        setTimeout(() => window.location.reload(), 800);
+      } else {
+        notifications.sendToast(t('settings.error'), t('settings.importError'), 'error');
+      }
+    } finally {
+      setImportingFile(false);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user?.email) return;
+      await supabase.auth.resetPasswordForEmail(user.email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+      notifications.sendToast(t('settings.passwordResetSent'), t('settings.passwordResetDesc'), 'success');
+    } catch {
+      notifications.sendToast(t('settings.error'), '', 'error');
+    }
+  };
+
+  const handleSignOutAllDevices = async () => {
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+      notifications.sendToast('✅', t('settings.signedOutAll'), 'success');
+      setTimeout(() => signOut(), 500);
+    } catch {
+      notifications.sendToast(t('settings.error'), '', 'error');
+    }
+  };
+
 
   useEffect(() => {
     const checkBiometric = async () => {
