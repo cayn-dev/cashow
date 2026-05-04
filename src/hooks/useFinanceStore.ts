@@ -377,6 +377,7 @@ export function useFinanceStore() {
       ...prev,
       savingsGoals: [],
       lastUpdated: new Date().toISOString(),
+    }));
   }, []);
 
   // Export all data as JSON string
@@ -422,7 +423,11 @@ export function useFinanceStore() {
       return false;
     }
   }, []);
+
+  return {
     transactions: data.transactions,
+    exportDataJson,
+    importDataJson,
     savingsGoals: data.savingsGoals,
     monthlySalary: data.monthlySalary,
     addTransaction,
