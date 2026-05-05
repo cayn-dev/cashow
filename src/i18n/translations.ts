@@ -664,14 +664,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'accounts.type.credit': 'Carta credito',
     'accounts.type.cash': 'Contanti',
     'accounts.type.investment': 'Investimenti',
-    'groups.created': 'Gruppo creato',
-    'groups.deleted': 'Gruppo eliminato',
-    'groups.added': 'Spesa aggiunta',
-    'groups.expenseDeleted': 'Spesa eliminata',
-    'groups.error': 'Errore: {message}',
-    'groups.inviteAccepted': 'Sei entrato nel gruppo',
-    'groups.inviteAlready': 'Sei già membro di questo gruppo',
-    'groups.inviteInvalid': 'Invito non valido o scaduto',
 
   },
 
@@ -1322,14 +1314,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'accounts.type.credit': 'Credit card',
     'accounts.type.cash': 'Cash',
     'accounts.type.investment': 'Investments',
-    'groups.created': 'Group created',
-    'groups.deleted': 'Group deleted',
-    'groups.added': 'Expense added',
-    'groups.expenseDeleted': 'Expense deleted',
-    'groups.error': 'Error: {message}',
-    'groups.inviteAccepted': 'You joined the group',
-    'groups.inviteAlready': 'You are already a member of this group',
-    'groups.inviteInvalid': 'Invalid or expired invite',
 
   },
 
@@ -1922,14 +1906,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'accounts.type.credit': 'Tarjeta de crédito',
     'accounts.type.cash': 'Efectivo',
     'accounts.type.investment': 'Inversiones',
-    'groups.created': 'Grupo creado',
-    'groups.deleted': 'Grupo eliminado',
-    'groups.added': 'Gasto añadido',
-    'groups.expenseDeleted': 'Gasto eliminado',
-    'groups.error': 'Error: {message}',
-    'groups.inviteAccepted': 'Te has unido al grupo',
-    'groups.inviteAlready': 'Ya eres miembro de este grupo',
-    'groups.inviteInvalid': 'Invitación no válida o expirada',
 
   },
 
@@ -2522,14 +2498,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'accounts.type.credit': 'Carte de crédit',
     'accounts.type.cash': 'Espèces',
     'accounts.type.investment': 'Investissements',
-    'groups.created': 'Groupe créé',
-    'groups.deleted': 'Groupe supprimé',
-    'groups.added': 'Dépense ajoutée',
-    'groups.expenseDeleted': 'Dépense supprimée',
-    'groups.error': 'Erreur : {message}',
-    'groups.inviteAccepted': 'Vous avez rejoint le groupe',
-    'groups.inviteAlready': 'Vous êtes déjà membre de ce groupe',
-    'groups.inviteInvalid': 'Invitation invalide ou expirée',
 
   },
 
@@ -3122,14 +3090,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'accounts.type.credit': 'Kreditkarte',
     'accounts.type.cash': 'Bargeld',
     'accounts.type.investment': 'Investitionen',
-    'groups.created': 'Gruppe erstellt',
-    'groups.deleted': 'Gruppe gelöscht',
-    'groups.added': 'Ausgabe hinzugefügt',
-    'groups.expenseDeleted': 'Ausgabe gelöscht',
-    'groups.error': 'Fehler: {message}',
-    'groups.inviteAccepted': 'Du bist der Gruppe beigetreten',
-    'groups.inviteAlready': 'Du bist bereits Mitglied dieser Gruppe',
-    'groups.inviteInvalid': 'Einladung ungültig oder abgelaufen',
 
   },
 };
