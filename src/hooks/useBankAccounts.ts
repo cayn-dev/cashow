@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
 
 export interface BankAccount {
@@ -20,6 +21,7 @@ const db = supabase as any;
 
 export function useBankAccounts() {
   const { user, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -67,11 +69,11 @@ export function useBankAccounts() {
       }).select().single();
       if (error) throw error;
       setAccounts(prev => [...prev, { ...data, current_balance: Number(data.current_balance), initial_balance: Number(data.initial_balance) }]);
-      toast.success('Conto aggiunto');
+      toast.success(t('accounts.added'));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('accounts.error', { msg: e.message }));
     }
-  }, [user]);
+  }, [user, t]);
 
   const updateAccount = useCallback(async (id: string, updates: Partial<BankAccount>) => {
     if (!user) return;
@@ -80,9 +82,9 @@ export function useBankAccounts() {
       if (error) throw error;
       setAccounts(prev => prev.map(a => a.id === id ? { ...a, ...updates } as BankAccount : a));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('accounts.error', { msg: e.message }));
     }
-  }, [user]);
+  }, [user, t]);
 
   const deleteAccount = useCallback(async (id: string) => {
     if (!user) return;
@@ -90,11 +92,11 @@ export function useBankAccounts() {
       const { error } = await db.from('bank_accounts').delete().eq('id', id).eq('user_id', user.id);
       if (error) throw error;
       setAccounts(prev => prev.filter(a => a.id !== id));
-      toast.success('Conto eliminato');
+      toast.success(t('accounts.deleted'));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('accounts.error', { msg: e.message }));
     }
-  }, [user]);
+  }, [user, t]);
 
   return { accounts, loading, addAccount, updateAccount, deleteAccount, refetch: fetchAccounts };
 }
