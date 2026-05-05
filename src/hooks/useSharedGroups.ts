@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
 
 export interface SharedGroup {
@@ -46,6 +47,7 @@ const db = supabase as any;
 
 export function useSharedGroups() {
   const { user, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [groups, setGroups] = useState<SharedGroup[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,13 +74,13 @@ export function useSharedGroups() {
       }).select().single();
       if (error) throw error;
       setGroups(prev => [data, ...prev]);
-      toast.success('Gruppo creato');
+      toast.success(t('groups.created'));
       return data as SharedGroup;
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('groups.error', { message: e.message }));
       return null;
     }
-  }, [user]);
+  }, [user, t]);
 
   const deleteGroup = useCallback(async (id: string) => {
     if (!user) return;
@@ -86,17 +88,18 @@ export function useSharedGroups() {
       const { error } = await db.from('shared_groups').delete().eq('id', id);
       if (error) throw error;
       setGroups(prev => prev.filter(g => g.id !== id));
-      toast.success('Gruppo eliminato');
+      toast.success(t('groups.deleted'));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('groups.error', { message: e.message }));
     }
-  }, [user]);
+  }, [user, t]);
 
   return { groups, loading, createGroup, deleteGroup, refetch: fetchGroups };
 }
 
 export function useGroupDetails(groupId: string | null) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [expenses, setExpenses] = useState<GroupExpense[]>([]);
   const [splits, setSplits] = useState<ExpenseSplit[]>([]);
@@ -166,30 +169,30 @@ export function useGroupDetails(groupId: string | null) {
         await db.from('expense_splits').insert(splitsToInsert);
       }
       await fetch();
-      toast.success('Spesa aggiunta');
+      toast.success(t('groups.added'));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('groups.error', { message: e.message }));
     }
-  }, [groupId, user, members, fetch]);
+  }, [groupId, user, members, fetch, t]);
 
   const deleteExpense = useCallback(async (id: string) => {
     try {
       await db.from('group_expenses').delete().eq('id', id);
       await fetch();
-      toast.success('Spesa eliminata');
+      toast.success(t('groups.expenseDeleted'));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('groups.error', { message: e.message }));
     }
-  }, [fetch]);
+  }, [fetch, t]);
 
   const togglePaid = useCallback(async (splitId: string, paid: boolean) => {
     try {
       await db.from('expense_splits').update({ paid, paid_at: paid ? new Date().toISOString() : null }).eq('id', splitId);
       setSplits(prev => prev.map(s => s.id === splitId ? { ...s, paid } : s));
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('groups.error', { message: e.message }));
     }
-  }, []);
+  }, [t]);
 
   const createInvite = useCallback(async (): Promise<string | null> => {
     if (!groupId || !user) return null;
@@ -200,10 +203,10 @@ export function useGroupDetails(groupId: string | null) {
       if (error) throw error;
       return data.token;
     } catch (e: any) {
-      toast.error('Errore: ' + e.message);
+      toast.error(t('groups.error', { message: e.message }));
       return null;
     }
-  }, [groupId, user]);
+  }, [groupId, user, t]);
 
   // Compute balances: positive = others owe me, negative = I owe
   const computeBalances = useCallback(() => {
