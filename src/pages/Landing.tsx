@@ -191,15 +191,18 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Wallet className="w-4 h-4" />
-            <span>© 2026 Cashow. {t('landing.rights')}</span>
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Wallet className="w-4 h-4" />
+              <span>© 2026 Cashow. {t('landing.rights')}</span>
+            </div>
+            <div className="flex items-center gap-6 text-sm">
+              <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.privacy')}</a>
+              <a href="/auth" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.login')}</a>
+            </div>
           </div>
-          <div className="flex items-center gap-6 text-sm">
-            <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.privacy')}</a>
-            <a href="/auth" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.login')}</a>
-          </div>
+          <p className="text-xs text-muted-foreground/80 pt-2">Made by Jacopo Ferrieri</p>
         </div>
       </footer>
     </div>

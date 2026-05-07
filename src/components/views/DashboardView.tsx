@@ -63,9 +63,9 @@ export function DashboardView({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <StatCard title={t('dashboard.monthlyIncome')} value={`${currencySymbol}${monthlyIncome.toLocaleString()}`} icon={TrendingUp} variant="income" delay={0} />
-        <StatCard title={t('dashboard.monthlyExpenses')} value={`${currencySymbol}${monthlyExpenses.toLocaleString()}`} icon={TrendingDown} variant="expense" delay={100} />
-        <StatCard title={t('dashboard.monthlyBalance')} value={`${currencySymbol}${monthlyBalance.toLocaleString()}`} subtitle={monthlyBalance >= 0 ? t('dashboard.saving') : t('dashboard.warning')} icon={Wallet} variant={monthlyBalance >= 0 ? 'income' : 'expense'} delay={200} />
+        <StatCard title={t('dashboard.monthlyIncome')} value={`${currencySymbol}${monthlyIncome.toLocaleString()}`} icon={TrendingUp} variant="income" delay={0} onClick={onViewTransactions} />
+        <StatCard title={t('dashboard.monthlyExpenses')} value={`${currencySymbol}${monthlyExpenses.toLocaleString()}`} icon={TrendingDown} variant="expense" delay={100} onClick={onViewTransactions} />
+        <StatCard title={t('dashboard.monthlyBalance')} value={`${currencySymbol}${monthlyBalance.toLocaleString()}`} subtitle={monthlyBalance >= 0 ? t('dashboard.saving') : t('dashboard.warning')} icon={Wallet} variant={monthlyBalance >= 0 ? 'income' : 'expense'} delay={200} onClick={onViewTransactions} />
         <StatCard title={t('dashboard.totalSavings')} value={`${currencySymbol}${totalSavings.toLocaleString()}`} icon={PiggyBank} variant="primary" delay={300} />
       </div>
 
