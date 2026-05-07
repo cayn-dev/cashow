@@ -138,7 +138,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `financeflow-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `cashow-backup-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -1132,7 +1132,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `financeflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+                    a.download = `cashow-backup-${new Date().toISOString().split('T')[0]}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
                     notifications.sendToast(t('settings.backupDownloaded'), t('settings.dataExported'), 'success');
@@ -1809,7 +1809,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
 
           <div className="text-center text-sm text-muted-foreground pt-4">
-            <p>FinanceFlow v1.0.0</p>
+            <p>Cashow v1.0.0</p>
             <p className="text-xs mt-1">Made with ❤️</p>
           </div>
         </div>

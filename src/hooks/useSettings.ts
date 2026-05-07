@@ -95,7 +95,7 @@ interface Settings {
 
 const SETTINGS_KEY = 'finance_settings';
 const PIN_VERIFIED_KEY = 'pin_verified';
-const PIN_SALT = 'financeflow:v1:pin';
+const PIN_SALT = 'cashow:v1:pin';
 
 // Hash a PIN using SHA-256 with a static app-level salt.
 // This prevents storing the raw PIN in localStorage; verification compares hashes.
@@ -528,13 +528,13 @@ export function useSettings() {
         publicKey: {
           challenge,
           rp: {
-            name: 'FinanceFlow',
+            name: 'Cashow',
             id: window.location.hostname,
           },
           user: {
             id: userId,
-            name: 'user@financeflow.app',
-            displayName: 'FinanceFlow User',
+            name: 'user@cashow.app',
+            displayName: 'Cashow User',
           },
           pubKeyCredParams: [
             { type: 'public-key', alg: -7 },

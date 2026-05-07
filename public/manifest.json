@@ -1,6 +1,6 @@
 {
-  "name": "FinanceFlow - Gestione Finanziaria",
-  "short_name": "FinanceFlow",
+  "name": "Cashow - Gestione Finanziaria",
+  "short_name": "Cashow",
   "description": "Gestisci le tue finanze personali: traccia spese, monitora risparmi e analizza il tuo budget.",
   "start_url": "/?source=pwa",
   "scope": "/",

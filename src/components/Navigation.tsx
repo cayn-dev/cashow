@@ -146,7 +146,7 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
               WebkitTextFillColor: 'transparent',
             }}
           >
-            FinanceFlow
+            Cashow
           </span>
         </div>
 

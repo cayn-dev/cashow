@@ -14,7 +14,7 @@ self.addEventListener('push', (event) => {
   try {
     data = event.data.json();
   } catch {
-    data = { title: 'FinanceFlow', body: event.data.text() };
+    data = { title: 'Cashow', body: event.data.text() };
   }
 
   const options = {
@@ -27,12 +27,12 @@ self.addEventListener('push', (event) => {
       type: data.type || 'info',
     },
     actions: data.actions || [],
-    tag: data.tag || 'financeflow-notification',
+    tag: data.tag || 'cashow-notification',
     renotify: true,
   };
 
   event.waitUntil(
-    self.registration.showNotification(data.title || 'FinanceFlow', options)
+    self.registration.showNotification(data.title || 'Cashow', options)
   );
 });
 

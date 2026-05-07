@@ -49,7 +49,7 @@ export default function Landing() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
             <Wallet className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-bold text-lg">FinanceFlow</span>
+          <span className="font-bold text-lg">Cashow</span>
         </div>
         <div className="flex items-center gap-2">
           {/* Language selector */}
@@ -194,7 +194,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Wallet className="w-4 h-4" />
-            <span>© 2026 FinanceFlow. {t('landing.rights')}</span>
+            <span>© 2026 Cashow. {t('landing.rights')}</span>
           </div>
           <div className="flex items-center gap-6 text-sm">
             <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.privacy')}</a>
