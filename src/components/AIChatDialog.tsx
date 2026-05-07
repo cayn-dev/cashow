@@ -474,6 +474,16 @@ ${goals || 'Nessun obiettivo impostato'}
             >
               <ImageIcon className="w-5 h-5" />
             </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("shrink-0", isListening ? "text-destructive animate-pulse" : "text-muted-foreground hover:text-primary")}
+              onClick={toggleVoice}
+              disabled={isLoading}
+              title={t('ai.voice') || 'Voice'}
+            >
+              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            </Button>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
