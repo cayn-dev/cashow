@@ -9,11 +9,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Bot, Send, User, Sparkles, Loader2, Zap, TrendingUp, Target, PiggyBank, Camera, X, Image as ImageIcon } from 'lucide-react';
+import { Bot, Send, User, Sparkles, Loader2, Zap, TrendingUp, Target, PiggyBank, Camera, X, Image as ImageIcon, Mic, MicOff } from 'lucide-react';
 import { Transaction, SavingsGoal } from '@/types/finance';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
-import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -40,8 +39,41 @@ export function AIChatDialog({
   monthlyBalance,
   currencySymbol = '€',
 }: AIChatDialogProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Voice input via Web Speech API
+  const toggleVoice = () => {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert(t('ai.voiceUnsupported') || 'Voice input not supported in this browser');
+      return;
+    }
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+    const rec = new SR();
+    const langMap: Record<string, string> = { it: 'it-IT', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE' };
+    rec.lang = langMap[language] || 'it-IT';
+    rec.interimResults = true;
+    rec.continuous = false;
+    rec.onresult = (e: any) => {
+      let txt = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        txt += e.results[i][0].transcript;
+      }
+      setInput(txt);
+    };
+    rec.onend = () => setIsListening(false);
+    rec.onerror = () => setIsListening(false);
+    recognitionRef.current = rec;
+    setIsListening(true);
+    rec.start();
+  };
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -156,16 +188,12 @@ ${goals || 'Nessun obiettivo impostato'}
         ? `[L'utente ha allegato un'immagine/screenshot dell'app. Analizza il contesto e rispondi.]\n\n${userMessage.content}`
         : userMessage.content;
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        throw new Error('Devi essere autenticato per usare la chat AI');
-      }
-
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
           messages: [...messages, { ...userMessage, content: messageContent }].map(m => ({
@@ -173,6 +201,7 @@ ${goals || 'Nessun obiettivo impostato'}
             content: m.content,
           })),
           financialContext,
+          language,
           stream: true,
         }),
         signal: abortControllerRef.current.signal,
