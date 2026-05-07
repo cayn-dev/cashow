@@ -193,6 +193,12 @@ export function Navigation({ currentView, onViewChange, onOpenSettings, onLock, 
             </ActionButton>
           )}
           <ActionButton
+            onClick={() => { feedback.tap(); window.location.reload(); }}
+            title={t('nav.refresh') || 'Refresh'}
+          >
+            <RefreshCw className="w-[17px] h-[17px]" />
+          </ActionButton>
+          <ActionButton
             onClick={() => { feedback.tap(); onOpenSettings(); }}
             title={t('settings.title').replace(/[⚙️\s]/g, '')}
           >

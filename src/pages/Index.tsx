@@ -11,15 +11,13 @@ import { SalaryView } from '@/components/views/SalaryView';
 import { SavingsView } from '@/components/views/SavingsView';
 import { BudgetView } from '@/components/views/BudgetView';
 import { CalendarView } from '@/components/views/CalendarView';
-import { AccountsView } from '@/components/views/AccountsView';
-import { GroupsView } from '@/components/views/GroupsView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts' | 'groups';
+type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -28,39 +26,7 @@ const Index = () => {
   const settings = useSettings();
   const { t } = useLanguage();
 
-  // Handle invite link: /?invite=TOKEN (also from sessionStorage if redirected via login)
-  useEffect(() => {
-    if (!isAuthenticated || isGuest) return;
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('invite') || sessionStorage.getItem('pendingInvite');
-    if (!token) return;
-    sessionStorage.removeItem('pendingInvite');
-    (async () => {
-      const db = supabase as any;
-      const { data: invite } = await db.from('group_invites').select('*').eq('token', token).maybeSingle();
-      if (!invite || invite.used) {
-        toast.error(t('groups.inviteInvalid'));
-      } else {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { error } = await db.from('group_members').insert({
-            group_id: invite.group_id, user_id: user.id, role: 'member',
-          });
-          if (!error) {
-            await db.from('group_invites').update({ used: true }).eq('id', invite.id);
-            toast.success(t('groups.inviteAccepted'));
-            setCurrentView('groups');
-          } else if (error.code === '23505') {
-            toast.info(t('groups.inviteAlready'));
-            setCurrentView('groups');
-          } else {
-            toast.error(t('groups.error', { message: error.message }));
-          }
-        }
-      }
-      window.history.replaceState({}, '', window.location.pathname);
-    })();
-  }, [isAuthenticated, isGuest, t]);
+  // (Group invite handling removed with Groups feature)
 
   // Use cloud store for authenticated users, local store for guests
   const cloudStore = useSupabaseFinanceStore();
@@ -172,13 +138,6 @@ const Index = () => {
           />
         )}
 
-        {currentView === 'accounts' && (
-          <AccountsView currencySymbol={settings.currencySymbol} />
-        )}
-
-        {currentView === 'groups' && (
-          <GroupsView currencySymbol={settings.currencySymbol} />
-        )}
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
