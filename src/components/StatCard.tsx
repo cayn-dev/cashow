@@ -11,6 +11,7 @@ interface StatCardProps {
   trendValue?: string;
   variant?: 'default' | 'income' | 'expense' | 'primary';
   delay?: number;
+  onClick?: () => void;
 }
 
 export function StatCard({
@@ -22,6 +23,7 @@ export function StatCard({
   trendValue,
   variant = 'default',
   delay = 0,
+  onClick,
 }: StatCardProps) {
   const variantStyles = {
     default: 'text-foreground',
@@ -31,9 +33,11 @@ export function StatCard({
   };
 
   return (
-    <GlassCard 
+    <GlassCard
+      onClick={onClick}
       className={cn(
         'animate-slide-up opacity-0',
+        onClick && 'cursor-pointer hover:scale-[1.02] transition-transform',
         delay && `delay-${delay}`
       )}
       style={{ animationDelay: `${delay}ms`, animationFillMode: 'forwards' }}
