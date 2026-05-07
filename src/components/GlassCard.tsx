@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { ReactNode, CSSProperties } from 'react';
+import { ReactNode, CSSProperties, MouseEventHandler } from 'react';
 
 interface GlassCardProps {
   children: ReactNode;
@@ -8,6 +8,7 @@ interface GlassCardProps {
   glow?: boolean;
   elevated?: boolean;
   style?: CSSProperties;
+  onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
 export function GlassCard({
@@ -17,9 +18,11 @@ export function GlassCard({
   glow = false,
   elevated = false,
   style,
+  onClick,
 }: GlassCardProps) {
   return (
     <div
+      onClick={onClick}
       className={cn(
         elevated ? 'glass-panel-elevated' : 'glass-panel',
         'p-5',

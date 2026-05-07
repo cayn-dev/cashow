@@ -95,7 +95,7 @@ interface Settings {
 
 const SETTINGS_KEY = 'finance_settings';
 const PIN_VERIFIED_KEY = 'pin_verified';
-const PIN_SALT = 'financeflow:v1:pin';
+const PIN_SALT = 'cashow:v1:pin';
 
 // Hash a PIN using SHA-256 with a static app-level salt.
 // This prevents storing the raw PIN in localStorage; verification compares hashes.
@@ -237,26 +237,31 @@ export function useSettings() {
   useEffect(() => {
     const preset = ACCENT_PRESETS.find(p => p.id === settings.accentColorId) ?? ACCENT_PRESETS[0];
     const root = document.documentElement;
+    const isLight = settings.theme === 'light';
     if (preset.id === 'mono') {
-      // Pure white on black
-      root.style.setProperty('--primary', '0 0% 100%');
-      root.style.setProperty('--primary-foreground', '0 0% 0%');
-      root.style.setProperty('--primary-glow', '0 0% 90%');
-      root.style.setProperty('--ring', '0 0% 100%');
-      root.style.setProperty('--info', '0 0% 90%');
-      root.style.setProperty('--accent', '0 0% 100% / 0.08');
+      // Monochrome: white on dark, black on light
+      const base = isLight ? '0 0% 10%' : '0 0% 100%';
+      const fg = isLight ? '0 0% 100%' : '0 0% 0%';
+      const glow = isLight ? '0 0% 25%' : '0 0% 90%';
+      root.style.setProperty('--primary', base);
+      root.style.setProperty('--primary-foreground', fg);
+      root.style.setProperty('--primary-glow', glow);
+      root.style.setProperty('--ring', base);
+      root.style.setProperty('--info', base);
+      root.style.setProperty('--accent', base);
+      root.style.setProperty('--accent-foreground', fg);
     } else {
       const base = `${preset.hue} ${preset.sat}% ${preset.light}%`;
       const glow = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 10, 75)}%`;
-      const accent = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`;
       root.style.setProperty('--primary', base);
       root.style.setProperty('--primary-foreground', '0 0% 100%');
       root.style.setProperty('--primary-glow', glow);
       root.style.setProperty('--ring', base);
-      root.style.setProperty('--info', accent);
-      root.style.setProperty('--accent', `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 5, 70)}%`);
+      root.style.setProperty('--info', base);
+      root.style.setProperty('--accent', base);
+      root.style.setProperty('--accent-foreground', '0 0% 100%');
     }
-  }, [settings.accentColorId]);
+  }, [settings.accentColorId, settings.theme]);
 
   // Apply advanced visual flags
   useEffect(() => {
@@ -528,13 +533,13 @@ export function useSettings() {
         publicKey: {
           challenge,
           rp: {
-            name: 'FinanceFlow',
+            name: 'Cashow',
             id: window.location.hostname,
           },
           user: {
             id: userId,
-            name: 'user@financeflow.app',
-            displayName: 'FinanceFlow User',
+            name: 'user@cashow.app',
+            displayName: 'Cashow User',
           },
           pubKeyCredParams: [
             { type: 'public-key', alg: -7 },

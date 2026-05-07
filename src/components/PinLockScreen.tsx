@@ -78,7 +78,7 @@ export function PinLockScreen({ onUnlock, onBiometricUnlock, biometricEnabled = 
           <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-primary/20 flex items-center justify-center">
             <Lock className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="font-display text-2xl font-bold mb-2">FinanceFlow</h1>
+          <h1 className="font-display text-2xl font-bold mb-2">Cashow</h1>
           <p className="text-muted-foreground">
             {pinEnabled ? t('pin.enterPin') : t('pin.useFaceId')}
           </p>

@@ -1,9 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -12,67 +11,43 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate the user before doing anything else
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const userClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims?.sub) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const { messages, financialContext, stream = false } = await req.json();
+    const { messages, financialContext, stream = false, language = 'it' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
+
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `Sei un assistente finanziario AI avanzato, esperto e amichevole. Parli italiano in modo naturale.
+    const langInstr: Record<string, string> = {
+      it: "Rispondi sempre in italiano in modo naturale.",
+      en: "Always reply in English.",
+      es: "Responde siempre en español.",
+      fr: "Réponds toujours en français.",
+      de: "Antworte immer auf Deutsch.",
+    };
 
-🎯 IL TUO RUOLO:
-Sei il consulente finanziario personale dell'utente. Hai accesso completo ai loro dati finanziari e devi usarli per dare consigli SPECIFICI e PERSONALIZZATI.
+    const systemPrompt = `You are Cashow's advanced AI financial assistant. ${langInstr[language] || langInstr.it}
 
-📊 ANALISI CHE DEVI FARE:
-1. Calcola percentuali di spesa per categoria
-2. Confronta il mese attuale con la media
-3. Identifica trend di spesa (in aumento/diminuzione)
-4. Valuta il progresso verso gli obiettivi
-5. Suggerisci budget ottimali per categoria
+ROLE: Personal financial advisor with full access to user data. Give SPECIFIC, PERSONALIZED advice with real numbers.
 
-💡 COME RISPONDERE:
-- USA SEMPRE i numeri reali dell'utente nelle risposte
-- Fai calcoli specifici (es: "Spendi €120/settimana in cibo, il 18% delle entrate")
-- Dai consigli ATTUABILI con numeri precisi
-- Se l'utente chiede analisi, fornisci tabelle markdown quando utile
-- Usa emoji per rendere le risposte visivamente accattivanti
-- Celebra i successi ma sii onesto sui problemi
-- Mantieni un tono professionale ma amichevole
+ANALYSIS:
+1. Calculate spending percentages by category
+2. Compare current vs average
+3. Identify trends (rising/falling)
+4. Evaluate goal progress
+5. Suggest optimal budgets
 
-⚠️ REGOLE IMPORTANTI:
-- MAI inventare dati - usa SOLO quelli forniti
-- Se mancano informazioni, chiedile
-- Risposte concise ma complete (max 4 paragrafi)
-- Priorità: praticità > teoria
+HOW TO ANSWER:
+- Always use real user numbers
+- Make specific calculations (e.g. "you spend €120/week on food, 18% of income")
+- Actionable advice with precise numbers
+- Use markdown tables when useful
+- Use emojis to make responses lively
+- Celebrate wins, be honest about issues
+- Concise but complete (max 4 paragraphs)
 
-📈 DATI FINANZIARI DELL'UTENTE:
-
-${financialContext}`;
+USER FINANCIAL DATA:
+${financialContext || 'No data provided yet.'}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -93,22 +68,21 @@ ${financialContext}`;
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Troppe richieste. Riprova tra poco." }),
+          JSON.stringify({ error: "Rate limit exceeded. Try again shortly." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: "Crediti AI esauriti. Aggiungi crediti nelle impostazioni." }),
+          JSON.stringify({ error: "AI credits exhausted." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       const errorText = await response.text();
       console.error("AI gateway error:", response.status, errorText);
-      throw new Error("Errore del gateway AI");
+      throw new Error("AI gateway error");
     }
 
-    // Return streaming response if requested
     if (stream) {
       return new Response(response.body, {
         headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
@@ -116,7 +90,7 @@ ${financialContext}`;
     }
 
     const data = await response.json();
-    const message = data.choices?.[0]?.message?.content || "Mi dispiace, non sono riuscito a elaborare la risposta.";
+    const message = data.choices?.[0]?.message?.content || "Sorry, no response.";
 
     return new Response(
       JSON.stringify({ message }),
@@ -125,7 +99,7 @@ ${financialContext}`;
   } catch (error) {
     console.error("finance-ai-chat error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Errore sconosciuto" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

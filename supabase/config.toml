@@ -1,7 +1,10 @@
 project_id = "eyuzazeavwbtdymmviyh"
- 
- [functions.process-recurring]
- verify_jwt = false
 
- [functions.delete-account]
- verify_jwt = false
+[functions.process-recurring]
+verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = false
+
+[functions.finance-ai-chat]
+verify_jwt = false

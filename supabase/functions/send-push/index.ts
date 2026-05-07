@@ -115,7 +115,7 @@ async function sendWebPush(
     subscription.endpoint,
     vapidPublicKey,
     vapidPrivateKey,
-    "mailto:noreply@financeflow.app"
+    "mailto:noreply@cashow.app"
   );
 
   // Encrypt payload using Web Push encryption (aes128gcm)
@@ -195,10 +195,10 @@ serve(async (req) => {
     }
 
     const payload = JSON.stringify({
-      title: title || "FinanceFlow",
+      title: title || "Cashow",
       body: body || "",
       type: type || "info",
-      tag: tag || "financeflow",
+      tag: tag || "cashow",
       url: "/",
     });
 

@@ -3,7 +3,7 @@ Allow: /
 Allow: /auth
 Allow: /privacy
 
-Sitemap: https://financeflowjf.lovable.app/sitemap.xml
+Sitemap: https://cashowjf.lovable.app/sitemap.xml
 
 User-agent: Googlebot
 Allow: /

@@ -260,7 +260,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
                 <SelectTrigger className="glass-input">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="glass-panel border-card-border max-h-[250px] overflow-y-auto">
+                <SelectContent className="bg-popover border-card-border max-h-[250px] overflow-y-auto z-[100]">
                   {displayCategories.map((key) => {
                     const config = CATEGORY_CONFIG[key as CategoryType];
                     if (!config) return null;
@@ -282,7 +282,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
               <SelectTrigger className="glass-input">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="glass-panel border-card-border">
+              <SelectContent className="bg-popover border-card-border z-[100]">
                 {Object.entries(PAYMENT_METHODS).map(([key]) => (
                   <SelectItem key={key} value={key}>
                     {PAYMENT_METHODS[key as PaymentMethod].emoji} {t(`pay.${key}`)}
@@ -299,7 +299,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
               <SelectTrigger className="glass-input">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="glass-panel border-card-border">
+              <SelectContent className="bg-popover border-card-border z-[100]">
                 {Object.entries(RECURRENCE_CONFIG).map(([key]) => (
                   <SelectItem key={key} value={key}>
                     {t(`rec.${key}`)}

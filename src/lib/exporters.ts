@@ -43,7 +43,7 @@ export function exportTransactionsCsv(transactions: Transaction[], currencySymbo
   // BOM + CSV
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
   const stamp = new Date().toISOString().slice(0, 10);
-  downloadBlob(blob, `financeflow-transactions-${stamp}.csv`);
+  downloadBlob(blob, `cashow-transactions-${stamp}.csv`);
 }
 
 /**
@@ -144,5 +144,5 @@ export function exportMonthlyReportPdf(
     },
   });
 
-  doc.save(`financeflow-report-${stamp}.pdf`);
+  doc.save(`cashow-report-${stamp}.pdf`);
 }

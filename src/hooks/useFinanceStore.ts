@@ -383,7 +383,7 @@ export function useFinanceStore() {
   // Export all data as JSON string
   const exportDataJson = useCallback((): string => {
     const payload = {
-      app: 'FinanceFlow',
+      app: 'Cashow',
       exportedAt: new Date().toISOString(),
       version: CURRENT_VERSION,
       settings: localStorage.getItem('finance_settings'),

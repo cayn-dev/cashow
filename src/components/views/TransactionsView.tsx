@@ -115,7 +115,7 @@ export function TransactionsView({
     const expenses = filteredTransactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     exportMonthlyReportPdf(filteredTransactions, {
       currencySymbol,
-      title: 'FinanceFlow — Report',
+      title: 'Cashow — Report',
       income,
       expenses,
       balance: income - expenses,
