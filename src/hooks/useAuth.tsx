@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+import { tt } from '@/lib/i18nToast';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -68,12 +69,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         if (error.message.includes('already registered')) {
-          return { error: new Error('Email già registrata. Prova ad accedere.') };
+          return { error: new Error(tt('toast.emailExists')) };
         }
         return { error };
       }
 
-      toast.success('Registrazione completata! Controlla la tua email per confermare.');
+      toast.success(tt('toast.signupSuccess'));
       return { error: null };
     } catch (err) {
       return { error: err as Error };
@@ -89,10 +90,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
-          return { error: new Error('Credenziali non valide. Riprova.') };
+          return { error: new Error(tt('toast.invalidCreds')) };
         }
         if (error.message.includes('Email not confirmed')) {
-          return { error: new Error('Email non confermata. Controlla la tua casella.') };
+          return { error: new Error(tt('toast.emailNotConfirmed')) };
         }
         return { error };
       }
@@ -100,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Exit guest mode on successful login
       setIsGuest(false);
       localStorage.removeItem(GUEST_MODE_KEY);
-      toast.success('Accesso effettuato!');
+      toast.success(tt('toast.signinSuccess'));
       return { error: null };
     } catch (err) {
       return { error: err as Error };
@@ -109,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-    toast.info('Disconnesso');
+    toast.info(tt('toast.signedOut'));
   }, []);
 
   const enterGuestMode = useCallback(() => {
