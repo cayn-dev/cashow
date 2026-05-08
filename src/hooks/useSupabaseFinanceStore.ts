@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { tt } from '@/lib/i18nToast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
@@ -188,7 +189,7 @@ export function useSupabaseFinanceStore() {
       } catch (error) {
         console.error('Error fetching finance data:', error);
         if (!cacheLoaded.current) {
-          toast.error('Errore nel caricamento dei dati');
+          toast.error(tt('toast.loadError'));
         }
         setState(prev => ({ ...prev, loading: false }));
       }
@@ -248,10 +249,10 @@ export function useSupabaseFinanceStore() {
          transactions: [newTransaction, ...prev.transactions],
        }));
  
-       toast.success('Transazione aggiunta');
+       toast.success(tt('toast.transactionAdded'));
      } catch (error) {
        console.error('Error adding transaction:', error);
-       toast.error('Errore nell\'aggiunta della transazione');
+       toast.error(tt('toast.transactionAddError'));
      }
    }, [user]);
  
@@ -273,10 +274,10 @@ export function useSupabaseFinanceStore() {
          transactions: prev.transactions.filter(t => t.id !== id),
        }));
  
-       toast.success('Transazione eliminata');
+       toast.success(tt('toast.transactionDeleted'));
      } catch (error) {
        console.error('Error deleting transaction:', error);
-       toast.error('Errore nell\'eliminazione');
+       toast.error(tt('toast.deleteError'));
      }
    }, [user]);
  
@@ -315,10 +316,10 @@ export function useSupabaseFinanceStore() {
          savingsGoals: [...prev.savingsGoals, newGoal],
        }));
  
-       toast.success('Obiettivo creato');
+       toast.success(tt('toast.goalCreated'));
      } catch (error) {
        console.error('Error adding goal:', error);
-       toast.error('Errore nella creazione dell\'obiettivo');
+       toast.error(tt('toast.goalCreateError'));
      }
    }, [user]);
  
@@ -347,10 +348,10 @@ export function useSupabaseFinanceStore() {
          ),
        }));
  
-       toast.success('Obiettivo aggiornato');
+       toast.success(tt('toast.goalUpdated'));
      } catch (error) {
        console.error('Error updating goal:', error);
-       toast.error('Errore nell\'aggiornamento');
+       toast.error(tt('toast.updateError'));
      }
    }, [user, state.savingsGoals]);
  
@@ -372,10 +373,10 @@ export function useSupabaseFinanceStore() {
          savingsGoals: prev.savingsGoals.filter(g => g.id !== id),
        }));
  
-       toast.success('Obiettivo eliminato');
+       toast.success(tt('toast.goalDeleted'));
      } catch (error) {
        console.error('Error deleting goal:', error);
-       toast.error('Errore nell\'eliminazione');
+       toast.error(tt('toast.deleteError'));
      }
    }, [user]);
  
@@ -392,10 +393,10 @@ export function useSupabaseFinanceStore() {
        if (error) throw error;
  
        setState(prev => ({ ...prev, monthlySalary: salary }));
-       toast.success('Stipendio aggiornato');
+       toast.success(tt('toast.salaryUpdated'));
      } catch (error) {
        console.error('Error updating salary:', error);
-       toast.error('Errore nell\'aggiornamento');
+       toast.error(tt('toast.updateError'));
      }
    }, [user]);
  
