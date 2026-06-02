@@ -203,7 +203,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
                   {date ? format(date, 'PPP', { locale: dateLocale }) : t('addTransaction.selectDate')}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 glass-panel" align="start">
+              <PopoverContent className="w-auto p-0 bg-popover border border-card-border shadow-xl z-[120]" align="start">
                 <Calendar
                   mode="single"
                   selected={date}
