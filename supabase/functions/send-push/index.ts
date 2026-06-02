@@ -175,11 +175,22 @@ serve(async (req) => {
 
     const { title, body, type, tag, target_user_id } = await req.json();
 
+    // Validate payload size
+    if ((title && String(title).length > 200) || (body && String(body).length > 1000)) {
+      return new Response(JSON.stringify({ error: "Payload too large" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const vapidPublicKey = Deno.env.get("VAPID_PUBLIC_KEY")!;
     const vapidPrivateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
 
-    // Get subscriptions
-    const targetUserId = target_user_id || userId;
+    // Determine target: only cron path may target arbitrary users.
+    // Authenticated users can only push to themselves — ignore caller-supplied target_user_id.
+    const isCron = cronSecret && cronSecret === Deno.env.get("CRON_SECRET");
+    const targetUserId = isCron ? (target_user_id || null) : userId;
+
     let query = supabase.from("push_subscriptions").select("*");
     if (targetUserId) {
       query = query.eq("user_id", targetUserId);
