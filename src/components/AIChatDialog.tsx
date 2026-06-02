@@ -13,6 +13,7 @@ import { Bot, Send, User, Sparkles, Loader2, Zap, TrendingUp, Target, PiggyBank,
 import { Transaction, SavingsGoal } from '@/types/finance';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -188,12 +189,18 @@ ${goals || 'Nessun obiettivo impostato'}
         ? `[L'utente ha allegato un'immagine/screenshot dell'app. Analizza il contesto e rispondi.]\n\n${userMessage.content}`
         : userMessage.content;
 
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+      if (!accessToken) {
+        throw new Error(t('ai.signInRequired') || 'Please sign in to use the AI assistant.');
+      }
+
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           messages: [...messages, { ...userMessage, content: messageContent }].map(m => ({
