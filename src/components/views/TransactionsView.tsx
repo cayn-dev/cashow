@@ -178,7 +178,7 @@ export function TransactionsView({
                       <SlidersHorizontal className="w-4 h-4" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="glass-panel-elevated w-[300px] p-4" align="end">
+                  <PopoverContent className="bg-popover border border-card-border shadow-xl w-[300px] p-4 z-[120]" align="end">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <h4 className="font-semibold text-sm">{t('transactions.advanced')}</h4>
