@@ -685,15 +685,59 @@
   background-size: 200px 200px;
 }
 
+/* Drifting accent orbs that follow the active --primary hue */
+.aurora-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.45;
+  will-change: transform;
+  background: radial-gradient(circle at 30% 30%,
+    hsl(var(--primary) / 0.85),
+    hsl(var(--primary) / 0.15) 60%,
+    transparent 75%);
+}
+.aurora-orb--a {
+  width: 55vmax; height: 55vmax;
+  top: -18vmax; left: -18vmax;
+  animation: aurora-drift-a 28s ease-in-out infinite alternate;
+}
+.aurora-orb--b {
+  width: 45vmax; height: 45vmax;
+  bottom: -15vmax; right: -15vmax;
+  opacity: 0.35;
+  animation: aurora-drift-b 34s ease-in-out infinite alternate;
+}
+.aurora-orb--c {
+  width: 35vmax; height: 35vmax;
+  top: 40%; left: 50%;
+  opacity: 0.25;
+  background: radial-gradient(circle, hsl(var(--primary) / 0.6), transparent 70%);
+  animation: aurora-drift-c 40s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift-a {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(8vmax, 6vmax, 0) scale(1.15); }
+}
+@keyframes aurora-drift-b {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-10vmax, -4vmax, 0) scale(1.1); }
+}
+@keyframes aurora-drift-c {
+  0%   { transform: translate3d(-50%, -50%, 0) scale(1); }
+  100% { transform: translate3d(-40%, -60%, 0) scale(1.2); }
+}
+
 /* Light mode tweaks — softer blend */
-.light .aurora-blob {
+.light .aurora-orb {
   mix-blend-mode: multiply;
-  filter: blur(110px);
-  opacity: 0.7;
+  opacity: 0.25;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aurora-blob {
+  .aurora-orb {
     animation: none !important;
   }
 }
+

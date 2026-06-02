@@ -58,8 +58,8 @@ import {
   Upload,
   Plus,
   X,
-  FlaskConical,
 } from 'lucide-react';
+
 import { useSettings, Currency, currencyNames, dateFormatLabels, DateFormat, FirstDayOfWeek, ACCENT_PRESETS } from '@/hooks/useSettings';
 import { CATEGORY_CONFIG, CategoryType, PAYMENT_METHODS, PaymentMethod } from '@/types/finance';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -1646,58 +1646,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </GlassCard>
           )}
 
-          {/* ===== Beta features ===== */}
-          <GlassCard className="p-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
-                <FlaskConical className="w-5 h-5 text-warning" />
-              </div>
-              <div>
-                <h3 className="font-semibold">{t('settings.beta')}</h3>
-                <p className="text-sm text-muted-foreground">{t('settings.betaDesc')}</p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1">
-                  <Label>{t('settings.betaEnable')}</Label>
-                  <p className="text-xs text-muted-foreground">{t('settings.betaEnableDesc')}</p>
-                </div>
-                <Switch
-                  checked={settings.betaFeaturesEnabled}
-                  onCheckedChange={(v) => settings.updateSettings({ betaFeaturesEnabled: v })}
-                />
-              </div>
-              {settings.betaFeaturesEnabled && (
-                <>
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <Label>{t('settings.expAI')}</Label>
-                      <p className="text-xs text-muted-foreground">{t('settings.expAIDesc')}</p>
-                    </div>
-                    <Switch
-                      checked={settings.experimentalAI}
-                      onCheckedChange={(v) => settings.updateSettings({ experimentalAI: v })}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <Label>{t('settings.expCharts')}</Label>
-                      <p className="text-xs text-muted-foreground">{t('settings.expChartsDesc')}</p>
-                    </div>
-                    <Switch
-                      checked={settings.experimentalCharts}
-                      onCheckedChange={(v) => settings.updateSettings({ experimentalCharts: v })}
-                    />
-                  </div>
-                  <p className="text-xs text-warning flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" />
-                    {t('settings.betaWarning')}
-                  </p>
-                </>
-              )}
-            </div>
-          </GlassCard>
+          {/* Beta features section removed — was unused noise */}
+
 
           {/* Privacy & Security Info */}
           <GlassCard className="p-4 border-primary/30 bg-primary/5">
