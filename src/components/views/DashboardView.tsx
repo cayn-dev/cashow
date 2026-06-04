@@ -30,6 +30,7 @@ interface DashboardViewProps {
   savingsGoals: SavingsGoal[];
   onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   onDeleteTransaction: (id: string) => void;
+  onUpdateTransaction?: (id: string, updates: Omit<Transaction, 'id'>) => void;
   onViewTransactions: () => void;
   currencySymbol?: string;
 }
@@ -46,6 +47,7 @@ export function DashboardView({
   savingsGoals,
   onAddTransaction,
   onDeleteTransaction,
+  onUpdateTransaction,
   onViewTransactions,
   currencySymbol = '€',
 }: DashboardViewProps) {
@@ -82,7 +84,7 @@ export function DashboardView({
           </div>
           <div className="space-y-3">
             {recentTransactions.slice(0, 5).map((transaction) => (
-              <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} />
+              <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} onEdit={onUpdateTransaction} currencySymbol={currencySymbol} />
             ))}
             {recentTransactions.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">{t('dashboard.noTransactions')}</div>

@@ -44,38 +44,64 @@ import { useSettings } from '@/hooks/useSettings';
 const DATE_LOCALES: Record<string, typeof it> = { it, en: enUS, es, fr, de };
 
 interface AddTransactionDialogProps {
-  onAdd: (transaction: Omit<Transaction, 'id'>) => void;
+  onAdd?: (transaction: Omit<Transaction, 'id'>) => void;
+  onEdit?: (id: string, updates: Omit<Transaction, 'id'>) => void;
+  transaction?: Transaction;
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
+export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open: openProp, onOpenChange }: AddTransactionDialogProps) {
   const { t, language } = useLanguage();
   const settings = useSettings();
-  const [open, setOpen] = useState(false);
-  const [type, setType] = useState<TransactionType>('expense');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState<CategoryType>('other');
-  const [description, setDescription] = useState('');
+  const isEdit = !!transaction;
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = openProp !== undefined ? openProp : internalOpen;
+  const setOpen = (v: boolean) => {
+    if (onOpenChange) onOpenChange(v);
+    else setInternalOpen(v);
+  };
+  const [type, setType] = useState<TransactionType>(transaction?.type ?? 'expense');
+  const [amount, setAmount] = useState(transaction ? String(transaction.amount) : '');
+  const [category, setCategory] = useState<CategoryType>(transaction?.category ?? 'other');
+  const [description, setDescription] = useState(transaction?.description ?? '');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
-    (settings.defaultPaymentMethod as PaymentMethod) || 'card'
+    transaction?.paymentMethod ?? ((settings.defaultPaymentMethod as PaymentMethod) || 'card')
   );
-  const [recurrence, setRecurrence] = useState<RecurrenceType>('none');
-  const [customRecurrenceDays, setCustomRecurrenceDays] = useState('');
-  const [isSalary, setIsSalary] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
+  const [recurrence, setRecurrence] = useState<RecurrenceType>(transaction?.recurrence ?? 'none');
+  const [customRecurrenceDays, setCustomRecurrenceDays] = useState(
+    transaction?.customRecurrenceDays ? String(transaction.customRecurrenceDays) : ''
+  );
+  const [isSalary, setIsSalary] = useState(transaction?.isSalary ?? false);
+  const [date, setDate] = useState<Date>(transaction?.date ?? new Date());
   const [autoSuggested, setAutoSuggested] = useState(false);
   const feedback = useFeedback();
 
   const dateLocale = DATE_LOCALES[language] || it;
 
-  // Reset payment method from settings when dialog opens
+  // Reset form when opening (or sync with transaction prop)
   useEffect(() => {
     if (open) {
-      setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
+      if (transaction) {
+        setType(transaction.type);
+        setAmount(String(transaction.amount));
+        setCategory(transaction.category);
+        setDescription(transaction.description);
+        setPaymentMethod(transaction.paymentMethod);
+        setRecurrence(transaction.recurrence);
+        setCustomRecurrenceDays(transaction.customRecurrenceDays ? String(transaction.customRecurrenceDays) : '');
+        setIsSalary(!!transaction.isSalary);
+        setDate(transaction.date);
+      } else {
+        setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
+      }
     }
-  }, [open, settings.defaultPaymentMethod]);
+  }, [open, transaction, settings.defaultPaymentMethod]);
 
-  // Auto-categorization effect
+  // Auto-categorization effect (only when creating)
   useEffect(() => {
+    if (isEdit) return;
     if (description.length >= 3 && !autoSuggested) {
       const result = autoCategorizeTransaction(description);
       if (result) {
@@ -90,13 +116,13 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
     if (description.length < 3) {
       setAutoSuggested(false);
     }
-  }, [description, autoSuggested]);
+  }, [description, autoSuggested, isEdit]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!amount || !description) return;
 
-    onAdd({
+    const payload: Omit<Transaction, 'id'> = {
       type,
       amount: parseFloat(amount),
       category: isSalary ? 'salary' : category,
@@ -106,19 +132,27 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
       recurrence,
       customRecurrenceDays: recurrence === 'custom' ? parseInt(customRecurrenceDays) : undefined,
       isSalary,
-    });
+    };
+
+    if (isEdit && transaction && onEdit) {
+      onEdit(transaction.id, payload);
+    } else if (onAdd) {
+      onAdd(payload);
+    }
 
     feedback.success();
 
-    setAmount('');
-    setDescription('');
-    setCategory('other');
-    setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
-    setRecurrence('none');
-    setCustomRecurrenceDays('');
-    setIsSalary(false);
-    setDate(new Date());
-    setAutoSuggested(false);
+    if (!isEdit) {
+      setAmount('');
+      setDescription('');
+      setCategory('other');
+      setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
+      setRecurrence('none');
+      setCustomRecurrenceDays('');
+      setIsSalary(false);
+      setDate(new Date());
+      setAutoSuggested(false);
+    }
     setOpen(false);
   };
 
@@ -131,15 +165,21 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="apple-button text-primary-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          {t('addTransaction.button')}
-        </Button>
-      </DialogTrigger>
+      {trigger ? (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      ) : !isEdit ? (
+        <DialogTrigger asChild>
+          <Button className="apple-button text-primary-foreground">
+            <Plus className="w-4 h-4 mr-2" />
+            {t('addTransaction.button')}
+          </Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent className="glass-panel border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl">{t('addTransaction.title')}</DialogTitle>
+          <DialogTitle className="font-display text-xl">
+            {isEdit ? t('addTransaction.editTitle') : t('addTransaction.title')}
+          </DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
@@ -327,7 +367,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
           )}
 
           <Button type="submit" className="w-full apple-button text-primary-foreground">
-            {t('addTransaction.submit')}
+            {isEdit ? t('addTransaction.update') : t('addTransaction.submit')}
           </Button>
         </form>
       </DialogContent>

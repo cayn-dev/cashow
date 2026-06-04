@@ -256,24 +256,58 @@ export function useSupabaseFinanceStore() {
      }
    }, [user]);
  
+   // Update transaction
+   const updateTransaction = useCallback(async (id: string, updates: Omit<Transaction, 'id'>) => {
+     if (!user) return;
+     try {
+       const { error } = await db
+         .from('transactions')
+         .update({
+           type: updates.type,
+           amount: updates.amount,
+           category: updates.category,
+           description: updates.description,
+           date: updates.date.toISOString(),
+           payment_method: updates.paymentMethod,
+           is_salary: updates.isSalary || false,
+         })
+         .eq('id', id)
+         .eq('user_id', user.id);
+
+       if (error) throw error;
+
+       setState(prev => ({
+         ...prev,
+         transactions: prev.transactions.map(t =>
+           t.id === id ? { ...updates, id } : t
+         ),
+       }));
+
+       toast.success(tt('toast.transactionUpdated') || 'Saved');
+     } catch (error) {
+       console.error('Error updating transaction:', error);
+       toast.error(tt('toast.updateError'));
+     }
+   }, [user]);
+
    // Delete transaction
    const deleteTransaction = useCallback(async (id: string) => {
      if (!user) return;
- 
+
      try {
        const { error } = await db
          .from('transactions')
          .delete()
          .eq('id', id)
          .eq('user_id', user.id);
- 
+
        if (error) throw error;
- 
+
        setState(prev => ({
          ...prev,
          transactions: prev.transactions.filter(t => t.id !== id),
        }));
- 
+
        toast.success(tt('toast.transactionDeleted'));
      } catch (error) {
        console.error('Error deleting transaction:', error);
@@ -443,6 +477,7 @@ export function useSupabaseFinanceStore() {
       loading: state.loading,
      addTransaction,
      deleteTransaction,
+     updateTransaction,
      addSavingsGoal,
      updateSavingsGoal,
      deleteSavingsGoal,

@@ -89,6 +89,7 @@ const Index = () => {
             savingsGoals={store.savingsGoals}
             onAddTransaction={store.addTransaction}
             onDeleteTransaction={store.deleteTransaction}
+            onUpdateTransaction={store.updateTransaction}
             onViewTransactions={() => setCurrentView('transactions')}
             currencySymbol={settings.currencySymbol}
           />
@@ -99,6 +100,7 @@ const Index = () => {
             transactions={store.transactions}
             onAddTransaction={store.addTransaction}
             onDeleteTransaction={store.deleteTransaction}
+            onUpdateTransaction={store.updateTransaction}
             currencySymbol={settings.currencySymbol}
           />
         )}
