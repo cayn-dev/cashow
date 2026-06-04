@@ -84,7 +84,7 @@ export function DashboardView({
           </div>
           <div className="space-y-3">
             {recentTransactions.slice(0, 5).map((transaction) => (
-              <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} />
+              <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} onEdit={onUpdateTransaction} currencySymbol={currencySymbol} />
             ))}
             {recentTransactions.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">{t('dashboard.noTransactions')}</div>
