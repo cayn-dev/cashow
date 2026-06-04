@@ -242,7 +242,7 @@ export function TransactionsView({
               <motion.div className="space-y-2" layout>
                 <AnimatePresence mode="popLayout">
                   {dayTransactions.map((transaction) => (
-                    <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} currencySymbol={currencySymbol} />
+                    <TransactionItem key={transaction.id} transaction={transaction} onDelete={onDeleteTransaction} onEdit={onUpdateTransaction} currencySymbol={currencySymbol} />
                   ))}
                 </AnimatePresence>
               </motion.div>
