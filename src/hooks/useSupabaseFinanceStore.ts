@@ -477,6 +477,7 @@ export function useSupabaseFinanceStore() {
       loading: state.loading,
      addTransaction,
      deleteTransaction,
+     updateTransaction,
      addSavingsGoal,
      updateSavingsGoal,
      deleteSavingsGoal,
