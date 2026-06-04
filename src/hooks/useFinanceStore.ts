@@ -264,6 +264,13 @@ export function useFinanceStore() {
     }));
   };
 
+  const updateTransaction = (id: string, updates: Omit<Transaction, 'id'>) => {
+    setData(prev => ({
+      ...prev,
+      transactions: prev.transactions.map(t => (t.id === id ? { ...updates, id } : t)),
+    }));
+  };
+
   const addSavingsGoal = (goal: Omit<SavingsGoal, 'id' | 'createdAt'>) => {
     const newGoal = {
       ...goal,
