@@ -236,6 +236,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'addTransaction.customDays': 'Ogni quanti giorni?',
     'addTransaction.customDaysPlaceholder': 'Es: 45',
     'addTransaction.submit': 'Aggiungi',
+    'addTransaction.editTitle': 'Modifica Transazione',
+    'addTransaction.update': 'Salva modifiche',
+    'transaction.edit': 'Modifica',
+    'savings.amountLabel': 'Importo',
+    'savings.deposit': 'Deposita',
+    'savings.withdraw': 'Preleva',
 
     // Salary
     'salary.title': 'Stipendio',
