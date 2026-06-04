@@ -47,6 +47,7 @@ export function DashboardView({
   savingsGoals,
   onAddTransaction,
   onDeleteTransaction,
+  onUpdateTransaction,
   onViewTransactions,
   currencySymbol = '€',
 }: DashboardViewProps) {
