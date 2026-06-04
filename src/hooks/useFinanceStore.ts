@@ -439,6 +439,7 @@ export function useFinanceStore() {
     monthlySalary: data.monthlySalary,
     addTransaction,
     deleteTransaction,
+    updateTransaction,
     addSavingsGoal,
     updateSavingsGoal,
     deleteSavingsGoal,
