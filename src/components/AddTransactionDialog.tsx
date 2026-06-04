@@ -367,7 +367,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           )}
 
           <Button type="submit" className="w-full apple-button text-primary-foreground">
-            {t('addTransaction.submit')}
+            {isEdit ? t('addTransaction.update') : t('addTransaction.submit')}
           </Button>
         </form>
       </DialogContent>
