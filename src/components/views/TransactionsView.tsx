@@ -27,6 +27,7 @@ interface TransactionsViewProps {
   transactions: Transaction[];
   onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   onDeleteTransaction: (id: string) => void;
+  onUpdateTransaction?: (id: string, updates: Omit<Transaction, 'id'>) => void;
   currencySymbol?: string;
 }
 
@@ -34,6 +35,7 @@ export function TransactionsView({
   transactions,
   onAddTransaction,
   onDeleteTransaction,
+  onUpdateTransaction,
   currencySymbol = '€',
 }: TransactionsViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
