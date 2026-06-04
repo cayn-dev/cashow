@@ -30,6 +30,7 @@ interface DashboardViewProps {
   savingsGoals: SavingsGoal[];
   onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   onDeleteTransaction: (id: string) => void;
+  onUpdateTransaction?: (id: string, updates: Omit<Transaction, 'id'>) => void;
   onViewTransactions: () => void;
   currencySymbol?: string;
 }
