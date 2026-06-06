@@ -42,8 +42,14 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+      <Seo
+        title="Cashow — Inizia gratis a gestire le tue finanze"
+        description="Scopri Cashow: l'app gratuita per tracciare spese, monitorare risparmi e raggiungere i tuoi obiettivi finanziari. Provala senza registrazione."
+        path="/welcome"
+      />
       {/* Animated aurora background */}
       <AuroraBackground intensity="vivid" />
+
 
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
