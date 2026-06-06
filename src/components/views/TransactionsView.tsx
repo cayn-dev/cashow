@@ -177,9 +177,10 @@ export function TransactionsView({
                 </Select>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={advancedActive ? 'default' : 'outline'} size="icon" className="shrink-0">
+                    <Button variant={advancedActive ? 'default' : 'outline'} size="icon" className="shrink-0" aria-label={t('transactions.advancedFilters') || 'Advanced filters'}>
                       <SlidersHorizontal className="w-4 h-4" />
                     </Button>
+
                   </PopoverTrigger>
                   <PopoverContent className="bg-popover border border-card-border shadow-xl w-[300px] p-4 z-[120]" align="end">
                     <div className="space-y-3">
