@@ -14,6 +14,8 @@ import { Loader2, Mail, Lock, User, Wallet, Globe } from 'lucide-react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { AuroraBackground } from '@/components/AuroraBackground';
+import { Seo } from '@/components/Seo';
+
 
 export default function Auth() {
   const navigate = useNavigate();
