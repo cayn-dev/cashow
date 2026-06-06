@@ -65,8 +65,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
+      <Seo
+        title="Cashow — La tua dashboard finanziaria"
+        description="Visualizza spese, entrate, risparmi e obiettivi in un'unica dashboard intelligente. Cashow rende la finanza personale semplice."
+        path="/"
+      />
       {/* Animated aurora background — drifts behind the glass for live refraction */}
       <AuroraBackground intensity="medium" />
+
 
       <div className="relative z-10 container max-w-7xl 2xl:max-w-[1480px] mx-auto py-6 px-4 lg:px-6">
         <Navigation 
