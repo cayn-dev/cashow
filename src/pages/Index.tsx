@@ -14,6 +14,8 @@ import { CalendarView } from '@/components/views/CalendarView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
+import { Seo } from '@/components/Seo';
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
