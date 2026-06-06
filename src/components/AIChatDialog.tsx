@@ -190,10 +190,7 @@ ${goals || 'Nessun obiettivo impostato'}
         : userMessage.content;
 
       const { data: sessionData } = await supabase.auth.getSession();
-      const accessToken = sessionData?.session?.access_token;
-      if (!accessToken) {
-        throw new Error(t('ai.signInRequired') || 'Please sign in to use the AI assistant.');
-      }
+      const accessToken = sessionData?.session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
@@ -213,6 +210,7 @@ ${goals || 'Nessun obiettivo impostato'}
         }),
         signal: abortControllerRef.current.signal,
       });
+
 
       if (!resp.ok) {
         const errorData = await resp.json().catch(() => ({}));
