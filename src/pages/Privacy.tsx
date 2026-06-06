@@ -3,6 +3,8 @@ import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
+import { Seo } from '@/components/Seo';
+
 
 const Privacy = () => {
   const navigate = useNavigate();
