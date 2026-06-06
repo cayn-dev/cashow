@@ -476,6 +476,7 @@ ${goals || 'Nessun obiettivo impostato'}
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
               title={t('ai.attachImage')}
+              aria-label={t('ai.attachImage')}
             >
               <ImageIcon className="w-5 h-5" />
             </Button>
@@ -486,9 +487,11 @@ ${goals || 'Nessun obiettivo impostato'}
               onClick={toggleVoice}
               disabled={isLoading}
               title={t('ai.voice') || 'Voice'}
+              aria-label={t('ai.voice') || 'Voice input'}
             >
               {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
             </Button>
+
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
