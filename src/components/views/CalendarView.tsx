@@ -197,7 +197,7 @@ export function CalendarView({ transactions, currencySymbol = '€' }: CalendarV
                   key={d}
                   onClick={() => setSelectedDay(cellDate)}
                   className={cn(
-                    'aspect-square rounded-lg p-1.5 flex flex-col items-start justify-between relative overflow-hidden transition-all duration-200 hover:scale-[1.04]',
+                    'aspect-square rounded-lg p-1.5 sm:p-2 md:p-2.5 flex flex-col items-start justify-between relative overflow-hidden transition-all duration-200 hover:scale-[1.04]',
                     isToday && 'ring-1 ring-primary',
                     isSelected && 'ring-2 ring-primary',
                   )}
@@ -214,14 +214,14 @@ export function CalendarView({ transactions, currencySymbol = '€' }: CalendarV
                 >
                   <span
                     className={cn(
-                      'text-xs font-medium',
+                      'text-sm sm:text-base md:text-lg font-semibold',
                       isToday ? 'text-primary' : 'text-foreground/90',
                     )}
                   >
                     {d}
                   </span>
                   {data && data.expense > 0 && (
-                    <span className="text-[9px] tabular-nums leading-none text-destructive font-semibold w-full truncate text-right">
+                    <span className="text-[10px] sm:text-xs tabular-nums leading-none text-destructive font-semibold w-full truncate text-right">
                       -{currencySymbol}
                       {data.expense >= 1000
                         ? (data.expense / 1000).toFixed(1) + 'k'
