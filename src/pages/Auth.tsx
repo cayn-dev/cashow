@@ -14,6 +14,8 @@ import { Loader2, Mail, Lock, User, Wallet, Globe } from 'lucide-react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { AuroraBackground } from '@/components/AuroraBackground';
+import { Seo } from '@/components/Seo';
+
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -104,8 +106,14 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative">
+      <Seo
+        title="Accedi a Cashow — Login e Registrazione"
+        description="Accedi o crea il tuo account Cashow per sincronizzare le tue finanze su tutti i dispositivi in modo sicuro."
+        path="/auth"
+      />
       {/* Animated aurora background */}
       <AuroraBackground intensity="medium" />
+
 
       {/* Language Selector - bottom center, non-overlapping */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-20">

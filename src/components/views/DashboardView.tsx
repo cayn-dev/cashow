@@ -77,7 +77,7 @@ export function DashboardView({
         </div>
         <GlassCard className="animate-fade-in">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-display font-semibold text-lg">{t('dashboard.recentTransactions')}</h3>
+            <h2 className="font-display font-semibold text-lg">{t('dashboard.recentTransactions')}</h2>
             <Button variant="ghost" size="sm" onClick={onViewTransactions} className="text-primary hover:text-primary/80">
               {t('dashboard.viewAll')} <ArrowRight className="w-4 h-4 ml-1" />
             </Button>

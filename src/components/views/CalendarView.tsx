@@ -158,6 +158,7 @@ export function CalendarView({ transactions, currencySymbol = '€' }: CalendarV
               size="icon"
               variant="ghost"
               onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
+              aria-label={t('calendar.prevMonth') || 'Previous month'}
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
@@ -166,9 +167,11 @@ export function CalendarView({ transactions, currencySymbol = '€' }: CalendarV
               size="icon"
               variant="ghost"
               onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
+              aria-label={t('calendar.nextMonth') || 'Next month'}
             >
               <ChevronRight className="w-5 h-5" />
             </Button>
+
           </div>
 
           {/* Weekday headers */}

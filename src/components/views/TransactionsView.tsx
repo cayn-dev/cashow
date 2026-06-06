@@ -133,12 +133,13 @@ export function TransactionsView({
           <p className="text-muted-foreground">{t('transactions.subtitle')}</p>
         </div>
         <div className="flex gap-2 items-center">
-          <Button variant="outline" size="icon" onClick={handleCsv} title={t('transactions.exportCsv')}>
+          <Button variant="outline" size="icon" onClick={handleCsv} title={t('transactions.exportCsv')} aria-label={t('transactions.exportCsv')}>
             <Download className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={handlePdf} title={t('transactions.exportPdf')}>
+          <Button variant="outline" size="icon" onClick={handlePdf} title={t('transactions.exportPdf')} aria-label={t('transactions.exportPdf')}>
             <FileText className="w-4 h-4" />
           </Button>
+
           <AddTransactionDialog onAdd={onAddTransaction} />
         </div>
       </motion.div>
@@ -176,9 +177,10 @@ export function TransactionsView({
                 </Select>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={advancedActive ? 'default' : 'outline'} size="icon" className="shrink-0">
+                    <Button variant={advancedActive ? 'default' : 'outline'} size="icon" className="shrink-0" aria-label={t('transactions.advancedFilters') || 'Advanced filters'}>
                       <SlidersHorizontal className="w-4 h-4" />
                     </Button>
+
                   </PopoverTrigger>
                   <PopoverContent className="bg-popover border border-card-border shadow-xl w-[300px] p-4 z-[120]" align="end">
                     <div className="space-y-3">

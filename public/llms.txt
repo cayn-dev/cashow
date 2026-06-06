@@ -1,0 +1,15 @@
+# Cashow
+
+> Cashow is a free, multilingual personal-finance PWA that helps users track expenses, manage savings goals, monitor budgets and get AI-powered insights — entirely on Lovable Cloud.
+
+Cashow offers a liquid-glass dashboard, offline-first sync, secure authentication (Google/Apple + optional PIN/biometric), recurring transactions, custom categories, push notifications and an AI financial assistant. Available in Italian, English, Spanish, French and German.
+
+## Pages
+
+- [Welcome / Landing](/welcome): Marketing landing page introducing Cashow, features, and guest-mode trial.
+- [Sign in / Sign up](/auth): Email/password and Google OAuth authentication.
+- [Privacy](/privacy): Privacy policy covering data protection, encryption and infrastructure.
+
+## Optional
+
+- [App dashboard](/): Authenticated dashboard (requires login or guest mode).
