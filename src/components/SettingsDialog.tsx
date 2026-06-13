@@ -1758,6 +1758,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           )}
 
 
+          {/* Feedback & Support */}
+          <GlassCard className="p-4 border-primary/20 bg-primary/5">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Mail className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold">{t('settings.feedbackTitle')}</h3>
+                <p className="text-sm text-muted-foreground">{t('settings.feedbackDesc')}</p>
+              </div>
+            </div>
+            <a
+              href="https://mail.google.com/mail/?view=cm&to=jacopo.dev0@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full"
+            >
+              <Button variant="outline" className="w-full justify-start">
+                <Mail className="w-4 h-4 mr-2" />
+                <span className="text-muted-foreground mr-1">{t('settings.emailUs')}</span>
+                <span className="font-medium">jacopo.dev0@gmail.com</span>
+              </Button>
+            </a>
+          </GlassCard>
+
           <div className="text-center text-sm text-muted-foreground pt-4">
             <p>Cashow v1.0.0</p>
             <p className="text-xs mt-1">Made with ❤️</p>
