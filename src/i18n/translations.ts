@@ -635,6 +635,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings.expCharts': 'Grafici sperimentali',
     'settings.expChartsDesc': 'Nuove visualizzazioni interattive',
     'settings.betaWarning': 'Le funzioni beta possono contenere bug',
+    'settings.feedbackTitle': 'Feedback & Supporto',
+    'settings.feedbackDesc': "Hai riscontrato dei problemi con l'app o vorresti che venissero aggiunte delle funzioni precise?",
+    'settings.emailUs': 'Scrivimi a questo indirizzo',
+    'settings.sendEmail': 'Invia email',
     // ===== Accounts (auto) =====
     'accounts.title': 'Conti',
     'accounts.subtitle': 'Gestisci conti bancari, carte e portafogli',
@@ -1306,6 +1310,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings.expCharts': 'Experimental charts',
     'settings.expChartsDesc': 'New interactive visualizations',
     'settings.betaWarning': 'Beta features may contain bugs',
+    'settings.feedbackTitle': 'Feedback & Support',
+    'settings.feedbackDesc': 'Found issues or have specific feature requests?',
+    'settings.emailUs': 'Email me at',
+    'settings.sendEmail': 'Send email',
 
     // ===== Accounts (auto) =====
     'accounts.title': 'Accounts',
@@ -1914,6 +1922,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings.expCharts': 'Gráficos experimentales',
     'settings.expChartsDesc': 'Nuevas visualizaciones interactivas',
     'settings.betaWarning': 'Las funciones beta pueden contener errores',
+    'settings.feedbackTitle': 'Comentarios y Soporte',
+    'settings.feedbackDesc': '¿Tienes problemas con la app o quieres solicitar funciones específicas?',
+    'settings.emailUs': 'Escríbeme a',
+    'settings.sendEmail': 'Enviar correo',
 
     // ===== Accounts (auto) =====
     'accounts.title': 'Cuentas',
@@ -2522,6 +2534,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings.expCharts': 'Graphiques expérimentaux',
     'settings.expChartsDesc': 'Nouvelles visualisations interactives',
     'settings.betaWarning': 'Les fonctions beta peuvent contenir des bugs',
+    'settings.feedbackTitle': 'Retour & Assistance',
+    'settings.feedbackDesc': 'Vous rencontrez des problèmes ou souhaitez des fonctionnalités spécifiques ?',
+    'settings.emailUs': 'Écrivez-moi à',
+    'settings.sendEmail': 'Envoyer un email',
 
     // ===== Accounts (auto) =====
     'accounts.title': 'Comptes',
@@ -3130,6 +3146,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings.expCharts': 'Experimentelle Charts',
     'settings.expChartsDesc': 'Neue interaktive Visualisierungen',
     'settings.betaWarning': 'Beta-Funktionen können Fehler enthalten',
+    'settings.feedbackTitle': 'Feedback & Support',
+    'settings.feedbackDesc': 'Probleme mit der App oder spezifische Funktionswünsche?',
+    'settings.emailUs': 'Schreib mir an',
+    'settings.sendEmail': 'E-Mail senden',
 
     // ===== Accounts (auto) =====
     'accounts.title': 'Konten',
