@@ -268,7 +268,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
         <div className="space-y-6 py-4">
           {/* Language Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Globe className="w-5 h-5 text-primary" />
@@ -283,7 +283,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <button
                   key={lang.code}
                   onClick={() => setLanguage(lang.code)}
-                  className={`flex flex-col items-center gap-1 p-3 rounded-xl border transition-all ${
+                  className={`flex flex-col items-center gap-1 p-2 sm:p-3 rounded-xl border transition-all ${
                     language === lang.code
                       ? 'border-primary bg-primary/20'
                       : 'border-border hover:border-primary/50'
@@ -298,7 +298,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           {/* Guest Account Section - only for guests */}
           {isGuest && (
-            <GlassCard className="p-4 border-primary/30 bg-primary/5">
+            <GlassCard className="p-3 sm:p-4 border-primary/30 bg-primary/5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                   <User className="w-5 h-5 text-primary" />
@@ -331,7 +331,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           )}
 
           {/* Theme & Accent Color Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Palette className="w-5 h-5 text-primary" />
@@ -404,7 +404,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Currency Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-success/20 flex items-center justify-center">
                 <DollarSign className="w-5 h-5 text-success" />
@@ -436,7 +436,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Budget & Spending Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Wallet className="w-5 h-5 text-primary" />
@@ -541,7 +541,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Quick Actions Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-success/20 flex items-center justify-center">
                 <Zap className="w-5 h-5 text-success" />
@@ -618,7 +618,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Date & Format Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-accent" />
@@ -685,7 +685,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Display Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-info/20 flex items-center justify-center">
                 <Eye className="w-5 h-5 text-info" />
@@ -737,7 +737,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 </div>
 
                 {settings.soundEnabled && (
-                  <div className="pl-6 space-y-3">
+                  <div className="pl-3 sm:pl-6 space-y-3">
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <Label className="text-sm">{t('settings.soundVolume')}</Label>
@@ -788,7 +788,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Security Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
                 <Shield className="w-5 h-5 text-warning" />
@@ -932,7 +932,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Notifications Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
                 <Bell className="w-5 h-5 text-accent" />
@@ -1049,7 +1049,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Data Statistics Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-primary" />
@@ -1098,7 +1098,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Advanced Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
                 <Database className="w-5 h-5 text-muted-foreground" />
@@ -1215,7 +1215,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Selective Clear Section */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center">
                 <Settings2 className="w-5 h-5 text-warning" />
@@ -1288,7 +1288,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* Danger Zone */}
-          <GlassCard className="p-4 border-destructive/30">
+          <GlassCard className="p-3 sm:p-4 border-destructive/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-destructive/20 flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5 text-destructive" />
@@ -1327,7 +1327,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* ===== Advanced — Privacy ===== */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <EyeOff className="w-5 h-5 text-primary" />
@@ -1359,7 +1359,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* ===== Advanced — Theme ===== */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary" />
@@ -1421,7 +1421,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* ===== Gestures & Shortcuts ===== */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Zap className="w-5 h-5 text-primary" />
@@ -1466,7 +1466,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* ===== Smart Notifications ===== */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Bell className="w-5 h-5 text-primary" />
@@ -1511,7 +1511,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* ===== Custom Categories ===== */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Palette className="w-5 h-5 text-primary" />
@@ -1571,7 +1571,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
 
           {/* ===== Backup JSON ===== */}
-          <GlassCard className="p-4">
+          <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Database className="w-5 h-5 text-primary" />
@@ -1609,7 +1609,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           {/* ===== Profile & Security ===== */}
           {isAuthenticated && !isGuest && (
-            <GlassCard className="p-4">
+            <GlassCard className="p-3 sm:p-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                   <KeyRound className="w-5 h-5 text-primary" />
@@ -1650,7 +1650,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
 
           {/* Privacy & Security Info */}
-          <GlassCard className="p-4 border-primary/30 bg-primary/5">
+          <GlassCard className="p-3 sm:p-4 border-primary/30 bg-primary/5">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Shield className="w-5 h-5 text-primary" />
@@ -1690,7 +1690,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           {/* Account Deletion - only for authenticated users */}
           {isAuthenticated && !isGuest && (
-          <GlassCard className="p-4 border-destructive/30">
+          <GlassCard className="p-3 sm:p-4 border-destructive/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-destructive/20 flex items-center justify-center">
                 <Trash2 className="w-5 h-5 text-destructive" />
@@ -1759,7 +1759,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
 
           {/* Feedback & Support */}
-          <GlassCard className="p-4 border-primary/20 bg-primary/5">
+          <GlassCard className="p-3 sm:p-4 border-primary/20 bg-primary/5">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                 <Mail className="w-5 h-5 text-primary" />
