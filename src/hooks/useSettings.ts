@@ -210,8 +210,8 @@ export function useSettings() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // Lock if PIN is enabled with valid 6-digit PIN OR biometric is enabled
-        const hasPinLock = parsed.pinEnabled === true && parsed.pin && typeof parsed.pin === 'string' && parsed.pin.length === 6;
+        // Lock if PIN is enabled (supports both legacy 6-digit and SHA-256 hashed PINs) OR biometric is enabled
+        const hasPinLock = parsed.pinEnabled === true && !!parsed.pin && typeof parsed.pin === 'string';
         const hasBiometricLock = parsed.biometricEnabled === true && parsed.biometricCredentialId;
         if (hasPinLock || hasBiometricLock) {
           return true;
