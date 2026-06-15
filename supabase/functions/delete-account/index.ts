@@ -39,14 +39,38 @@ Deno.serve(async (req) => {
     // Use service role to delete all user data and then the auth user
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Delete in order: audit_log, transactions, recurring_transactions, savings_goals, profiles, user_roles
-    const tables = ['audit_log', 'transactions', 'recurring_transactions', 'savings_goals', 'profiles', 'user_roles']
-    
-    for (const table of tables) {
+    // Delete user data. Most tables use user_id; some use a different column.
+    const tablesByUserId = [
+      'audit_log',
+      'bank_accounts',
+      'csv_imports',
+      'push_subscriptions',
+      'transactions',
+      'recurring_transactions',
+      'savings_goals',
+      'expense_splits',
+      'group_members',
+      'profiles',
+      'user_roles',
+    ]
+
+    for (const table of tablesByUserId) {
       const { error } = await adminClient.from(table).delete().eq('user_id', user.id)
       if (error) {
         console.error(`Error deleting from ${table}:`, error)
       }
+    }
+
+    // group_invites uses created_by
+    {
+      const { error } = await adminClient.from('group_invites').delete().eq('created_by', user.id)
+      if (error) console.error('Error deleting from group_invites:', error)
+    }
+
+    // shared_groups uses owner_id (cascades to remaining group_members/expenses via cleanup trigger)
+    {
+      const { error } = await adminClient.from('shared_groups').delete().eq('owner_id', user.id)
+      if (error) console.error('Error deleting from shared_groups:', error)
     }
 
     // Delete the auth user
