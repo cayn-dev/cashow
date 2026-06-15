@@ -39,8 +39,22 @@ Deno.serve(async (req) => {
     // Use service role to delete all user data and then the auth user
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Delete in order: audit_log, transactions, recurring_transactions, savings_goals, profiles, user_roles
-    const tables = ['audit_log', 'transactions', 'recurring_transactions', 'savings_goals', 'profiles', 'user_roles']
+    // Delete user data from all tables containing user-owned rows
+    const tables = [
+      'audit_log',
+      'bank_accounts',
+      'csv_imports',
+      'push_subscriptions',
+      'transactions',
+      'recurring_transactions',
+      'savings_goals',
+      'expense_splits',
+      'group_invites',
+      'group_members',
+      'shared_groups',
+      'profiles',
+      'user_roles',
+    ]
     
     for (const table of tables) {
       const { error } = await adminClient.from(table).delete().eq('user_id', user.id)
