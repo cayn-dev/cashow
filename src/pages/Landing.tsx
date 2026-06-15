@@ -86,6 +86,7 @@ export default function Landing() {
         </div>
       </nav>
 
+      <main id="main-content">
       {/* Hero */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-20 text-center">
         <motion.div
@@ -196,6 +197,8 @@ export default function Landing() {
           </Button>
         </motion.div>
       </section>
+
+      </main>
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-8 px-6">
