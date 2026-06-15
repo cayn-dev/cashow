@@ -213,7 +213,7 @@ export default function Landing() {
               <a href="/auth" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.login')}</a>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground/80 pt-2">Made by Jacopo Ferrieri</p>
+          <p className="text-xs text-muted-foreground pt-2">Made by Jacopo Ferrieri</p>
         </div>
       </footer>
     </div>
