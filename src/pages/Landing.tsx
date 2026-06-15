@@ -86,6 +86,7 @@ export default function Landing() {
         </div>
       </nav>
 
+      <main id="main-content">
       {/* Hero */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-20 text-center">
         <motion.div
@@ -197,6 +198,8 @@ export default function Landing() {
         </motion.div>
       </section>
 
+      </main>
+
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-3">
@@ -210,7 +213,7 @@ export default function Landing() {
               <a href="/auth" className="text-muted-foreground hover:text-foreground transition-colors">{t('landing.login')}</a>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground/80 pt-2">Made by Jacopo Ferrieri</p>
+          <p className="text-xs text-muted-foreground pt-2">Made by Jacopo Ferrieri</p>
         </div>
       </footer>
     </div>

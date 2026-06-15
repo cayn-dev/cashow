@@ -74,7 +74,7 @@ const Index = () => {
       <AuroraBackground intensity="medium" />
 
 
-      <div className="relative z-10 container max-w-7xl 2xl:max-w-[1480px] mx-auto py-6 px-4 lg:px-6">
+      <main className="relative z-10 container max-w-7xl 2xl:max-w-[1480px] mx-auto py-6 px-4 lg:px-6">
         <Navigation 
           currentView={currentView} 
           onViewChange={setCurrentView}
@@ -148,7 +148,7 @@ const Index = () => {
           />
         )}
 
-      </div>
+      </main>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
