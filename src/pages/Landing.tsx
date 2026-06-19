@@ -52,21 +52,21 @@ export default function Landing() {
 
 
       {/* Nav */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
-        <div className="flex items-center gap-2">
+      <nav className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-4 max-w-6xl mx-auto">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
             <Wallet className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-bold text-lg">Cashow</span>
+          <span className="font-bold text-lg hidden sm:inline">Cashow</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 min-w-0">
           {/* Language selector */}
-          <div className="flex items-center gap-0.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl p-0.5 mr-2">
+          <div className="flex items-center gap-0.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl p-0.5 mr-1 sm:mr-2 shrink-0">
             {LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => setLanguage(lang.code)}
-                className={`px-2 py-1.5 rounded-lg text-sm transition-all duration-300 ${
+                className={`px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-lg text-xs sm:text-sm transition-all duration-300 ${
                   language === lang.code
                     ? 'bg-primary/20 text-primary scale-110'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -77,10 +77,10 @@ export default function Landing() {
               </button>
             ))}
           </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>
+          <Button variant="ghost" size="sm" className="text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9 shrink-0" onClick={() => navigate('/auth')}>
             {t('landing.login')}
           </Button>
-          <Button size="sm" onClick={() => navigate('/auth')}>
+          <Button size="sm" className="hidden sm:inline-flex text-xs sm:text-sm h-8 sm:h-9" onClick={() => navigate('/auth')}>
             {t('landing.startFree')} <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
