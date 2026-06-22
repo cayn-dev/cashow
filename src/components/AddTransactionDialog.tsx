@@ -75,6 +75,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   );
   const [isSalary, setIsSalary] = useState(transaction?.isSalary ?? false);
   const [date, setDate] = useState<Date>(transaction?.date ?? new Date());
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [autoSuggested, setAutoSuggested] = useState(false);
   const feedback = useFeedback();
 
@@ -230,7 +231,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           {/* Date Picker */}
           <div className="space-y-2">
             <Label>{t('addTransaction.date')}</Label>
-            <Popover>
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -247,7 +248,12 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(d) => d && setDate(d)}
+                  onSelect={(d) => {
+                    if (d) {
+                      setDate(d);
+                      setCalendarOpen(false);
+                    }
+                  }}
                   initialFocus
                   className="pointer-events-auto"
                   locale={dateLocale}
