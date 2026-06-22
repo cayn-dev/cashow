@@ -75,6 +75,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   );
   const [isSalary, setIsSalary] = useState(transaction?.isSalary ?? false);
   const [date, setDate] = useState<Date>(transaction?.date ?? new Date());
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [autoSuggested, setAutoSuggested] = useState(false);
   const feedback = useFeedback();
 
