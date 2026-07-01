@@ -11,6 +11,7 @@ import Index from "./pages/Index";
  import Privacy from "./pages/Privacy";
  import Landing from "./pages/Landing";
  import NotFound from "./pages/NotFound";
+import { Analytics } from "./components/Analytics";
 import { Loader2 } from "lucide-react";
 
 // Capture invite token immediately so it survives the auth/landing redirect
