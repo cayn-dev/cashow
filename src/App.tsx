@@ -52,6 +52,8 @@ const App = () => (
            <Toaster />
            <Sonner />
            <BrowserRouter>
+              <Analytics />
+
               <Routes>
                 <Route path="/welcome" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
