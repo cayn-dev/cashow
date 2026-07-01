@@ -176,7 +176,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </Button>
         </DialogTrigger>
       ) : null}
-      <DialogContent className="glass-panel border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-background border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-xl">
             {isEdit ? t('addTransaction.editTitle') : t('addTransaction.title')}
