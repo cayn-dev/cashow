@@ -274,208 +274,238 @@
 
 
 @layer components {
-  /* ===== Pure Black surface card ===== */
+  /* ===== Noir glass surface with gold hairline ===== */
   .glass-panel {
     @apply relative overflow-hidden;
-    background: hsl(0 0% 100% / 0.025);
+    background:
+      linear-gradient(180deg, hsl(40 15% 100% / 0.035) 0%, hsl(40 15% 100% / 0.015) 100%);
     border-radius: var(--radius);
-    border: 0.5px solid hsl(0 0% 100% / 0.08);
-    box-shadow: 0 1px 0 0 hsl(0 0% 100% / 0.04) inset;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    border: 0.5px solid hsl(var(--card-border));
+    box-shadow:
+      0 1px 0 0 hsl(42 55% 62% / 0.06) inset,
+      0 20px 60px -30px hsl(0 0% 0% / 0.6);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .glass-panel:hover {
-    background: hsl(0 0% 100% / 0.04);
-    border-color: hsl(0 0% 100% / 0.12);
+    background:
+      linear-gradient(180deg, hsl(40 15% 100% / 0.05) 0%, hsl(40 15% 100% / 0.02) 100%);
+    border-color: hsl(42 55% 62% / 0.24);
   }
 
   .glass-panel-elevated {
     @apply glass-panel;
-    background: hsl(0 0% 6%);
-    border: 0.5px solid hsl(0 0% 100% / 0.10);
+    background: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 5%) 100%);
+    border: 0.5px solid hsl(42 40% 62% / 0.16);
     box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.06) inset,
-      0 8px 32px hsl(0 0% 0% / 0.6);
+      0 1px 0 0 hsl(42 55% 62% / 0.10) inset,
+      0 24px 60px hsl(0 0% 0% / 0.55);
   }
 
-  /* Liquid glass input - Apple style */
+  /* Editorial gold-bordered card variant */
+  .noir-card {
+    @apply relative overflow-hidden rounded-[var(--radius)];
+    background:
+      linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 4%) 100%);
+    border: 0.5px solid hsl(42 40% 62% / 0.18);
+    box-shadow: var(--shadow-editorial);
+  }
+
+  /* Liquid gold input */
   .glass-input {
     @apply relative;
-    background: hsl(0 0% 100% / 0.06);
+    background: hsl(40 10% 100% / 0.05);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 0.5px solid hsl(0 0% 100% / 0.1);
-    border-radius: 0.875rem;
+    border: 0.5px solid hsl(42 40% 62% / 0.14);
+    border-radius: 0.75rem;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .glass-input:focus,
   .glass-input:focus-within {
-    background: hsl(0 0% 100% / 0.08);
-    border-color: hsl(var(--primary) / 0.4);
-    box-shadow: 
-      0 0 0 3px hsl(var(--primary) / 0.12),
-      0 0 0 1px hsl(var(--primary) / 0.3);
+    background: hsl(40 10% 100% / 0.08);
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow:
+      0 0 0 3px hsl(var(--primary) / 0.14),
+      0 0 0 1px hsl(var(--primary) / 0.4);
   }
 
-  /* Apple-style glow */
+  /* Gold glow */
   .glow {
-    box-shadow: 
-      0 0 0 0.5px hsl(0 0% 100% / 0.1) inset,
-      0 0 20px hsl(var(--primary) / 0.2),
-      0 0 40px hsl(var(--primary) / 0.1);
+    box-shadow:
+      0 0 0 0.5px hsl(var(--primary) / 0.18) inset,
+      var(--shadow-gold-glow);
   }
 
   .glow-text {
-    text-shadow: 
-      0 0 20px hsl(var(--primary) / 0.4),
-      0 0 40px hsl(var(--primary) / 0.2);
+    text-shadow:
+      0 0 24px hsl(var(--primary) / 0.5),
+      0 0 48px hsl(var(--primary) / 0.25);
   }
 
-  /* Stat card with hover */
+  /* Stat card */
   .stat-card {
     @apply glass-panel p-5;
-    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  .stat-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 40%, hsl(var(--primary) / 0.08) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.9s ease;
+    pointer-events: none;
   }
 
   .stat-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 
-      0 0 0 0.5px hsl(0 0% 100% / 0.12) inset,
-      0 1px 0 0 hsl(0 0% 100% / 0.15) inset,
-      0 12px 32px hsl(0 0% 0% / 0.2),
-      0 24px 64px hsl(0 0% 0% / 0.15);
+    transform: translateY(-4px);
+    border-color: hsl(42 55% 62% / 0.30);
+    box-shadow:
+      0 1px 0 0 hsl(42 55% 62% / 0.10) inset,
+      0 20px 60px -20px hsl(0 0% 0% / 0.6),
+      0 0 40px hsl(var(--primary) / 0.12);
   }
 
-  /* Progress bar with glow */
+  .stat-card:hover::after {
+    transform: translateX(100%);
+  }
+
   .progress-glow {
-    box-shadow: 
-      0 0 8px currentColor,
-      0 0 16px currentColor;
+    box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
   }
 
-  /* Income/Expense badges */
+  /* Badges */
   .badge-income {
     background: hsl(var(--success) / 0.12);
     color: hsl(var(--success));
-    border: 0.5px solid hsl(var(--success) / 0.2);
+    border: 0.5px solid hsl(var(--success) / 0.25);
     backdrop-filter: blur(8px);
   }
 
   .badge-expense {
     background: hsl(var(--destructive) / 0.12);
     color: hsl(var(--destructive));
-    border: 0.5px solid hsl(var(--destructive) / 0.2);
+    border: 0.5px solid hsl(var(--destructive) / 0.25);
     backdrop-filter: blur(8px);
   }
 
-  /* Apple-style primary button — uses theme primary, no hardcoded blue */
+  /* Primary gold button */
   .apple-button {
-    @apply relative overflow-hidden px-6 py-3 font-medium;
-    background: hsl(var(--primary));
+    @apply relative overflow-hidden px-6 py-3 font-medium tracking-tight;
+    background: var(--gradient-gold);
     color: hsl(var(--primary-foreground));
-    border-radius: 1rem;
+    border-radius: 0.875rem;
     box-shadow:
-      0 0 0 0.5px hsl(0 0% 100% / 0.18) inset,
-      0 1px 0 0 hsl(0 0% 100% / 0.12) inset,
-      0 4px 12px hsl(var(--primary) / 0.25);
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      0 0 0 0.5px hsl(44 78% 82% / 0.35) inset,
+      0 1px 0 0 hsl(44 78% 92% / 0.30) inset,
+      0 -1px 0 0 hsl(38 70% 25% / 0.35) inset,
+      0 8px 24px hsl(var(--primary) / 0.35);
+    transition: all 0.3s cubic-bezier(0.34, 1.5, 0.64, 1);
+  }
+
+  .apple-button::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, hsl(44 78% 95% / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
   }
 
   .apple-button:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 20px hsl(var(--primary) / 0.35);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 0.5px hsl(44 78% 82% / 0.45) inset,
+      0 1px 0 0 hsl(44 78% 92% / 0.35) inset,
+      0 12px 32px hsl(var(--primary) / 0.5);
   }
 
-  .apple-button:active {
-    transform: translateY(0) scale(0.98);
-  }
+  .apple-button:hover::before { transform: translateX(120%); }
+  .apple-button:active { transform: translateY(0) scale(0.98); }
 
-  /* AI Chat bubble */
+  /* Chat bubbles */
   .ai-bubble {
     @apply glass-panel;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary) / 0.08) 0%,
-      hsl(var(--primary) / 0.04) 100%
-    );
-    border: 0.5px solid hsl(var(--primary) / 0.15);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.10) 0%, hsl(var(--primary) / 0.04) 100%);
+    border: 0.5px solid hsl(var(--primary) / 0.22);
   }
 
   .user-bubble {
     @apply glass-panel;
-    background: hsl(0 0% 100% / 0.08);
+    background: linear-gradient(135deg, hsl(40 15% 100% / 0.06) 0%, hsl(40 15% 100% / 0.02) 100%);
   }
 
-  /* Floating action button - Apple style */
+  /* FAB with gold gradient */
   .fab {
     @apply fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center;
-    background: hsl(var(--primary));
+    background: var(--gradient-gold);
     color: hsl(var(--primary-foreground));
     box-shadow:
-      0 0 0 0.5px hsl(0 0% 100% / 0.2) inset,
-      0 8px 24px hsl(var(--primary) / 0.4);
-    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      0 0 0 0.5px hsl(44 78% 82% / 0.4) inset,
+      0 1px 0 0 hsl(44 78% 92% / 0.35) inset,
+      0 12px 32px hsl(var(--primary) / 0.45),
+      0 24px 60px hsl(var(--primary) / 0.2);
+    transition: all 0.4s cubic-bezier(0.34, 1.5, 0.64, 1);
   }
 
   .fab:hover {
-    transform: translateY(-4px) scale(1.08);
-    box-shadow: 
-      0 0 0 0.5px hsl(0 0% 100% / 0.25) inset,
-      0 1px 0 0 hsl(0 0% 100% / 0.25) inset,
-      0 12px 32px hsl(var(--primary) / 0.5),
-      0 24px 64px hsl(var(--primary) / 0.25);
+    transform: translateY(-4px) scale(1.06);
+    box-shadow:
+      0 0 0 0.5px hsl(44 78% 82% / 0.5) inset,
+      0 16px 40px hsl(var(--primary) / 0.55),
+      0 32px 80px hsl(var(--primary) / 0.28);
   }
 
-  /* Insight card variants */
+  /* Insight cards */
   .insight-card {
     @apply glass-panel p-4;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--info) / 0.06) 0%,
-      hsl(var(--info) / 0.02) 100%
-    );
-    border: 0.5px solid hsl(var(--info) / 0.15);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.06) 0%, hsl(var(--primary) / 0.015) 100%);
+    border: 0.5px solid hsl(var(--primary) / 0.18);
   }
 
   .insight-card.warning {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--warning) / 0.06) 0%,
-      hsl(var(--warning) / 0.02) 100%
-    );
-    border: 0.5px solid hsl(var(--warning) / 0.15);
+    background: linear-gradient(135deg, hsl(var(--warning) / 0.08) 0%, hsl(var(--warning) / 0.02) 100%);
+    border: 0.5px solid hsl(var(--warning) / 0.22);
   }
 
   .insight-card.success {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--success) / 0.06) 0%,
-      hsl(var(--success) / 0.02) 100%
-    );
-    border: 0.5px solid hsl(var(--success) / 0.15);
+    background: linear-gradient(135deg, hsl(var(--success) / 0.08) 0%, hsl(var(--success) / 0.02) 100%);
+    border: 0.5px solid hsl(var(--success) / 0.22);
   }
 
-  /* Navigation pill - Apple style */
+  /* Nav pill */
   .nav-pill {
-    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-300;
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 tracking-tight;
     background: transparent;
     color: hsl(var(--muted-foreground));
   }
 
   .nav-pill:hover {
-    background: hsl(0 0% 100% / 0.06);
+    background: hsl(var(--primary) / 0.08);
     color: hsl(var(--foreground));
   }
 
   .nav-pill.active {
-    background: hsl(0 0% 100% / 0.1);
-    color: hsl(var(--foreground));
-    box-shadow: 
-      0 0 0 0.5px hsl(0 0% 100% / 0.1) inset,
-      0 2px 8px hsl(0 0% 0% / 0.1);
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.18), hsl(var(--primary) / 0.08));
+    color: hsl(var(--primary-glow));
+    box-shadow:
+      0 0 0 0.5px hsl(var(--primary) / 0.25) inset,
+      0 2px 8px hsl(var(--primary) / 0.15);
+  }
+
+  /* Editorial hero rule */
+  .rule-gold::after {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 1px;
+    margin-top: 0.75rem;
+    background: linear-gradient(90deg, hsl(var(--primary)), transparent);
   }
 }
+
 
 @layer utilities {
   /* Smooth Apple animations */
