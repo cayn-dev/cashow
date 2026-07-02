@@ -80,7 +80,7 @@ const Index = () => {
         path="/"
       />
       <div className="min-h-dvh flex w-full bg-background text-foreground relative">
-        <AuroraBackground intensity="soft" />
+        <AuroraBackground intensity="subtle" />
 
         <AppSidebar
           currentView={currentView}
