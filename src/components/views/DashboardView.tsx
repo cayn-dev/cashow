@@ -38,12 +38,17 @@ interface DashboardViewProps {
   openAddTxTick?: number;
 }
 
-function greetKey(): string {
+const GREETINGS: Record<string, [string, string, string, string]> = {
+  it: ['Buonanotte', 'Buongiorno', 'Buon pomeriggio', 'Buonasera'],
+  en: ['Good night', 'Good morning', 'Good afternoon', 'Good evening'],
+  es: ['Buenas noches', 'Buenos días', 'Buenas tardes', 'Buenas noches'],
+  fr: ['Bonne nuit', 'Bonjour', 'Bon après-midi', 'Bonsoir'],
+  de: ['Gute Nacht', 'Guten Morgen', 'Guten Tag', 'Guten Abend'],
+};
+function greetingFor(lang: string): string {
   const h = new Date().getHours();
-  if (h < 6) return 'greeting.night';
-  if (h < 12) return 'greeting.morning';
-  if (h < 18) return 'greeting.afternoon';
-  return 'greeting.evening';
+  const idx = h < 6 ? 0 : h < 12 ? 1 : h < 18 ? 2 : 3;
+  return (GREETINGS[lang] || GREETINGS.en)[idx];
 }
 
 export function DashboardView({
@@ -64,14 +69,14 @@ export function DashboardView({
   openAddTxTick = 0,
 }: DashboardViewProps) {
   const insights = useInsights(allTransactions);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [addOpen, setAddOpen] = useState(false);
 
   useEffect(() => {
     if (openAddTxTick > 0) setAddOpen(true);
   }, [openAddTxTick]);
 
-  const greeting = t(greetKey()) || t('dashboard.title');
+  const greeting = greetingFor(language);
   const savingsRate =
     monthlyIncome > 0 ? Math.max(0, Math.min(100, (monthlyBalance / monthlyIncome) * 100)) : 0;
 
