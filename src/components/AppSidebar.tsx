@@ -29,10 +29,9 @@ interface AppSidebarProps {
   currentView: View;
   onViewChange: (view: View) => void;
   onOpenSettings: () => void;
-  onOpenCommand: () => void;
 }
 
-export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCommand }: AppSidebarProps) {
+export function AppSidebar({ currentView, onViewChange, onOpenSettings }: AppSidebarProps) {
   const { t } = useLanguage();
   const { state, setOpenMobile, isMobile } = useSidebar();
   const handleSelect = (id: View) => {
@@ -137,19 +136,6 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCo
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => { onOpenCommand(); if (isMobile) setOpenMobile(false); }} tooltip={t('nav.commandPalette') || 'Command'} className="rounded-lg">
-              <Command className="w-4 h-4" />
-              <span className="font-sans text-[13px] tracking-tight flex-1">
-                {t('nav.commandPalette') || 'Command'}
-              </span>
-              {!collapsed && (
-                <kbd className="ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded border border-border/60 text-muted-foreground">
-                  ⌘K
-                </kbd>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton onClick={() => { onOpenSettings(); if (isMobile) setOpenMobile(false); }} tooltip={t('settings.title') || 'Settings'} className="rounded-lg">
               <Settings className="w-4 h-4" />
