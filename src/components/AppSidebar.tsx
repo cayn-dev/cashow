@@ -35,7 +35,11 @@ interface AppSidebarProps {
 
 export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCommand }: AppSidebarProps) {
   const { t } = useLanguage();
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
+  const handleSelect = (id: View) => {
+    onViewChange(id);
+    if (isMobile) setOpenMobile(false);
+  };
   const collapsed = state === 'collapsed';
 
   const primary: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
