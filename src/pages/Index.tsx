@@ -7,7 +7,6 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { TopBar } from '@/components/TopBar';
-import { CommandPalette } from '@/components/CommandPalette';
 import { DashboardView } from '@/components/views/DashboardView';
 import { TransactionsView } from '@/components/views/TransactionsView';
 import { SalaryView } from '@/components/views/SalaryView';
