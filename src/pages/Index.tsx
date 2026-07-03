@@ -23,7 +23,6 @@ type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'ca
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [commandOpen, setCommandOpen] = useState(false);
   const [addTxTick, setAddTxTick] = useState(0);
   const { isAuthenticated, isGuest, signOut } = useAuth();
   const settings = useSettings();
@@ -85,7 +84,6 @@ const Index = () => {
           currentView={currentView}
           onViewChange={setCurrentView}
           onOpenSettings={() => setSettingsOpen(true)}
-          onOpenCommand={() => setCommandOpen(true)}
         />
 
         <SidebarInset className="relative z-10 min-w-0">
@@ -93,7 +91,6 @@ const Index = () => {
             onLock={settings.lockApp}
             pinEnabled={settings.pinEnabled}
             onLogout={handleLogout}
-            onOpenCommand={() => setCommandOpen(true)}
             viewLabel={viewLabel}
           />
 
@@ -158,19 +155,6 @@ const Index = () => {
             )}
           </main>
         </SidebarInset>
-
-        <CommandPalette
-          open={commandOpen}
-          onOpenChange={setCommandOpen}
-          onNavigate={setCurrentView}
-          onOpenSettings={() => setSettingsOpen(true)}
-          onLock={settings.pinEnabled ? settings.lockApp : undefined}
-          onAddTransaction={() => {
-            setCurrentView('dashboard');
-            setAddTxTick((n) => n + 1);
-          }}
-          onLogout={handleLogout}
-        />
 
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </div>
