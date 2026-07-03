@@ -6,7 +6,6 @@ import {
   Wallet,
   Target,
   Settings,
-  Command,
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import {
