@@ -35,7 +35,11 @@ interface AppSidebarProps {
 
 export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCommand }: AppSidebarProps) {
   const { t } = useLanguage();
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
+  const handleSelect = (id: View) => {
+    onViewChange(id);
+    if (isMobile) setOpenMobile(false);
+  };
   const collapsed = state === 'collapsed';
 
   const primary: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
@@ -87,7 +91,7 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCo
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
                     isActive={currentView === item.id}
-                    onClick={() => onViewChange(item.id)}
+                    onClick={() => handleSelect(item.id)}
                     tooltip={item.label}
                     className={cn(
                       'transition-all duration-300 rounded-lg',
@@ -114,7 +118,7 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCo
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
                     isActive={currentView === item.id}
-                    onClick={() => onViewChange(item.id)}
+                    onClick={() => handleSelect(item.id)}
                     tooltip={item.label}
                     className={cn(
                       'transition-all duration-300 rounded-lg',
@@ -135,7 +139,7 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCo
       <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={onOpenCommand} tooltip={t('nav.commandPalette') || 'Command'} className="rounded-lg">
+            <SidebarMenuButton onClick={() => { onOpenCommand(); if (isMobile) setOpenMobile(false); }} tooltip={t('nav.commandPalette') || 'Command'} className="rounded-lg">
               <Command className="w-4 h-4" />
               <span className="font-sans text-[13px] tracking-tight flex-1">
                 {t('nav.commandPalette') || 'Command'}
@@ -148,7 +152,7 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings, onOpenCo
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={onOpenSettings} tooltip={t('settings.title') || 'Settings'} className="rounded-lg">
+            <SidebarMenuButton onClick={() => { onOpenSettings(); if (isMobile) setOpenMobile(false); }} tooltip={t('settings.title') || 'Settings'} className="rounded-lg">
               <Settings className="w-4 h-4" />
               <span className="font-sans text-[13px] tracking-tight">
                 {t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}

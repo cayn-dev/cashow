@@ -1760,13 +1760,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           {/* Feedback & Support */}
           <GlassCard className="p-3 sm:p-4 border-primary/20 bg-primary/5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+            <div className="flex items-start gap-3 mb-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                 <Mail className="w-5 h-5 text-primary" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <h3 className="font-semibold">{t('settings.feedbackTitle')}</h3>
-                <p className="text-sm text-muted-foreground">{t('settings.feedbackDesc')}</p>
+                <p className="text-sm text-muted-foreground break-words">{t('settings.feedbackDesc')}</p>
               </div>
             </div>
             <a
@@ -1775,10 +1775,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               rel="noopener noreferrer"
               className="block w-full"
             >
-              <Button variant="outline" className="w-full justify-start">
-                <Mail className="w-4 h-4 mr-2" />
-                <span className="text-muted-foreground mr-1">{t('settings.emailUs')}</span>
-                <span className="font-medium">jacopo.dev0@gmail.com</span>
+              <Button variant="outline" className="w-full h-auto py-2.5 flex-col items-start gap-1 whitespace-normal text-left">
+                <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Mail className="w-3.5 h-3.5" />
+                  {t('settings.emailUs')}
+                </span>
+                <span className="font-medium text-sm break-all">jacopo.dev0@gmail.com</span>
               </Button>
             </a>
           </GlassCard>
