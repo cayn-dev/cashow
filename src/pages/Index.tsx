@@ -7,7 +7,6 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { TopBar } from '@/components/TopBar';
-import { CommandPalette } from '@/components/CommandPalette';
 import { DashboardView } from '@/components/views/DashboardView';
 import { TransactionsView } from '@/components/views/TransactionsView';
 import { SalaryView } from '@/components/views/SalaryView';
@@ -24,7 +23,6 @@ type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'ca
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [commandOpen, setCommandOpen] = useState(false);
   const [addTxTick, setAddTxTick] = useState(0);
   const { isAuthenticated, isGuest, signOut } = useAuth();
   const settings = useSettings();
@@ -86,7 +84,6 @@ const Index = () => {
           currentView={currentView}
           onViewChange={setCurrentView}
           onOpenSettings={() => setSettingsOpen(true)}
-          onOpenCommand={() => setCommandOpen(true)}
         />
 
         <SidebarInset className="relative z-10 min-w-0">
@@ -94,7 +91,6 @@ const Index = () => {
             onLock={settings.lockApp}
             pinEnabled={settings.pinEnabled}
             onLogout={handleLogout}
-            onOpenCommand={() => setCommandOpen(true)}
             viewLabel={viewLabel}
           />
 
@@ -159,19 +155,6 @@ const Index = () => {
             )}
           </main>
         </SidebarInset>
-
-        <CommandPalette
-          open={commandOpen}
-          onOpenChange={setCommandOpen}
-          onNavigate={setCurrentView}
-          onOpenSettings={() => setSettingsOpen(true)}
-          onLock={settings.pinEnabled ? settings.lockApp : undefined}
-          onAddTransaction={() => {
-            setCurrentView('dashboard');
-            setAddTxTick((n) => n + 1);
-          }}
-          onLogout={handleLogout}
-        />
 
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </div>
