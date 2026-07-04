@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage, LANGUAGES } from '@/hooks/useLanguage';
 import { lovable } from '@/integrations/lovable/index';
@@ -19,6 +19,12 @@ import { Seo } from '@/components/Seo';
 
 export default function Auth() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nextParam = searchParams.get('next');
+  const safeNext =
+    nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')
+      ? nextParam
+      : '/';
   const { signIn, signUp, isAuthenticated, isGuest, enterGuestMode } = useAuth();
   const { t, language, setLanguage } = useLanguage();
   const [loading, setLoading] = useState(false);
@@ -35,7 +41,7 @@ export default function Auth() {
   const passwordSchema = z.string().min(6, t('auth.passwordMinLength'));
 
   if (isAuthenticated || isGuest) {
-    navigate('/', { replace: true });
+    navigate(safeNext, { replace: true });
     return null;
   }
 
@@ -61,7 +67,7 @@ export default function Auth() {
     if (error) {
       setError(error.message);
     } else {
-      navigate('/', { replace: true });
+      navigate(safeNext, { replace: true });
     }
   };
 
@@ -94,7 +100,7 @@ export default function Auth() {
     setSocialLoading(provider);
     
     const { error } = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: window.location.origin,
+      redirect_uri: window.location.origin + safeNext,
     });
     
     setSocialLoading(null);
@@ -323,7 +329,7 @@ export default function Auth() {
             className="w-full text-muted-foreground hover:text-foreground"
             onClick={() => {
               enterGuestMode();
-              navigate('/', { replace: true });
+              navigate(safeNext, { replace: true });
             }}
           >
             {t('auth.continueWithout')}
