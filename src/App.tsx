@@ -11,6 +11,7 @@ import Index from "./pages/Index";
  import Privacy from "./pages/Privacy";
  import Landing from "./pages/Landing";
  import NotFound from "./pages/NotFound";
+ import OAuthConsent from "./pages/OAuthConsent";
 import { Analytics } from "./components/Analytics";
 import { Loader2 } from "lucide-react";
 
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/welcome" element={<Landing />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/privacy" element={<Privacy />} />
+                <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                 <Route path="/" element={
                   <ProtectedRoute>
                     <Index />
