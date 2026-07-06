@@ -8,7 +8,7 @@ import "@fontsource/syne/500.css";
 import "@fontsource/syne/600.css";
 import "@fontsource/syne/700.css";
 import "@fontsource/syne/800.css";
-import "@fontsource-variable/plus-jakarta-sans";
+import "@fontsource-variable/plus-jakarta-sans/index.css";
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
