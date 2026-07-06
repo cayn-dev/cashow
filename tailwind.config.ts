@@ -14,9 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Work Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
-        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans Variable"', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['"Syne"', '"Plus Jakarta Sans Variable"', 'system-ui', 'sans-serif'],
+        serif: ['"Syne"', 'Georgia', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
