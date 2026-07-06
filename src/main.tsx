@@ -3,14 +3,12 @@ import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
 
-// Editorial typography: Instrument Serif for display, Work Sans for body
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource/work-sans/300.css";
-import "@fontsource/work-sans/400.css";
-import "@fontsource/work-sans/500.css";
-import "@fontsource/work-sans/600.css";
-import "@fontsource/work-sans/700.css";
+// Premium typography: Syne for display, Plus Jakarta Sans for body
+import "@fontsource/syne/500.css";
+import "@fontsource/syne/600.css";
+import "@fontsource/syne/700.css";
+import "@fontsource/syne/800.css";
+import "@fontsource-variable/plus-jakarta-sans/index.css";
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
