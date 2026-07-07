@@ -25,14 +25,8 @@ export function TopBar({ onLock, pinEnabled, onLogout, viewLabel }: TopBarProps)
   });
 
   return (
-    <header
-      className="sticky top-0 z-30 flex items-center gap-3 h-14 px-3 sm:px-5 border-b border-border/60"
-      style={{
-        background: 'linear-gradient(180deg, hsl(0 0% 5% / 0.92) 0%, hsl(0 0% 4% / 0.85) 100%)',
-        backdropFilter: 'blur(24px) saturate(160%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(160%)',
-      }}
-    >
+    <header className="glass-topbar sticky top-0 z-30 flex items-center gap-3 h-14 px-3 sm:px-5">
+
       <SidebarTrigger className="text-foreground/70 hover:text-foreground" />
 
       <div className="hidden md:flex items-baseline gap-3 min-w-0 flex-1">
