@@ -58,24 +58,25 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings }: AppSid
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
             style={{
-              background: 'var(--gradient-gold)',
+              background: 'var(--gradient-primary)',
               boxShadow:
-                '0 0 0 0.5px hsl(44 78% 82% / 0.4) inset, 0 4px 12px hsl(var(--primary) / 0.35)',
+                '0 0 0 0.5px hsl(220 100% 96% / 0.5) inset, 0 1px 0 0 hsl(220 100% 100% / 0.4) inset, 0 6px 20px hsl(var(--primary) / 0.45)',
             }}
           >
-            <span className="font-display text-lg font-normal text-[hsl(var(--primary-foreground))] italic">C</span>
+            <span className="font-display text-lg font-bold text-[hsl(var(--primary-foreground))]">C</span>
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <div className="font-display text-[22px] leading-none tracking-tight text-gold italic">
+              <div className="font-display text-[22px] leading-none tracking-tight text-shine font-bold">
                 Cashow
               </div>
-              <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1">
-                Editorial Finance
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
+                Liquid Finance
               </div>
             </div>
           )}
         </div>
+
       </SidebarHeader>
 
       <SidebarContent className="px-1.5 py-3">
