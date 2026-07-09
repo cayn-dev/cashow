@@ -16,6 +16,7 @@ import { CalendarView } from '@/components/views/CalendarView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
+import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Seo } from '@/components/Seo';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
@@ -47,13 +48,16 @@ const Index = () => {
     return map[currentView];
   }, [currentView, t]);
 
-  // Loading state
+  // Loading state — liquid-glass skeleton coherent with dashboard layout
   if (isAuthenticated && !isGuest && cloudStore.loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground font-sans">{t('loading.data')}</p>
+      <div className="min-h-screen bg-background relative overflow-hidden">
+        <AuroraBackground />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          <DashboardSkeleton />
+          <span className="sr-only" role="status" aria-live="polite">
+            {t('loading.data')}
+          </span>
         </div>
       </div>
     );
