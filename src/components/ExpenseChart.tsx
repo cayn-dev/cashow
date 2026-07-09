@@ -93,8 +93,8 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
     return (
       <GlassCard className="h-full" elevated>
         {Header}
-        <div className="flex items-center justify-center h-[220px] text-muted-foreground font-sans text-sm">
-          {t('chart.noExpenses')}
+      <div className="h-[220px] flex items-center justify-center">
+          <GlassEmptyState icon={PieIcon} title={t('chart.noExpenses')} compact />
         </div>
       </GlassCard>
     );
@@ -241,8 +241,8 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
             {transactions.length === 0 ? (
-              <div className="flex items-center justify-center h-[260px] text-muted-foreground font-sans text-sm">
-                {t('chart.noExpenses')}
+              <div className="h-[260px] flex items-center justify-center">
+                <GlassEmptyState icon={LineIcon} title={t('chart.noExpenses')} compact />
               </div>
             ) : (
               <div className="h-[280px]">
