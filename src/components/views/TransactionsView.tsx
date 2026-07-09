@@ -3,6 +3,7 @@ import { Transaction, CATEGORY_CONFIG, PAYMENT_METHODS } from '@/types/finance';
 import { TransactionItem } from '@/components/TransactionItem';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -255,11 +256,11 @@ export function TransactionsView({
         <AnimatePresence>
           {filteredTransactions.length === 0 && (
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
-              <GlassCard>
-                <div className="text-center py-12">
-                  <Filter className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-                  <p className="text-muted-foreground">{t('transactions.noResults')}</p>
-                </div>
+              <GlassCard hover={false}>
+                <GlassEmptyState
+                  icon={Filter}
+                  title={t('transactions.noResults')}
+                />
               </GlassCard>
             </motion.div>
           )}

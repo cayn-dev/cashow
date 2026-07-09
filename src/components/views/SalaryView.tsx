@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Transaction } from '@/types/finance';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import { StatCard } from '@/components/StatCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -122,7 +123,7 @@ export function SalaryView({ monthlySalary, cumulativeSalary, salaryTransactions
             </div>
           ))}
           {salaryTransactions.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">{t('salary.noSalary')}</div>
+            <GlassEmptyState icon={Wallet} title={t('salary.noSalary')} compact />
           )}
         </div>
       </GlassCard>

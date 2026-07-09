@@ -2,6 +2,7 @@ import { SavingsGoal } from '@/types/finance';
 import { SavingsGoalCard } from '@/components/SavingsGoalCard';
 import { AddGoalDialog } from '@/components/AddGoalDialog';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import { StatCard } from '@/components/StatCard';
 import { PiggyBank, Target, TrendingUp } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -60,13 +61,13 @@ export function SavingsView({ savingsGoals, totalSavings, onAddGoal, onUpdateGoa
       </div>
 
       {savingsGoals.length === 0 && (
-        <GlassCard>
-          <div className="text-center py-12">
-            <Target className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" />
-            <h3 className="font-display font-semibold text-lg mb-2">{t('savings.noGoals')}</h3>
-            <p className="text-muted-foreground mb-4">{t('savings.createFirst')}</p>
-            <AddGoalDialog onAdd={onAddGoal} />
-          </div>
+        <GlassCard hover={false}>
+          <GlassEmptyState
+            icon={Target}
+            title={t('savings.noGoals')}
+            description={t('savings.createFirst')}
+            action={<AddGoalDialog onAdd={onAddGoal} />}
+          />
         </GlassCard>
       )}
 

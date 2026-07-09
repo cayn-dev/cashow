@@ -369,9 +369,12 @@ export function CalendarView({ transactions, currencySymbol = '€' }: CalendarV
                 </Button>
               </div>
               {selectedDayTx.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">
-                  {t('calendar.noTx')}
-                </p>
+                <div className="py-3 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <span className="glass-empty-icon !w-8 !h-8">
+                    <span className="text-xs">·</span>
+                  </span>
+                  <span>{t('calendar.noTx')}</span>
+                </div>
               ) : (
                 <div className="space-y-2">
                   {selectedDayTx.map(tx => (

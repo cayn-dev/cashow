@@ -17,6 +17,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
+import { Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
@@ -203,9 +205,12 @@ export function DashboardView({
               />
             ))}
             {recentTransactions.length === 0 && (
-              <div className="text-center py-10 text-muted-foreground font-sans text-sm">
-                {t('dashboard.noTransactions')}
-              </div>
+              <GlassEmptyState
+                icon={Receipt}
+                title={t('dashboard.noTransactions')}
+                description={t('dashboard.subtitle')}
+                compact
+              />
             )}
           </div>
         </GlassCard>

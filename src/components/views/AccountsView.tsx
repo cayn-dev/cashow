@@ -3,6 +3,7 @@ import { useBankAccounts } from '@/hooks/useBankAccounts';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/hooks/useLanguage';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -229,9 +230,8 @@ export function AccountsView({ currencySymbol = '€' }: AccountsViewProps) {
           );
         })}
         {accounts.length === 0 && (
-          <GlassCard className="p-8 col-span-full text-center text-muted-foreground">
-            <Building2 className="w-12 h-12 mx-auto mb-3 opacity-40" />
-            <p>{t('accounts.empty')}</p>
+          <GlassCard hover={false} className="col-span-full">
+            <GlassEmptyState icon={Building2} title={t('accounts.empty')} />
           </GlassCard>
         )}
       </div>

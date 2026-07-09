@@ -774,3 +774,71 @@
 @media (prefers-reduced-motion: reduce) {
   .aurora-orb, .aurora-blob { animation: none !important; }
 }
+
+/* ============= LIQUID GLASS SKELETON ============= */
+.glass-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, hsl(220 30% 100% / 0.06) 0%, hsl(220 30% 100% / 0.02) 100%);
+  border: 0.5px solid hsl(var(--card-border));
+  isolation: isolate;
+}
+.glass-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    transparent 30%,
+    hsl(220 100% 92% / 0.14) 50%,
+    hsl(224 100% 78% / 0.10) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: glass-shimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes glass-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-skeleton::after { animation: none; opacity: 0.4; }
+}
+
+/* Liquid-glass empty state accent halo */
+.glass-empty-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px; height: 72px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 50% 40%, hsl(var(--primary) / 0.22), transparent 65%),
+    linear-gradient(180deg, hsl(220 30% 100% / 0.08) 0%, hsl(220 30% 100% / 0.02) 100%);
+  border: 0.5px solid hsl(var(--card-border));
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    0 1px 0 0 hsl(220 60% 96% / 0.14) inset,
+    0 20px 40px -20px hsl(224 60% 2% / 0.6);
+}
+.glass-empty-icon::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(135deg,
+    hsl(220 100% 92% / 0.4),
+    transparent 45%,
+    hsl(260 100% 82% / 0.2) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}

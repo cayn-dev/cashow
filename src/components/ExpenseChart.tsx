@@ -1,5 +1,6 @@
 import { CategoryType, CATEGORY_CONFIG, Transaction } from '@/types/finance';
 import { GlassCard } from './GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
@@ -9,6 +10,7 @@ import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfDay, eachDayOfInterval } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PieChart as PieIcon, LineChart as LineIcon } from 'lucide-react';
 
 interface ExpenseChartProps {
   data: Record<CategoryType, number>;
@@ -91,8 +93,8 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
     return (
       <GlassCard className="h-full" elevated>
         {Header}
-        <div className="flex items-center justify-center h-[220px] text-muted-foreground font-sans text-sm">
-          {t('chart.noExpenses')}
+      <div className="h-[220px] flex items-center justify-center">
+          <GlassEmptyState icon={PieIcon} title={t('chart.noExpenses')} compact />
         </div>
       </GlassCard>
     );
@@ -239,8 +241,8 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
             {transactions.length === 0 ? (
-              <div className="flex items-center justify-center h-[260px] text-muted-foreground font-sans text-sm">
-                {t('chart.noExpenses')}
+              <div className="h-[260px] flex items-center justify-center">
+                <GlassEmptyState icon={LineIcon} title={t('chart.noExpenses')} compact />
               </div>
             ) : (
               <div className="h-[280px]">
