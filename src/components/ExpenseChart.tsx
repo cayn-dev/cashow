@@ -1,5 +1,6 @@
 import { CategoryType, CATEGORY_CONFIG, Transaction } from '@/types/finance';
 import { GlassCard } from './GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
@@ -9,6 +10,7 @@ import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfDay, eachDayOfInterval } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PieChart as PieIcon, LineChart as LineIcon } from 'lucide-react';
 
 interface ExpenseChartProps {
   data: Record<CategoryType, number>;
