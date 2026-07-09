@@ -3,6 +3,7 @@ import { useSharedGroups, useGroupDetails, SharedGroup } from '@/hooks/useShared
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/hooks/useLanguage';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -86,9 +87,8 @@ export function GroupsView({ currencySymbol = '€' }: GroupsViewProps) {
           </button>
         ))}
         {groups.length === 0 && (
-          <GlassCard className="p-8 col-span-full text-center text-muted-foreground">
-            <Users className="w-12 h-12 mx-auto mb-3 opacity-40" />
-            <p>{t('groups.empty')}</p>
+          <GlassCard hover={false} className="col-span-full">
+            <GlassEmptyState icon={Users} title={t('groups.empty')} />
           </GlassCard>
         )}
       </div>
