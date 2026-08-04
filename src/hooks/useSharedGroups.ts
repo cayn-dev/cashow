@@ -66,6 +66,23 @@ export function useSharedGroups() {
 
   useEffect(() => { fetchGroups(); }, [fetchGroups]);
 
+  // Consume a pending invite (self-join is only possible through a valid invite)
+  useEffect(() => {
+    if (!isAuthenticated || !user) return;
+    const token = typeof window !== 'undefined' ? sessionStorage.getItem('pendingInvite') : null;
+    if (!token) return;
+    sessionStorage.removeItem('pendingInvite');
+    (async () => {
+      const { error } = await db.rpc('join_group_with_invite', { _token: token });
+      if (error) {
+        toast.error(t('groups.error', { message: error.message }));
+        return;
+      }
+      toast.success(t('groups.joined', { defaultValue: 'Sei entrato nel gruppo' }));
+      fetchGroups();
+    })();
+  }, [isAuthenticated, user, fetchGroups, t]);
+
   const createGroup = useCallback(async (input: Pick<SharedGroup, 'name' | 'description' | 'emoji' | 'type' | 'currency'>) => {
     if (!user) return null;
     try {
