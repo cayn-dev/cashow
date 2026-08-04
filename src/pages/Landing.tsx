@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { Seo } from '@/components/Seo';
+import cashowLogo from '@/assets/cashow-logo.png.asset.json';
+
 
 
 const spring = { type: 'spring' as const, stiffness: 100, damping: 20 };
@@ -54,11 +56,10 @@ export default function Landing() {
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-            <Wallet className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img src={cashowLogo.url} alt="Cashow" className="w-9 h-9 rounded-xl object-cover ring-1 ring-white/10" />
           <span className="font-bold text-lg hidden sm:inline">Cashow</span>
         </div>
+
         <div className="flex items-center gap-1 sm:gap-2 min-w-0">
           {/* Language selector */}
           <div className="flex items-center gap-0.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl p-0.5 mr-1 sm:mr-2 shrink-0">

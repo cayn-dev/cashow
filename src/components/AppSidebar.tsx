@@ -22,6 +22,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import cashowLogo from '@/assets/cashow-logo.png.asset.json';
+
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
 
@@ -55,16 +57,12 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings }: AppSid
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className={cn('flex items-center gap-3 px-2 py-3', collapsed && 'justify-center px-0')}>
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-            style={{
-              background: 'var(--gradient-primary)',
-              boxShadow:
-                '0 0 0 0.5px hsl(220 100% 96% / 0.5) inset, 0 1px 0 0 hsl(220 100% 100% / 0.4) inset, 0 6px 20px hsl(var(--primary) / 0.45)',
-            }}
-          >
-            <span className="font-display text-lg font-bold text-[hsl(var(--primary-foreground))]">C</span>
-          </div>
+          <img
+            src={cashowLogo.url}
+            alt="Cashow"
+            className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/10"
+          />
+
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-display text-[22px] leading-none tracking-tight text-shine font-bold">
