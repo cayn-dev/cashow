@@ -585,6 +585,7 @@ export type Database = {
         Args: { _group_id: string; _user_id: string }
         Returns: boolean
       }
+      join_group_with_invite: { Args: { _token: string }; Returns: string }
       process_recurring_transactions: { Args: never; Returns: number }
     }
     Enums: {
