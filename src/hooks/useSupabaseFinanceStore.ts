@@ -431,25 +431,48 @@ export function useSupabaseFinanceStore() {
      }
    }, [user]);
  
-   // Set monthly salary
-   const setMonthlySalary = useCallback(async (salary: number) => {
-     if (!user) return;
- 
-     try {
-       const { error } = await db
-         .from('profiles')
-         .update({ monthly_salary: salary })
-         .eq('user_id', user.id);
- 
-       if (error) throw error;
- 
-       setState(prev => ({ ...prev, monthlySalary: salary }));
-       toast.success(tt('toast.salaryUpdated'));
-     } catch (error) {
-       console.error('Error updating salary:', error);
-       toast.error(tt('toast.updateError'));
-     }
-   }, [user]);
+   // Set salary — `salary` is the raw amount entered by the user, interpreted
+   // with the given frequency; the monthly NET equivalent is what we store as
+   // monthly_salary so every other calculation in the app stays comparable.
+   const setMonthlySalary = useCallback(
+     async (
+       salary: number,
+       meta?: { frequency?: SalaryFrequency; isGross?: boolean },
+     ) => {
+       const frequency = meta?.frequency ?? 'monthly';
+       const isGross = meta?.isGross ?? false;
+       const monthlyNet = netMonthlySalary(salary, frequency, isGross);
+
+       setSalaryConfig({ amount: salary, frequency, isGross });
+
+       if (!user) {
+         setState(prev => ({ ...prev, monthlySalary: monthlyNet }));
+         return;
+       }
+
+       try {
+         const { error } = await db
+           .from('profiles')
+           .update({
+             monthly_salary: monthlyNet,
+             salary_amount: salary,
+             salary_frequency: frequency,
+             salary_is_gross: isGross,
+           })
+           .eq('user_id', user.id);
+
+         if (error) throw error;
+
+         setState(prev => ({ ...prev, monthlySalary: monthlyNet }));
+         toast.success(tt('toast.salaryUpdated'));
+       } catch (error) {
+         console.error('Error updating salary:', error);
+         toast.error(tt('toast.updateError'));
+       }
+     },
+     [user, setSalaryConfig],
+   );
+
  
    // Computed values
    const currentMonthTransactions = state.transactions.filter(t => {
