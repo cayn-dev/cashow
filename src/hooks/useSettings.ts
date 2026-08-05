@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { SalaryFrequency } from '@/lib/salary';
+
 
 export type Theme = 'dark' | 'light';
 export type Currency = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY' | 'CAD' | 'AUD';
