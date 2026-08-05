@@ -40,10 +40,14 @@ interface DbProfile {
   user_id: string;
   display_name: string | null;
   monthly_salary: number | null;
+  salary_amount: number | null;
+  salary_frequency: string | null;
+  salary_is_gross: boolean | null;
   currency_symbol: string | null;
   created_at: string;
   updated_at: string;
 }
+
 
 interface FinanceStoreState {
   transactions: Transaction[];
