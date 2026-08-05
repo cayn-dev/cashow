@@ -304,6 +304,10 @@ export type Database = {
           display_name: string | null
           id: string
           monthly_salary: number | null
+          monthly_spending_limit: number
+          salary_amount: number
+          salary_frequency: string
+          salary_is_gross: boolean
           updated_at: string
           user_id: string
         }
@@ -313,6 +317,10 @@ export type Database = {
           display_name?: string | null
           id?: string
           monthly_salary?: number | null
+          monthly_spending_limit?: number
+          salary_amount?: number
+          salary_frequency?: string
+          salary_is_gross?: boolean
           updated_at?: string
           user_id: string
         }
@@ -322,6 +330,10 @@ export type Database = {
           display_name?: string | null
           id?: string
           monthly_salary?: number | null
+          monthly_spending_limit?: number
+          salary_amount?: number
+          salary_frequency?: string
+          salary_is_gross?: boolean
           updated_at?: string
           user_id?: string
         }
