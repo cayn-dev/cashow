@@ -63,6 +63,17 @@ interface Settings {
   dateFormat: DateFormat;
   firstDayOfWeek: FirstDayOfWeek;
   categoryBudgets: CategoryBudget[];
+  // Salary configuration
+  salaryAmount: number;              // raw amount entered by the user
+  salaryFrequency: SalaryFrequency;  // weekly | monthly | yearly
+  salaryIsGross: boolean;            // whether the amount entered is gross
+  // Overall monthly spending cap (independent from category budgets)
+  monthlySpendingLimit: number;
+  monthlyLimitHistory: Record<string, number>; // 'YYYY-MM' -> limit
+  // Dashboard customisation
+  dashboardWidgets: string[];        // ordered widget ids ([] = default order)
+  dashboardHiddenWidgets: string[];  // hidden widget ids
+
   showMonthlyComparison: boolean;
   defaultPaymentMethod: string;
   weeklyReportEnabled: boolean;
