@@ -58,7 +58,7 @@ export function MonthlyLimitCard({ spent, limit, currencySymbol = '€' }: Month
         <span className={`tabular-nums font-medium ${over ? 'text-destructive' : 'text-foreground/80'}`}>
           {over
             ? `+${fmt(remaining)}`
-            : t('budget.remaining').replace('{amount}', fmt(remaining))}
+            : t('budget.limitRemaining').replace('{amount}', fmt(remaining))}
         </span>
       </div>
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">{pct.toFixed(0)}%</p>
