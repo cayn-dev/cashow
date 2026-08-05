@@ -177,7 +177,14 @@ export function useSupabaseFinanceStore() {
 
         const monthlySalary = profileData?.monthly_salary ? Number(profileData.monthly_salary) : 0;
 
+        setSalaryConfig({
+          amount: profileData?.salary_amount ? Number(profileData.salary_amount) : 0,
+          frequency: (profileData?.salary_frequency as SalaryFrequency) || 'monthly',
+          isGross: !!profileData?.salary_is_gross,
+        });
+
         setState({ transactions, savingsGoals, monthlySalary, loading: false });
+
 
         // Persist to local cache
         saveCache({
