@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { tt } from '@/lib/i18nToast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useSettings } from '@/hooks/useSettings';
+import { netMonthlySalary, type SalaryFrequency } from '@/lib/salary';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
 import { toast } from 'sonner';
+
 
 const CACHE_KEY = 'finance_cache';
 
