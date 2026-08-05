@@ -107,6 +107,12 @@ interface Settings {
 }
 
 const SETTINGS_KEY = 'finance_settings';
+
+/** Current month key used for the spending-limit history: 'YYYY-MM'. */
+export function monthKey(d: Date = new Date()): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
 const PIN_VERIFIED_KEY = 'pin_verified';
 const PIN_SALT = 'cashow:v1:pin';
 
