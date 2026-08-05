@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { SalaryFrequency } from '@/lib/salary';
+
 
 export type Theme = 'dark' | 'light';
 export type Currency = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY' | 'CAD' | 'AUD';
@@ -61,6 +63,17 @@ interface Settings {
   dateFormat: DateFormat;
   firstDayOfWeek: FirstDayOfWeek;
   categoryBudgets: CategoryBudget[];
+  // Salary configuration
+  salaryAmount: number;              // raw amount entered by the user
+  salaryFrequency: SalaryFrequency;  // weekly | monthly | yearly
+  salaryIsGross: boolean;            // whether the amount entered is gross
+  // Overall monthly spending cap (independent from category budgets)
+  monthlySpendingLimit: number;
+  monthlyLimitHistory: Record<string, number>; // 'YYYY-MM' -> limit
+  // Dashboard customisation
+  dashboardWidgets: string[];        // ordered widget ids ([] = default order)
+  dashboardHiddenWidgets: string[];  // hidden widget ids
+
   showMonthlyComparison: boolean;
   defaultPaymentMethod: string;
   weeklyReportEnabled: boolean;
@@ -94,6 +107,12 @@ interface Settings {
 }
 
 const SETTINGS_KEY = 'finance_settings';
+
+/** Current month key used for the spending-limit history: 'YYYY-MM'. */
+export function monthKey(d: Date = new Date()): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
 const PIN_VERIFIED_KEY = 'pin_verified';
 const PIN_SALT = 'cashow:v1:pin';
 
@@ -161,6 +180,14 @@ const defaultSettings: Settings = {
   dateFormat: 'dd/MM/yyyy',
   firstDayOfWeek: 'monday',
   categoryBudgets: [],
+  salaryAmount: 0,
+  salaryFrequency: 'monthly',
+  salaryIsGross: false,
+  monthlySpendingLimit: 0,
+  monthlyLimitHistory: {},
+  dashboardWidgets: [],
+  dashboardHiddenWidgets: [],
+
   showMonthlyComparison: true,
   defaultPaymentMethod: 'card',
   weeklyReportEnabled: false,
@@ -609,9 +636,67 @@ export function useSettings() {
     updateSettings({ biometricEnabled: false, biometricCredentialId: null });
   }, [updateSettings]);
 
+  // ===== Salary configuration (amount + frequency + net/gross) =====
+  const setSalaryConfig = useCallback(
+    (config: { amount?: number; frequency?: SalaryFrequency; isGross?: boolean }) => {
+      updateSettings({
+        ...(config.amount !== undefined ? { salaryAmount: config.amount } : {}),
+        ...(config.frequency !== undefined ? { salaryFrequency: config.frequency } : {}),
+        ...(config.isGross !== undefined ? { salaryIsGross: config.isGross } : {}),
+      });
+    },
+    [updateSettings],
+  );
+
+  // ===== Overall monthly spending limit (with per-month history) =====
+  const setMonthlySpendingLimit = useCallback(
+    (limit: number) => {
+      const key = monthKey();
+      updateSettings({
+        monthlySpendingLimit: limit,
+        monthlyLimitHistory: { ...settings.monthlyLimitHistory, [key]: limit },
+      });
+    },
+    [updateSettings, settings.monthlyLimitHistory],
+  );
+
+  // Keep the current month recorded in the history so past months stay browsable
+  useEffect(() => {
+    const key = monthKey();
+    if (settings.monthlySpendingLimit > 0 && settings.monthlyLimitHistory[key] === undefined) {
+      updateSettings({
+        monthlyLimitHistory: {
+          ...settings.monthlyLimitHistory,
+          [key]: settings.monthlySpendingLimit,
+        },
+      });
+    }
+  }, [settings.monthlySpendingLimit, settings.monthlyLimitHistory, updateSettings]);
+
+  // ===== Dashboard layout customisation =====
+  const setDashboardWidgets = useCallback(
+    (widgets: string[]) => updateSettings({ dashboardWidgets: widgets }),
+    [updateSettings],
+  );
+
+  const setHiddenDashboardWidgets = useCallback(
+    (hidden: string[]) => updateSettings({ dashboardHiddenWidgets: hidden }),
+    [updateSettings],
+  );
+
+  const resetDashboardLayout = useCallback(() => {
+    updateSettings({ dashboardWidgets: [], dashboardHiddenWidgets: [] });
+  }, [updateSettings]);
+
   return {
     ...settings,
     isLocked,
+    setSalaryConfig,
+    setMonthlySpendingLimit,
+    setDashboardWidgets,
+    setHiddenDashboardWidgets,
+    resetDashboardLayout,
+
     setTheme,
     setAccentColor,
     setCurrency,

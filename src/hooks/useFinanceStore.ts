@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
+import { netMonthlySalary, type SalaryFrequency } from '@/lib/salary';
+
 
 const STORAGE_KEY = 'finance_data';
 const INITIALIZED_KEY = 'finance_initialized';
@@ -299,9 +301,14 @@ export function useFinanceStore() {
     }));
   };
 
-  const setMonthlySalary = (salary: number) => {
-    setData(prev => ({ ...prev, monthlySalary: salary }));
+  const setMonthlySalary = (
+    salary: number,
+    meta?: { frequency?: SalaryFrequency; isGross?: boolean },
+  ) => {
+    const monthlyNet = netMonthlySalary(salary, meta?.frequency ?? 'monthly', meta?.isGross ?? false);
+    setData(prev => ({ ...prev, monthlySalary: monthlyNet }));
   };
+
 
   // Computed values
   const currentMonthTransactions = data.transactions.filter(t => {

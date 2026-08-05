@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { tt } from '@/lib/i18nToast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useSettings } from '@/hooks/useSettings';
+import { netMonthlySalary, type SalaryFrequency } from '@/lib/salary';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
 import { toast } from 'sonner';
+
 
 const CACHE_KEY = 'finance_cache';
 
@@ -40,10 +43,14 @@ interface DbProfile {
   user_id: string;
   display_name: string | null;
   monthly_salary: number | null;
+  salary_amount: number | null;
+  salary_frequency: string | null;
+  salary_is_gross: boolean | null;
   currency_symbol: string | null;
   created_at: string;
   updated_at: string;
 }
+
 
 interface FinanceStoreState {
   transactions: Transaction[];
@@ -95,7 +102,9 @@ const saveCache = (data: CachedData) => {
 
 export function useSupabaseFinanceStore() {
   const { user, isAuthenticated } = useAuth();
+  const { setSalaryConfig } = useSettings();
   const cacheLoaded = useRef(false);
+
 
   const [state, setState] = useState<FinanceStoreState>(() => {
     // Try loading from cache immediately for instant UI
@@ -146,9 +155,10 @@ export function useSupabaseFinanceStore() {
 
         const { data: profileData, error: profileError } = await db
           .from('profiles')
-          .select('monthly_salary')
+          .select('monthly_salary, salary_amount, salary_frequency, salary_is_gross')
           .eq('user_id', user.id)
           .single() as { data: DbProfile | null; error: any };
+
 
         if (profileError && profileError?.code !== 'PGRST116') throw profileError;
 
@@ -176,7 +186,14 @@ export function useSupabaseFinanceStore() {
 
         const monthlySalary = profileData?.monthly_salary ? Number(profileData.monthly_salary) : 0;
 
+        setSalaryConfig({
+          amount: profileData?.salary_amount ? Number(profileData.salary_amount) : 0,
+          frequency: (profileData?.salary_frequency as SalaryFrequency) || 'monthly',
+          isGross: !!profileData?.salary_is_gross,
+        });
+
         setState({ transactions, savingsGoals, monthlySalary, loading: false });
+
 
         // Persist to local cache
         saveCache({
@@ -414,25 +431,48 @@ export function useSupabaseFinanceStore() {
      }
    }, [user]);
  
-   // Set monthly salary
-   const setMonthlySalary = useCallback(async (salary: number) => {
-     if (!user) return;
- 
-     try {
-       const { error } = await db
-         .from('profiles')
-         .update({ monthly_salary: salary })
-         .eq('user_id', user.id);
- 
-       if (error) throw error;
- 
-       setState(prev => ({ ...prev, monthlySalary: salary }));
-       toast.success(tt('toast.salaryUpdated'));
-     } catch (error) {
-       console.error('Error updating salary:', error);
-       toast.error(tt('toast.updateError'));
-     }
-   }, [user]);
+   // Set salary — `salary` is the raw amount entered by the user, interpreted
+   // with the given frequency; the monthly NET equivalent is what we store as
+   // monthly_salary so every other calculation in the app stays comparable.
+   const setMonthlySalary = useCallback(
+     async (
+       salary: number,
+       meta?: { frequency?: SalaryFrequency; isGross?: boolean },
+     ) => {
+       const frequency = meta?.frequency ?? 'monthly';
+       const isGross = meta?.isGross ?? false;
+       const monthlyNet = netMonthlySalary(salary, frequency, isGross);
+
+       setSalaryConfig({ amount: salary, frequency, isGross });
+
+       if (!user) {
+         setState(prev => ({ ...prev, monthlySalary: monthlyNet }));
+         return;
+       }
+
+       try {
+         const { error } = await db
+           .from('profiles')
+           .update({
+             monthly_salary: monthlyNet,
+             salary_amount: salary,
+             salary_frequency: frequency,
+             salary_is_gross: isGross,
+           })
+           .eq('user_id', user.id);
+
+         if (error) throw error;
+
+         setState(prev => ({ ...prev, monthlySalary: monthlyNet }));
+         toast.success(tt('toast.salaryUpdated'));
+       } catch (error) {
+         console.error('Error updating salary:', error);
+         toast.error(tt('toast.updateError'));
+       }
+     },
+     [user, setSalaryConfig],
+   );
+
  
    // Computed values
    const currentMonthTransactions = state.transactions.filter(t => {

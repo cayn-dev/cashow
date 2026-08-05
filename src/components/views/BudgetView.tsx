@@ -22,8 +22,10 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/hooks/useSettings';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Plus, Trash2, Wallet } from 'lucide-react';
+import { Plus, Trash2, Wallet, Gauge } from 'lucide-react';
 import { toast } from 'sonner';
+import { MonthlyLimitCard } from '@/components/MonthlyLimitCard';
+
 
 interface BudgetViewProps {
   transactions: Transaction[];
@@ -36,6 +38,30 @@ export function BudgetView({ transactions, currencySymbol = '€' }: BudgetViewP
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryType>('food');
   const [limit, setLimit] = useState('');
+  const [limitInput, setLimitInput] = useState(
+    settings.monthlySpendingLimit ? String(settings.monthlySpendingLimit) : '',
+  );
+
+  const now = new Date();
+  const monthSpent = transactions
+    .filter(
+      tr =>
+        tr.type === 'expense' &&
+        tr.date.getMonth() === now.getMonth() &&
+        tr.date.getFullYear() === now.getFullYear(),
+    )
+    .reduce((sum, tr) => sum + tr.amount, 0);
+
+  const handleSaveLimit = () => {
+    const n = parseFloat(limitInput);
+    if (isNaN(n) || n < 0) {
+      toast.error(t('budget.invalidAmount'));
+      return;
+    }
+    settings.setMonthlySpendingLimit(n);
+    toast.success(t('budget.limitSaved'));
+  };
+
 
   const expenseCategories = Object.entries(CATEGORY_CONFIG).filter(
     ([key]) => !['salary', 'freelance', 'investments'].includes(key),
@@ -131,6 +157,41 @@ export function BudgetView({ transactions, currencySymbol = '€' }: BudgetViewP
         </Dialog>
       </motion.div>
 
+      {/* Overall monthly spending limit */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="space-y-4"
+      >
+        <GlassCard>
+          <h3 className="font-semibold text-base mb-1 flex items-center gap-2">
+            <Gauge className="w-4 h-4" />
+            {t('budget.overallLimit')}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">{t('budget.overallLimitDesc')}</p>
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <Input
+              type="number"
+              inputMode="decimal"
+              placeholder="1200"
+              value={limitInput}
+              onChange={e => setLimitInput(e.target.value)}
+              className="bg-muted/50"
+            />
+            <Button onClick={handleSaveLimit} className="shrink-0">
+              {t('budget.setLimit')}
+            </Button>
+          </div>
+        </GlassCard>
+
+        <MonthlyLimitCard
+          spent={monthSpent}
+          limit={settings.monthlySpendingLimit}
+          currencySymbol={currencySymbol}
+        />
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -142,6 +203,7 @@ export function BudgetView({ transactions, currencySymbol = '€' }: BudgetViewP
           currencySymbol={currencySymbol}
         />
       </motion.div>
+
 
       {settings.categoryBudgets.length > 0 && (
         <motion.div

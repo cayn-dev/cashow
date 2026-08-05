@@ -56,7 +56,15 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings }: AppSid
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
-        <div className={cn('flex items-center gap-3 px-2 py-3', collapsed && 'justify-center px-0')}>
+        <button
+          type="button"
+          onClick={() => handleSelect('dashboard')}
+          aria-label="Cashow — Dashboard"
+          className={cn(
+            'flex w-full items-center gap-3 px-2 py-3 cursor-pointer text-left rounded-xl hover:bg-sidebar-accent/50 transition-colors',
+            collapsed && 'justify-center px-0',
+          )}
+        >
           <img
             src={cashowLogo.url}
             alt="Cashow"
@@ -73,7 +81,8 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings }: AppSid
               </div>
             </div>
           )}
-        </div>
+        </button>
+
 
       </SidebarHeader>
 
