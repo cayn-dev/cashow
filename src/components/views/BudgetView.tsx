@@ -22,8 +22,10 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/hooks/useSettings';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Plus, Trash2, Wallet } from 'lucide-react';
+import { Plus, Trash2, Wallet, Gauge } from 'lucide-react';
 import { toast } from 'sonner';
+import { MonthlyLimitCard } from '@/components/MonthlyLimitCard';
+
 
 interface BudgetViewProps {
   transactions: Transaction[];
