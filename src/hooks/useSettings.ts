@@ -611,9 +611,67 @@ export function useSettings() {
     updateSettings({ biometricEnabled: false, biometricCredentialId: null });
   }, [updateSettings]);
 
+  // ===== Salary configuration (amount + frequency + net/gross) =====
+  const setSalaryConfig = useCallback(
+    (config: { amount?: number; frequency?: SalaryFrequency; isGross?: boolean }) => {
+      updateSettings({
+        ...(config.amount !== undefined ? { salaryAmount: config.amount } : {}),
+        ...(config.frequency !== undefined ? { salaryFrequency: config.frequency } : {}),
+        ...(config.isGross !== undefined ? { salaryIsGross: config.isGross } : {}),
+      });
+    },
+    [updateSettings],
+  );
+
+  // ===== Overall monthly spending limit (with per-month history) =====
+  const setMonthlySpendingLimit = useCallback(
+    (limit: number) => {
+      const key = monthKey();
+      updateSettings({
+        monthlySpendingLimit: limit,
+        monthlyLimitHistory: { ...settings.monthlyLimitHistory, [key]: limit },
+      });
+    },
+    [updateSettings, settings.monthlyLimitHistory],
+  );
+
+  // Keep the current month recorded in the history so past months stay browsable
+  useEffect(() => {
+    const key = monthKey();
+    if (settings.monthlySpendingLimit > 0 && settings.monthlyLimitHistory[key] === undefined) {
+      updateSettings({
+        monthlyLimitHistory: {
+          ...settings.monthlyLimitHistory,
+          [key]: settings.monthlySpendingLimit,
+        },
+      });
+    }
+  }, [settings.monthlySpendingLimit, settings.monthlyLimitHistory, updateSettings]);
+
+  // ===== Dashboard layout customisation =====
+  const setDashboardWidgets = useCallback(
+    (widgets: string[]) => updateSettings({ dashboardWidgets: widgets }),
+    [updateSettings],
+  );
+
+  const setHiddenDashboardWidgets = useCallback(
+    (hidden: string[]) => updateSettings({ dashboardHiddenWidgets: hidden }),
+    [updateSettings],
+  );
+
+  const resetDashboardLayout = useCallback(() => {
+    updateSettings({ dashboardWidgets: [], dashboardHiddenWidgets: [] });
+  }, [updateSettings]);
+
   return {
     ...settings,
     isLocked,
+    setSalaryConfig,
+    setMonthlySpendingLimit,
+    setDashboardWidgets,
+    setHiddenDashboardWidgets,
+    resetDashboardLayout,
+
     setTheme,
     setAccentColor,
     setCurrency,
