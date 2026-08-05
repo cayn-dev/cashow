@@ -102,7 +102,9 @@ const saveCache = (data: CachedData) => {
 
 export function useSupabaseFinanceStore() {
   const { user, isAuthenticated } = useAuth();
+  const { setSalaryConfig } = useSettings();
   const cacheLoaded = useRef(false);
+
 
   const [state, setState] = useState<FinanceStoreState>(() => {
     // Try loading from cache immediately for instant UI
