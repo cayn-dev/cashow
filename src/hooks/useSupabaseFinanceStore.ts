@@ -146,9 +146,10 @@ export function useSupabaseFinanceStore() {
 
         const { data: profileData, error: profileError } = await db
           .from('profiles')
-          .select('monthly_salary')
+          .select('monthly_salary, salary_amount, salary_frequency, salary_is_gross')
           .eq('user_id', user.id)
           .single() as { data: DbProfile | null; error: any };
+
 
         if (profileError && profileError?.code !== 'PGRST116') throw profileError;
 
