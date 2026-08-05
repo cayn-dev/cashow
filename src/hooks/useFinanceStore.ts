@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
+import { netMonthlySalary, type SalaryFrequency } from '@/lib/salary';
+
 
 const STORAGE_KEY = 'finance_data';
 const INITIALIZED_KEY = 'finance_initialized';
