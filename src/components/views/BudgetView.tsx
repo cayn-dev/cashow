@@ -131,6 +131,41 @@ export function BudgetView({ transactions, currencySymbol = '€' }: BudgetViewP
         </Dialog>
       </motion.div>
 
+      {/* Overall monthly spending limit */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="space-y-4"
+      >
+        <GlassCard>
+          <h3 className="font-semibold text-base mb-1 flex items-center gap-2">
+            <Gauge className="w-4 h-4" />
+            {t('budget.overallLimit')}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">{t('budget.overallLimitDesc')}</p>
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <Input
+              type="number"
+              inputMode="decimal"
+              placeholder="1200"
+              value={limitInput}
+              onChange={e => setLimitInput(e.target.value)}
+              className="bg-muted/50"
+            />
+            <Button onClick={handleSaveLimit} className="shrink-0">
+              {t('budget.setLimit')}
+            </Button>
+          </div>
+        </GlassCard>
+
+        <MonthlyLimitCard
+          spent={monthSpent}
+          limit={settings.monthlySpendingLimit}
+          currencySymbol={currencySymbol}
+        />
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -142,6 +177,7 @@ export function BudgetView({ transactions, currencySymbol = '€' }: BudgetViewP
           currencySymbol={currencySymbol}
         />
       </motion.div>
+
 
       {settings.categoryBudgets.length > 0 && (
         <motion.div
