@@ -38,6 +38,30 @@ export function BudgetView({ transactions, currencySymbol = '€' }: BudgetViewP
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryType>('food');
   const [limit, setLimit] = useState('');
+  const [limitInput, setLimitInput] = useState(
+    settings.monthlySpendingLimit ? String(settings.monthlySpendingLimit) : '',
+  );
+
+  const now = new Date();
+  const monthSpent = transactions
+    .filter(
+      tr =>
+        tr.type === 'expense' &&
+        tr.date.getMonth() === now.getMonth() &&
+        tr.date.getFullYear() === now.getFullYear(),
+    )
+    .reduce((sum, tr) => sum + tr.amount, 0);
+
+  const handleSaveLimit = () => {
+    const n = parseFloat(limitInput);
+    if (isNaN(n) || n < 0) {
+      toast.error(t('budget.invalidAmount'));
+      return;
+    }
+    settings.setMonthlySpendingLimit(n);
+    toast.success(t('budget.limitSaved'));
+  };
+
 
   const expenseCategories = Object.entries(CATEGORY_CONFIG).filter(
     ([key]) => !['salary', 'freelance', 'investments'].includes(key),
