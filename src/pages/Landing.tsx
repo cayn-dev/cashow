@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { Seo } from '@/components/Seo';
-import cashowLogo from '@/assets/cashow-logo.png.asset.json';
+import cashowLogo from '@/assets/cashow-logo-v2.png.asset.json';
 
 
 

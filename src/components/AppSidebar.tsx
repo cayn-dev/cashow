@@ -22,7 +22,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import cashowLogo from '@/assets/cashow-logo.png.asset.json';
+import cashowLogo from '@/assets/cashow-logo-v2.png.asset.json';
 
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
