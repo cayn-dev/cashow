@@ -23,6 +23,8 @@ import {
   Plus,
   RotateCcw,
   GripVertical,
+  ArrowUp,
+  ArrowDown,
   Receipt,
 } from 'lucide-react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
