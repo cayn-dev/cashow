@@ -129,6 +129,20 @@ export function DashboardView({
     setDragId(null);
   };
 
+  /** Touch-friendly reordering: swap a widget with its visible neighbour. */
+  const moveWidget = (id: string, dir: -1 | 1) => {
+    const vIndex = visible.indexOf(id);
+    const neighbour = visible[vIndex + dir];
+    if (!neighbour) return;
+    const next = [...order];
+    const a = next.indexOf(id);
+    const b = next.indexOf(neighbour);
+    if (a < 0 || b < 0) return;
+    [next[a], next[b]] = [next[b], next[a]];
+    settings.setDashboardWidgets(next);
+  };
+
+
   const widgetLabel = (id: string) => t(`dash.w.${id === 'hero' ? 'hero' : id === 'stats' ? 'stats' : id === 'limit' ? 'limit' : id === 'chart' ? 'chart' : id === 'recent' ? 'recent' : 'insights'}`);
 
   // ===== Widget renderers =====
