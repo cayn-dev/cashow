@@ -368,21 +368,44 @@ export function DashboardView({
           >
             {editMode && (
               <div className="flex items-center justify-between gap-2 px-3 py-2">
-                <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <GripVertical className="w-4 h-4" />
-                  {widgetLabel(id)}
+                <span className="flex items-center gap-2 text-xs text-muted-foreground min-w-0">
+                  <GripVertical className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{widgetLabel(id)}</span>
                 </span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                  aria-label={t('dash.hide')}
-                  onClick={() => hideWidget(id)}
-                >
-                  <EyeOff className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9"
+                    disabled={visible.indexOf(id) === 0}
+                    aria-label="↑"
+                    onClick={() => moveWidget(id, -1)}
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9"
+                    disabled={visible.indexOf(id) === visible.length - 1}
+                    aria-label="↓"
+                    onClick={() => moveWidget(id, 1)}
+                  >
+                    <ArrowDown className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 text-destructive hover:bg-destructive/10"
+                    aria-label={t('dash.hide')}
+                    onClick={() => hideWidget(id)}
+                  >
+                    <EyeOff className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             )}
+
             <div className={editMode ? 'pointer-events-none opacity-90' : undefined}>
               {content || (
                 <GlassCard>
