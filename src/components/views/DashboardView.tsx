@@ -23,6 +23,8 @@ import {
   Plus,
   RotateCcw,
   GripVertical,
+  ArrowUp,
+  ArrowDown,
   Receipt,
 } from 'lucide-react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
@@ -126,6 +128,20 @@ export function DashboardView({
     settings.setDashboardWidgets(next);
     setDragId(null);
   };
+
+  /** Touch-friendly reordering: swap a widget with its visible neighbour. */
+  const moveWidget = (id: string, dir: -1 | 1) => {
+    const vIndex = visible.indexOf(id);
+    const neighbour = visible[vIndex + dir];
+    if (!neighbour) return;
+    const next = [...order];
+    const a = next.indexOf(id);
+    const b = next.indexOf(neighbour);
+    if (a < 0 || b < 0) return;
+    [next[a], next[b]] = [next[b], next[a]];
+    settings.setDashboardWidgets(next);
+  };
+
 
   const widgetLabel = (id: string) => t(`dash.w.${id === 'hero' ? 'hero' : id === 'stats' ? 'stats' : id === 'limit' ? 'limit' : id === 'chart' ? 'chart' : id === 'recent' ? 'recent' : 'insights'}`);
 
@@ -352,21 +368,44 @@ export function DashboardView({
           >
             {editMode && (
               <div className="flex items-center justify-between gap-2 px-3 py-2">
-                <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <GripVertical className="w-4 h-4" />
-                  {widgetLabel(id)}
+                <span className="flex items-center gap-2 text-xs text-muted-foreground min-w-0">
+                  <GripVertical className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{widgetLabel(id)}</span>
                 </span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                  aria-label={t('dash.hide')}
-                  onClick={() => hideWidget(id)}
-                >
-                  <EyeOff className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9"
+                    disabled={visible.indexOf(id) === 0}
+                    aria-label="↑"
+                    onClick={() => moveWidget(id, -1)}
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9"
+                    disabled={visible.indexOf(id) === visible.length - 1}
+                    aria-label="↓"
+                    onClick={() => moveWidget(id, 1)}
+                  >
+                    <ArrowDown className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 text-destructive hover:bg-destructive/10"
+                    aria-label={t('dash.hide')}
+                    onClick={() => hideWidget(id)}
+                  >
+                    <EyeOff className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             )}
+
             <div className={editMode ? 'pointer-events-none opacity-90' : undefined}>
               {content || (
                 <GlassCard>
