@@ -3,6 +3,7 @@ import { Transaction, CATEGORY_CONFIG, PAYMENT_METHODS } from '@/types/finance';
 import { TransactionItem } from '@/components/TransactionItem';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassPillTabs } from '@/components/ui/glass-pill-tabs';
 import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -159,14 +160,16 @@ export function TransactionsView({
                 />
               </div>
               <div className="flex gap-2 flex-wrap">
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-[130px] bg-muted/50 border-card-border"><SelectValue /></SelectTrigger>
-                  <SelectContent className="glass-panel border-card-border">
-                    <SelectItem value="all">{t('transactions.all')}</SelectItem>
-                    <SelectItem value="income">{t('transactions.income')}</SelectItem>
-                    <SelectItem value="expense">{t('transactions.expense')}</SelectItem>
-                  </SelectContent>
-                </Select>
+                <GlassPillTabs
+                  size="sm"
+                  value={typeFilter}
+                  onChange={setTypeFilter}
+                  items={[
+                    { value: 'all', label: t('transactions.all') },
+                    { value: 'income', label: t('transactions.income') },
+                    { value: 'expense', label: t('transactions.expense') },
+                  ]}
+                />
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger className="w-[150px] bg-muted/50 border-card-border"><SelectValue /></SelectTrigger>
                   <SelectContent className="glass-panel border-card-border max-h-[300px]">
