@@ -867,7 +867,9 @@
   .glass-capsule {
     position: relative;
     border-radius: 9999px;
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.12) 0%, hsl(0 0% 100% / 0.045) 100%);
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.10) 0%, hsl(0 0% 100% / 0.035) 100%),
+      hsl(228 24% 7% / 0.72);
     backdrop-filter: blur(36px) saturate(200%);
     -webkit-backdrop-filter: blur(36px) saturate(200%);
     border: 0.5px solid hsl(0 0% 100% / 0.16);
