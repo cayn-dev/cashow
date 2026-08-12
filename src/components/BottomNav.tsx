@@ -72,7 +72,7 @@ export function BottomNav({ currentView, onViewChange }: BottomNavProps) {
                   className={cn(
                     'press relative flex-1 min-w-0 rounded-full flex flex-col items-center justify-center gap-0.5 px-1',
                     compact ? 'py-2.5' : 'py-2',
-                    active ? 'text-primary-foreground' : 'text-foreground/65'
+                    active ? 'text-foreground' : 'text-foreground/60'
                   )}
                 >
                   <motion.span
@@ -82,9 +82,9 @@ export function BottomNav({ currentView, onViewChange }: BottomNavProps) {
                     transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.6 }}
                     className="absolute inset-0 rounded-full"
                     style={{
-                      backgroundColor: 'hsl(var(--primary))',
+                      backgroundColor: 'hsl(228 30% 4% / 0.92)',
                       boxShadow:
-                        '0 1px 0 0 hsl(0 0% 100% / 0.22) inset, 0 6px 20px hsl(var(--primary) / 0.45)',
+                        '0 1px 0 0 hsl(0 0% 100% / 0.16) inset, 0 6px 20px hsl(0 0% 0% / 0.5)',
                     }}
                   />
                   <Icon className="relative w-[21px] h-[21px]" strokeWidth={1.6} />
