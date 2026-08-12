@@ -40,7 +40,6 @@ import { it, enUS, es, fr, de } from 'date-fns/locale';
 import { useFeedback } from '@/hooks/useFeedback';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSettings } from '@/hooks/useSettings';
-import { GlassPillTabs } from '@/components/ui/glass-pill-tabs';
 
 const DATE_LOCALES: Record<string, typeof it> = { it, en: enUS, es, fr, de };
 
@@ -177,12 +176,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </Button>
         </DialogTrigger>
       ) : null}
-      <DialogContent className="relative overflow-hidden bg-background border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
-        {/* Dynamic screen tint — green for income, red for expense */}
-        <div
-          aria-hidden
-          className={cn('screen-tint -z-10 h-[55%] bottom-auto', type === 'income' ? 'tint-income' : 'tint-expense')}
-        />
+      <DialogContent className="bg-background border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-xl">
             {isEdit ? t('addTransaction.editTitle') : t('addTransaction.title')}
@@ -190,24 +184,32 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          {/* Type selector — Liquid Glass capsule */}
-          <div className="flex justify-center">
-            <GlassPillTabs
-              value={type}
-              onChange={(v) => {
-                setType(v as TransactionType);
-                if (v === 'expense') setIsSalary(false);
-              }}
-              activeTone={(v) =>
-                v === 'income'
-                  ? 'bg-success shadow-[0_0_28px_hsl(var(--success)/0.45)]'
-                  : 'bg-destructive shadow-[0_0_28px_hsl(var(--destructive)/0.45)]'
-              }
-              items={[
-                { value: 'expense', label: t('addTransaction.expense'), icon: TrendingDown },
-                { value: 'income', label: t('addTransaction.income'), icon: TrendingUp },
-              ]}
-            />
+          {/* Type Toggle */}
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant={type === 'expense' ? 'default' : 'outline'}
+              onClick={() => { setType('expense'); setIsSalary(false); }}
+              className={cn(
+                'flex-1 transition-all duration-500',
+                type === 'expense' && 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_0_20px_hsl(var(--destructive)/0.3)]'
+              )}
+            >
+              <TrendingDown className="w-4 h-4 mr-2" />
+              {t('addTransaction.expense')}
+            </Button>
+            <Button
+              type="button"
+              variant={type === 'income' ? 'default' : 'outline'}
+              onClick={() => setType('income')}
+              className={cn(
+                'flex-1 transition-all duration-500',
+                type === 'income' && 'bg-success text-success-foreground hover:bg-success/90 shadow-[0_0_20px_hsl(var(--success)/0.3)]'
+              )}
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              {t('addTransaction.income')}
+            </Button>
           </div>
 
           {/* Is Salary Toggle (only for income) */}
@@ -270,10 +272,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className={cn(
-                'glass-input h-16 text-center text-4xl font-bold num tracking-tight',
-                type === 'income' ? 'text-success' : 'text-destructive'
-              )}
+              className="glass-input text-lg font-display"
               required
             />
           </div>
