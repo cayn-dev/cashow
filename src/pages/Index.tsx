@@ -18,6 +18,7 @@ import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Seo } from '@/components/Seo';
+import { BottomNav } from '@/components/BottomNav';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
 
@@ -98,7 +99,7 @@ const Index = () => {
             viewLabel={viewLabel}
           />
 
-          <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 max-w-[1480px] w-full mx-auto">
+          <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 pb-32 lg:pb-8 max-w-[1480px] w-full mx-auto">
             {currentView === 'dashboard' && (
               <DashboardView
                 monthlyIncome={store.monthlyIncome}
@@ -159,6 +160,8 @@ const Index = () => {
             )}
           </main>
         </SidebarInset>
+
+        <BottomNav currentView={currentView} onViewChange={setCurrentView} />
 
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </div>
