@@ -80,8 +80,9 @@ export function BottomNav({ currentView, onViewChange }: BottomNavProps) {
                     initial={false}
                     animate={{ opacity: active ? 1 : 0, scale: active ? 1 : 0.82 }}
                     transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.6 }}
-                    className="absolute inset-0 rounded-full bg-primary/90"
+                    className="absolute inset-0 rounded-full"
                     style={{
+                      backgroundColor: 'hsl(var(--primary))',
                       boxShadow:
                         '0 1px 0 0 hsl(0 0% 100% / 0.22) inset, 0 6px 20px hsl(var(--primary) / 0.45)',
                     }}
