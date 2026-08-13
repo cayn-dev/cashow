@@ -83,7 +83,7 @@ const Index = () => {
         path="/"
       />
       <div className="min-h-dvh flex w-full text-foreground relative">
-        <div aria-hidden className="screen-wash wash-navy" />
+        <div aria-hidden className="wash-navy fixed inset-0 z-0 pointer-events-none" />
         <AuroraBackground intensity="subtle" />
 
         <AppSidebar
