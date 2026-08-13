@@ -11,7 +11,7 @@
 @layer base {
   :root {
     /* Base surfaces */
-    --background: 224 22% 4%;              /* obsidian cool */
+    --background: 225 22% 3%;              /* obsidian cool */
     --foreground: 220 20% 97%;             /* platinum */
 
     /* Layered glass cards */
@@ -31,31 +31,31 @@
     --popover-foreground: 220 20% 97%;
 
     /* Primary = icy periwinkle (single premium accent, no gold, no pink) */
-    --primary: 224 100% 78%;               /* #a8b8ff */
-    --primary-foreground: 224 40% 8%;
-    --primary-glow: 210 100% 88%;          /* #c2e0ff */
+    --primary: 217 91% 60%;                /* #3B82F6 */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 213 94% 72%;           /* #60A5FA */
 
     --secondary: 220 30% 100% / 0.06;
     --secondary-foreground: 220 15% 90%;
 
     --muted: 220 30% 100% / 0.04;
-    --muted-foreground: 220 10% 62%;
+    --muted-foreground: 220 9% 69%;        /* #A0A5B0 */
 
     --accent: 224 100% 78% / 0.14;
     --accent-foreground: 210 100% 92%;
 
     /* Semantic — clean, restrained */
-    --success: 158 65% 55%;
-    --success-foreground: 220 40% 8%;
-    --warning: 38 92% 62%;
+    --success: 158 64% 52%;                /* #34D399 */
+    --success-foreground: 160 60% 8%;
+    --warning: 43 96% 56%;                 /* #FBBF24 */
     --warning-foreground: 220 40% 8%;
-    --destructive: 358 72% 62%;
+    --destructive: 0 91% 71%;              /* #F87171 */
     --destructive-foreground: 220 20% 97%;
-    --info: 224 100% 78%;
-    --info-foreground: 220 40% 8%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
 
-    --income: 158 65% 55%;
-    --expense: 358 72% 62%;
+    --income: 158 64% 52%;
+    --expense: 0 91% 71%;
     --freelance: 224 100% 78%;
     --investments: 210 100% 88%;
 
@@ -63,7 +63,7 @@
     --input: 220 30% 100% / 0.05;
     --ring: 224 100% 78%;
 
-    --radius: 1.25rem;
+    --radius: 1.5rem;
 
     /* Category accents — cool, restrained */
     --category-food: 20 85% 65%;
@@ -187,7 +187,7 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: '"Plus Jakarta Sans Variable"', '"Plus Jakarta Sans"', system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
@@ -197,7 +197,7 @@
   /* Display type — Syne */
   .font-display, .font-serif,
   h1, h2, h3, h4, h5, h6 {
-    font-family: '"Syne"', '"Plus Jakarta Sans Variable"', system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: -0.03em;
   }
@@ -841,4 +841,70 @@
   -webkit-mask-composite: xor;
           mask-composite: exclude;
   pointer-events: none;
+}
+
+/* ================================================
+   LIQUID GLASS (iOS 26) — floating bars, screen
+   gradients and tile primitives
+   ================================================ */
+@layer components {
+  /* Floating capsule bar / segmented control shell */
+  .liquid-bar {
+    @apply relative flex items-center rounded-full;
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.10) 0%, hsl(0 0% 100% / 0.035) 100%);
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    border: 0.5px solid hsl(0 0% 100% / 0.16);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.22) inset,
+      0 -1px 0 0 hsl(0 0% 0% / 0.25) inset,
+      0 10px 34px hsl(0 0% 0% / 0.35),
+      0 24px 60px hsl(0 0% 0% / 0.22);
+  }
+  /* curved-glass top highlight */
+  .liquid-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.12) 0%, transparent 55%);
+  }
+
+  /* Active selected pill inside a liquid bar */
+  .liquid-pill-active {
+    background: linear-gradient(180deg, hsl(225 25% 10% / 0.96) 0%, hsl(225 30% 5% / 0.96) 100%);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.14) inset,
+      0 6px 18px hsl(0 0% 0% / 0.45);
+  }
+
+  /* Screen gradient washes (navy / income / expense / transfer) */
+  .screen-wash { position: fixed; inset: 0; z-index: -5; pointer-events: none; transition: opacity .35s ease; }
+  .wash-navy   { background: linear-gradient(180deg, hsl(220 71% 14%) 0%, hsl(225 40% 6%) 45%, hsl(225 22% 3%) 100%); }
+  .wash-income { background: linear-gradient(180deg, hsl(169 61% 14%) 0%, hsl(180 30% 6%) 45%, hsl(225 22% 3%) 100%); }
+  .wash-expense{ background: linear-gradient(180deg, hsl(351 61% 14%) 0%, hsl(350 30% 6%) 45%, hsl(225 22% 3%) 100%); }
+  .wash-transfer{background: linear-gradient(180deg, hsl(196 61% 14%) 0%, hsl(200 30% 6%) 45%, hsl(225 22% 3%) 100%); }
+
+  /* Square rounded colored icon tile */
+  .icon-tile {
+    @apply relative flex items-center justify-center rounded-2xl shrink-0;
+    background: linear-gradient(180deg, hsl(var(--tile-h, 217) 70% 42%) 0%, hsl(var(--tile-h, 217) 70% 28%) 100%);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.22) inset,
+      0 4px 12px hsl(0 0% 0% / 0.35);
+  }
+
+  /* Inset hairline separator for list rows */
+  .row-sep { border-bottom: 1px solid hsl(0 0% 100% / 0.08); }
+
+  .tap-shrink { transition: transform .18s cubic-bezier(.34,1.4,.64,1); }
+  .tap-shrink:active { transform: scale(0.97); }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@layer utilities {
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
 }

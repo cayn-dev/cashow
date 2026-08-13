@@ -176,7 +176,18 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </Button>
         </DialogTrigger>
       ) : null}
-      <DialogContent className="bg-background border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="relative bg-background border-card-border sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
+        {/* Dynamic color wash: green = income, red = expense */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-56 -z-10 transition-opacity duration-300"
+          style={{
+            background:
+              type === 'income'
+                ? 'linear-gradient(180deg, hsl(169 61% 18%) 0%, transparent 100%)'
+                : 'linear-gradient(180deg, hsl(351 61% 18%) 0%, transparent 100%)',
+          }}
+        />
         <DialogHeader>
           <DialogTitle className="font-display text-xl">
             {isEdit ? t('addTransaction.editTitle') : t('addTransaction.title')}
@@ -184,18 +195,20 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          {/* Type Toggle */}
-          <div className="flex gap-2">
+          {/* Type Toggle — Liquid Glass capsule with circular buttons */}
+          <div className="liquid-bar mx-auto w-fit gap-2 p-1.5">
             <Button
               type="button"
               variant={type === 'expense' ? 'default' : 'outline'}
               onClick={() => { setType('expense'); setIsSalary(false); }}
               className={cn(
-                'flex-1 transition-all duration-500',
-                type === 'expense' && 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[0_0_20px_hsl(var(--destructive)/0.3)]'
+                'relative rounded-full px-5 h-11 border-0 tap-shrink transition-all duration-300',
+                type === 'expense'
+                  ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90 scale-105 shadow-[0_0_24px_hsl(var(--destructive)/0.5)]'
+                  : 'bg-white/5 text-foreground/70 hover:bg-white/10'
               )}
             >
-              <TrendingDown className="w-4 h-4 mr-2" />
+              <TrendingDown className="w-4 h-4 mr-2" strokeWidth={1.8} />
               {t('addTransaction.expense')}
             </Button>
             <Button
@@ -203,11 +216,13 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
               variant={type === 'income' ? 'default' : 'outline'}
               onClick={() => setType('income')}
               className={cn(
-                'flex-1 transition-all duration-500',
-                type === 'income' && 'bg-success text-success-foreground hover:bg-success/90 shadow-[0_0_20px_hsl(var(--success)/0.3)]'
+                'relative rounded-full px-5 h-11 border-0 tap-shrink transition-all duration-300',
+                type === 'income'
+                  ? 'bg-success text-success-foreground hover:bg-success/90 scale-105 shadow-[0_0_24px_hsl(var(--success)/0.5)]'
+                  : 'bg-white/5 text-foreground/70 hover:bg-white/10'
               )}
             >
-              <TrendingUp className="w-4 h-4 mr-2" />
+              <TrendingUp className="w-4 h-4 mr-2" strokeWidth={1.8} />
               {t('addTransaction.income')}
             </Button>
           </div>
@@ -272,7 +287,10 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="glass-input text-lg font-display"
+              className={cn(
+                'glass-input h-16 text-center text-4xl font-bold tabular tracking-tight',
+                type === 'income' ? 'text-success' : 'text-destructive'
+              )}
               required
             />
           </div>
