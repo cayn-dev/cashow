@@ -92,7 +92,7 @@ const Index = () => {
           onOpenSettings={() => setSettingsOpen(true)}
         />
 
-        <SidebarInset className="relative z-10 min-w-0">
+        <SidebarInset className="relative z-10 min-w-0 !bg-transparent">
           <TopBar
             onLock={settings.lockApp}
             pinEnabled={settings.pinEnabled}
