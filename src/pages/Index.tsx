@@ -82,7 +82,7 @@ const Index = () => {
         description="Cashow: la finanza personale in versione editoriale. Nero, oro e serif per un controllo elegante delle tue entrate e uscite."
         path="/"
       />
-      <div className="min-h-dvh flex w-full bg-background text-foreground relative">
+      <div className="min-h-dvh flex w-full text-foreground relative">
         <div aria-hidden className="screen-wash wash-navy" />
         <AuroraBackground intensity="subtle" />
 

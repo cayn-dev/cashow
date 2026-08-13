@@ -5,7 +5,6 @@ import {
   PiggyBank,
   Wallet,
   Target,
-  CalendarDays,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -32,7 +31,6 @@ export function LiquidTabBar({ currentView, onViewChange, className }: LiquidTab
     { id: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { id: 'transactions', label: t('nav.transactions'), icon: ArrowUpDown },
     { id: 'budget', label: t('nav.budget'), icon: PiggyBank },
-    { id: 'calendar', label: t('nav.calendar'), icon: CalendarDays },
     { id: 'salary', label: t('nav.salary'), icon: Wallet },
     { id: 'savings', label: t('nav.savings'), icon: Target },
   ];
