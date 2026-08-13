@@ -11,7 +11,7 @@
 @layer base {
   :root {
     /* Base surfaces */
-    --background: 224 22% 4%;              /* obsidian cool */
+    --background: 225 22% 3%;              /* obsidian cool */
     --foreground: 220 20% 97%;             /* platinum */
 
     /* Layered glass cards */
@@ -31,31 +31,31 @@
     --popover-foreground: 220 20% 97%;
 
     /* Primary = icy periwinkle (single premium accent, no gold, no pink) */
-    --primary: 224 100% 78%;               /* #a8b8ff */
-    --primary-foreground: 224 40% 8%;
-    --primary-glow: 210 100% 88%;          /* #c2e0ff */
+    --primary: 217 91% 60%;                /* #3B82F6 */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 213 94% 72%;           /* #60A5FA */
 
     --secondary: 220 30% 100% / 0.06;
     --secondary-foreground: 220 15% 90%;
 
     --muted: 220 30% 100% / 0.04;
-    --muted-foreground: 220 10% 62%;
+    --muted-foreground: 220 9% 69%;        /* #A0A5B0 */
 
     --accent: 224 100% 78% / 0.14;
     --accent-foreground: 210 100% 92%;
 
     /* Semantic — clean, restrained */
-    --success: 158 65% 55%;
-    --success-foreground: 220 40% 8%;
-    --warning: 38 92% 62%;
+    --success: 158 64% 52%;                /* #34D399 */
+    --success-foreground: 160 60% 8%;
+    --warning: 43 96% 56%;                 /* #FBBF24 */
     --warning-foreground: 220 40% 8%;
-    --destructive: 358 72% 62%;
+    --destructive: 0 91% 71%;              /* #F87171 */
     --destructive-foreground: 220 20% 97%;
-    --info: 224 100% 78%;
-    --info-foreground: 220 40% 8%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
 
-    --income: 158 65% 55%;
-    --expense: 358 72% 62%;
+    --income: 158 64% 52%;
+    --expense: 0 91% 71%;
     --freelance: 224 100% 78%;
     --investments: 210 100% 88%;
 
@@ -63,7 +63,7 @@
     --input: 220 30% 100% / 0.05;
     --ring: 224 100% 78%;
 
-    --radius: 1.25rem;
+    --radius: 1.5rem;
 
     /* Category accents — cool, restrained */
     --category-food: 20 85% 65%;
