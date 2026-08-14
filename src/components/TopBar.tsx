@@ -1,4 +1,3 @@
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Lock, LogOut, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -26,8 +25,6 @@ export function TopBar({ onLock, pinEnabled, onLogout, viewLabel }: TopBarProps)
 
   return (
     <header className="glass-topbar sticky top-0 z-30 flex items-center gap-3 h-14 px-3 sm:px-5">
-
-      <SidebarTrigger className="text-foreground/70 hover:text-foreground" />
 
       <div className="hidden md:flex items-baseline gap-3 min-w-0 flex-1">
         <span className="font-display italic text-lg text-foreground/90 truncate">

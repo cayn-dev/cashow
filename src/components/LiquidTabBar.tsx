@@ -5,6 +5,7 @@ import {
   PiggyBank,
   Wallet,
   Target,
+  Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -15,6 +16,7 @@ export type TabView = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'bud
 interface LiquidTabBarProps {
   currentView: TabView;
   onViewChange: (view: TabView) => void;
+  onOpenSettings?: () => void;
   className?: string;
 }
 
@@ -23,7 +25,7 @@ interface LiquidTabBarProps {
  * Detached from screen edges, full capsule, heavy backdrop blur,
  * active item is a solid dark pill that slides between positions.
  */
-export function LiquidTabBar({ currentView, onViewChange, className }: LiquidTabBarProps) {
+export function LiquidTabBar({ currentView, onViewChange, onOpenSettings, className }: LiquidTabBarProps) {
   const { t } = useLanguage();
   const feedback = useFeedback();
 
@@ -39,7 +41,7 @@ export function LiquidTabBar({ currentView, onViewChange, className }: LiquidTab
     <nav
       aria-label={t('nav.dashboard')}
       className={cn(
-        'fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden',
+        'fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50',
         className
       )}
     >
@@ -78,6 +80,25 @@ export function LiquidTabBar({ currentView, onViewChange, className }: LiquidTab
             </button>
           );
         })}
+
+        {onOpenSettings && (
+          <button
+            type="button"
+            onClick={() => {
+              feedback.tap();
+              onOpenSettings();
+            }}
+            aria-label={t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
+            className="relative flex-1 min-w-[52px] rounded-full px-1 py-1.5 tap-shrink"
+          >
+            <span className="relative flex flex-col items-center gap-0.5 text-foreground/75">
+              <Settings className="w-[19px] h-[19px]" strokeWidth={1.6} />
+              <span className="text-[10px] font-medium leading-none truncate max-w-full">
+                {t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
+              </span>
+            </span>
+          </button>
+        )}
       </div>
     </nav>
   );
