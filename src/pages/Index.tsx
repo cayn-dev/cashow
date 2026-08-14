@@ -4,8 +4,6 @@ import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/hooks/useSettings';
 import { useLanguage } from '@/hooks/useLanguage';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/AppSidebar';
 import { TopBar } from '@/components/TopBar';
 import { DashboardView } from '@/components/views/DashboardView';
 import { TransactionsView } from '@/components/views/TransactionsView';
@@ -76,7 +74,7 @@ const Index = () => {
   }
 
   return (
-    <SidebarProvider defaultOpen>
+    <>
       <Seo
         title="Cashow — Editorial Personal Finance"
         description="Cashow: la finanza personale in versione editoriale. Nero, oro e serif per un controllo elegante delle tue entrate e uscite."
@@ -86,13 +84,8 @@ const Index = () => {
         <div aria-hidden className="wash-navy fixed inset-0 z-0 pointer-events-none" />
         <AuroraBackground intensity="subtle" />
 
-        <AppSidebar
-          currentView={currentView}
-          onViewChange={setCurrentView}
-          onOpenSettings={() => setSettingsOpen(true)}
-        />
 
-        <SidebarInset className="relative z-10 min-w-0 !bg-transparent">
+        <div className="relative z-10 min-w-0 flex-1 flex flex-col">
           <TopBar
             onLock={settings.lockApp}
             pinEnabled={settings.pinEnabled}
@@ -100,7 +93,7 @@ const Index = () => {
             viewLabel={viewLabel}
           />
 
-          <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 pb-32 lg:pb-6 max-w-[1480px] w-full mx-auto">
+          <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 pb-32 max-w-[1480px] w-full mx-auto">
             {currentView === 'dashboard' && (
               <DashboardView
                 monthlyIncome={store.monthlyIncome}
@@ -160,13 +153,17 @@ const Index = () => {
               <CalendarView transactions={store.transactions} currencySymbol={settings.currencySymbol} />
             )}
           </main>
-        </SidebarInset>
+        </div>
 
-        <LiquidTabBar currentView={currentView} onViewChange={setCurrentView} />
+        <LiquidTabBar
+          currentView={currentView}
+          onViewChange={setCurrentView}
+          onOpenSettings={() => setSettingsOpen(true)}
+        />
 
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </div>
-    </SidebarProvider>
+    </>
   );
 };
 
