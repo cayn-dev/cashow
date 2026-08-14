@@ -51,14 +51,17 @@ export type Database = {
         Row: {
           bank_name: string | null
           color: string | null
+          connection_id: string | null
           created_at: string
           currency: string | null
           current_balance: number
+          external_account_id: string | null
           icon: string | null
           id: string
           initial_balance: number
           is_active: boolean | null
           name: string
+          provider: string | null
           type: string
           updated_at: string
           user_id: string
@@ -66,14 +69,17 @@ export type Database = {
         Insert: {
           bank_name?: string | null
           color?: string | null
+          connection_id?: string | null
           created_at?: string
           currency?: string | null
           current_balance?: number
+          external_account_id?: string | null
           icon?: string | null
           id?: string
           initial_balance?: number
           is_active?: boolean | null
           name: string
+          provider?: string | null
           type?: string
           updated_at?: string
           user_id: string
@@ -81,15 +87,68 @@ export type Database = {
         Update: {
           bank_name?: string | null
           color?: string | null
+          connection_id?: string | null
           created_at?: string
           currency?: string | null
           current_balance?: number
+          external_account_id?: string | null
           icon?: string | null
           id?: string
           initial_balance?: number
           is_active?: boolean | null
           name?: string
+          provider?: string | null
           type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_accounts_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "bank_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bank_connections: {
+        Row: {
+          created_at: string
+          id: string
+          institution_id: string
+          institution_logo: string | null
+          institution_name: string | null
+          last_synced_at: string | null
+          provider: string
+          requisition_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          institution_id: string
+          institution_logo?: string | null
+          institution_name?: string | null
+          last_synced_at?: string | null
+          provider?: string
+          requisition_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          institution_id?: string
+          institution_logo?: string | null
+          institution_name?: string | null
+          last_synced_at?: string | null
+          provider?: string
+          requisition_id?: string
+          status?: string
           updated_at?: string
           user_id?: string
         }

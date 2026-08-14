@@ -70,6 +70,7 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useFeedback } from '@/hooks/useFeedback';
 import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { GlassCard } from './GlassCard';
+import { BankConnections } from '@/components/BankConnections';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -1757,6 +1758,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </GlassCard>
           )}
 
+
+          <BankConnections />
 
           {/* Feedback & Support */}
           <GlassCard className="p-3 sm:p-4 border-primary/20 bg-primary/5">

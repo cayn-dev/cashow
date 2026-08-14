@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSupabaseFinanceStore } from '@/hooks/useSupabaseFinanceStore';
 import { useFinanceStore } from '@/hooks/useFinanceStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -17,6 +17,8 @@ import { AuroraBackground } from '@/components/AuroraBackground';
 import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Seo } from '@/components/Seo';
 import { LiquidTabBar } from '@/components/LiquidTabBar';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
 
@@ -31,6 +33,21 @@ const Index = () => {
   const cloudStore = useSupabaseFinanceStore();
   const localStore = useFinanceStore();
   const store = isAuthenticated && !isGuest ? cloudStore : localStore;
+
+  // Ritorno dal flusso di collegamento bancario: sincronizza e pulisci l'URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('bank') !== 'connected') return;
+    window.history.replaceState({}, '', window.location.pathname);
+    toast.info(t('bank.connectedToast'));
+    supabase.functions.invoke('bank-link', { body: { action: 'sync' } }).then(({ data, error }) => {
+      if (error) {
+        toast.error(t('bank.errorSync'));
+        return;
+      }
+      toast.success(t('bank.synced', { count: String((data as any)?.imported ?? 0) }));
+    });
+  }, [t]);
 
   const salaryTransactions = store.transactions.filter((t) => t.isSalary);
   const handleLogout = isGuest ? undefined : signOut;
