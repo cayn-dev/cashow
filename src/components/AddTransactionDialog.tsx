@@ -176,7 +176,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </Button>
         </DialogTrigger>
       ) : null}
-      <DialogContent className="relative bg-background border-card-border left-0 top-0 translate-x-0 translate-y-0 w-screen max-w-none h-[100dvh] rounded-none border-0 overflow-y-auto p-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:w-full sm:max-w-[425px] sm:h-auto sm:max-h-[90vh] sm:rounded-2xl sm:border sm:p-6">
+      <DialogContent className="fixed bg-background border-card-border left-0 top-0 translate-x-0 translate-y-0 w-screen max-w-none h-[100dvh] rounded-none border-0 overflow-y-auto p-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:w-full sm:max-w-[425px] sm:h-auto sm:max-h-[90vh] sm:rounded-2xl sm:border sm:p-6">
         {/* Dynamic color wash: green = income, red = expense */}
         <div
           aria-hidden
