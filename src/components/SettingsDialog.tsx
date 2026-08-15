@@ -267,7 +267,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="dialog-stagger space-y-6 py-4">
           {/* Language Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
