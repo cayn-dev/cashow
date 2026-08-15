@@ -260,7 +260,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 bg-card border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0">
+      <DialogContent className="dialog-pop w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 bg-card border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-display">
             {t('settings.title')}
