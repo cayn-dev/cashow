@@ -908,3 +908,86 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 }
+
+/* ============ Dialog motion: iOS-like sheet & pop ============ */
+@keyframes lg-sheet-in {
+  from { opacity: 0; transform: translateY(100%) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes lg-sheet-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(100%) scale(0.98); }
+}
+@keyframes lg-pop-in {
+  from { opacity: 0; transform: translate(-50%, -44%) scale(0.92); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes lg-pop-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, -47%) scale(0.96); }
+}
+@keyframes lg-overlay-in {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to   { opacity: 1; backdrop-filter: blur(14px); }
+}
+
+/* Overlay with progressive blur */
+.dialog-overlay-blur[data-state='open'] {
+  animation: lg-overlay-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  backdrop-filter: blur(14px);
+  background: hsl(0 0% 0% / 0.55);
+}
+.dialog-overlay-blur[data-state='closed'] {
+  animation: fadeIn 0.2s ease-in reverse both !important;
+  backdrop-filter: blur(14px);
+  background: hsl(0 0% 0% / 0.55);
+}
+
+/* Full-screen sheet on mobile, pop on desktop */
+.dialog-sheet[data-state='open'] {
+  animation: lg-sheet-in 0.44s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+.dialog-sheet[data-state='closed'] {
+  animation: lg-sheet-out 0.26s cubic-bezier(0.4, 0, 1, 1) both !important;
+}
+@media (min-width: 640px) {
+  .dialog-sheet[data-state='open'] {
+    animation: lg-pop-in 0.4s cubic-bezier(0.34, 1.36, 0.5, 1) both !important;
+  }
+  .dialog-sheet[data-state='closed'] {
+    animation: lg-pop-out 0.2s cubic-bezier(0.4, 0, 1, 1) both !important;
+  }
+}
+
+/* Always-centered dialogs (settings) */
+.dialog-pop[data-state='open'] {
+  animation: lg-pop-in 0.42s cubic-bezier(0.34, 1.36, 0.5, 1) both !important;
+}
+.dialog-pop[data-state='closed'] {
+  animation: lg-pop-out 0.2s cubic-bezier(0.4, 0, 1, 1) both !important;
+}
+
+/* Staggered content reveal inside dialogs */
+.dialog-stagger > * {
+  animation: dialog-item-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dialog-stagger > *:nth-child(1) { animation-delay: 0.06s; }
+.dialog-stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.dialog-stagger > *:nth-child(3) { animation-delay: 0.14s; }
+.dialog-stagger > *:nth-child(4) { animation-delay: 0.18s; }
+.dialog-stagger > *:nth-child(5) { animation-delay: 0.22s; }
+.dialog-stagger > *:nth-child(6) { animation-delay: 0.26s; }
+.dialog-stagger > *:nth-child(n + 7) { animation-delay: 0.3s; }
+@keyframes dialog-item-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-sheet[data-state],
+  .dialog-pop[data-state],
+  .dialog-overlay-blur[data-state],
+  .dialog-stagger > * {
+    animation: fadeIn 0.15s ease-out both !important;
+  }
+}
