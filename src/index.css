@@ -927,20 +927,24 @@
   to   { opacity: 0; transform: translate(-50%, -47%) scale(0.96); }
 }
 @keyframes lg-overlay-in {
-  from { opacity: 0; backdrop-filter: blur(0px); }
-  to   { opacity: 1; backdrop-filter: blur(14px); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-/* Overlay with progressive blur */
+/* Overlay: fade only (animating backdrop-filter causes jank) */
 .dialog-overlay-blur[data-state='open'] {
-  animation: lg-overlay-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both !important;
-  backdrop-filter: blur(14px);
+  animation: lg-overlay-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background: hsl(0 0% 0% / 0.55);
+  will-change: opacity;
 }
 .dialog-overlay-blur[data-state='closed'] {
-  animation: fadeIn 0.2s ease-in reverse both !important;
-  backdrop-filter: blur(14px);
+  animation: lg-overlay-in 0.2s ease-in reverse both !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background: hsl(0 0% 0% / 0.55);
+  will-change: opacity;
 }
 
 /* Full-screen sheet on mobile, pop on desktop */
