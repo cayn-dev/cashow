@@ -22,7 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Plus, TrendingUp, TrendingDown, CalendarIcon, Sparkles } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown, CalendarIcon, Sparkles, Camera, Loader2 } from 'lucide-react';
 import { 
   Transaction, 
   TransactionType, 
@@ -40,8 +40,40 @@ import { it, enUS, es, fr, de } from 'date-fns/locale';
 import { useFeedback } from '@/hooks/useFeedback';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSettings } from '@/hooks/useSettings';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const DATE_LOCALES: Record<string, typeof it> = { it, en: enUS, es, fr, de };
+
+/** Downscale + JPEG-compress a picture so the vision model gets a small payload. */
+async function fileToCompressedDataUrl(file: File, maxSize = 1400): Promise<string> {
+  const dataUrl: string = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error('read_failed'));
+    reader.readAsDataURL(file);
+  });
+
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error('decode_failed'));
+      el.src = dataUrl;
+    });
+    const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return dataUrl;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.82);
+  } catch {
+    return dataUrl;
+  }
+}
 
 interface AddTransactionDialogProps {
   onAdd?: (transaction: Omit<Transaction, 'id'>) => void;
