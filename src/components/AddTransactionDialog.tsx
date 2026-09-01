@@ -109,9 +109,54 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   const [date, setDate] = useState<Date>(transaction?.date ?? new Date());
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [autoSuggested, setAutoSuggested] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [scanNote, setScanNote] = useState<string | null>(null);
+  const [newCatOpen, setNewCatOpen] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatEmoji, setNewCatEmoji] = useState('🏷️');
+  const fileRef = useRef<HTMLInputElement>(null);
+  const customCats = useCustomCategories();
   const feedback = useFeedback();
 
   const dateLocale = DATE_LOCALES[language] || it;
+
+  const handleReceipt = async (file: File) => {
+    setScanning(true);
+    setScanNote(null);
+    try {
+      const image = await fileToCompressedDataUrl(file);
+      const { data, error } = await supabase.functions.invoke('scan-receipt', { body: { image } });
+      if (error) throw error;
+      const r = (data as any)?.receipt;
+      if (!r) throw new Error('no_data');
+
+      if (typeof r.amount === 'number' && r.amount > 0) setAmount(String(r.amount));
+      if (r.description) {
+        setDescription(String(r.description));
+        setAutoSuggested(true);
+      }
+      if (r.category && (CATEGORY_CONFIG as Record<string, unknown>)[r.category]) {
+        setCategory(r.category as CategoryType);
+      }
+      if (r.date) {
+        const parsed = new Date(r.date);
+        if (!isNaN(parsed.getTime())) setDate(parsed);
+      }
+      setType('expense');
+      setIsSalary(false);
+      const place = [r.merchant, r.location].filter(Boolean).join(' · ');
+      setScanNote(place || null);
+      feedback.success();
+      toast.success(t('receipt.done'));
+    } catch (e: any) {
+      const status = e?.context?.status;
+      if (status === 429) toast.error(t('receipt.rateLimit'));
+      else if (status === 402) toast.error(t('receipt.credits'));
+      else toast.error(t('receipt.failed'));
+    } finally {
+      setScanning(false);
+    }
+  };
 
   // Reset form when opening (or sync with transaction prop)
   useEffect(() => {
