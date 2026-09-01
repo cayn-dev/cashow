@@ -26,7 +26,9 @@ export type CategoryType =
   | 'education'
   | 'gifts'
   | 'insurance'
-  | 'other';
+  | 'other'
+  // Custom user-defined categories are stored as `custom:<id>`
+  | (string & {});
 
 export interface Transaction {
   id: string;
@@ -258,4 +260,37 @@ export function autoCategorizeTransaction(description: string): { category: Cate
   }
   
   return null;
+}
+
+// ===== Custom categories =====
+export const CUSTOM_CATEGORIES_KEY = 'finance_custom_categories';
+
+export function readCustomCategories(): CustomCategory[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(CUSTOM_CATEGORIES_KEY);
+    return raw ? (JSON.parse(raw) as CustomCategory[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export interface CategoryMeta { label: string; emoji: string; color: string }
+
+/** Resolves a category key (built-in or `custom:<id>`) to display metadata. */
+export function resolveCategoryMeta(key: string, customs?: CustomCategory[]): CategoryMeta {
+  if (key?.startsWith('custom:')) {
+    const id = key.slice(7);
+    const list = customs ?? readCustomCategories();
+    const found = list.find((c) => c.id === id);
+    if (found) return { label: found.name, emoji: found.emoji, color: 'category-other' };
+    return { label: key, emoji: '🏷️', color: 'category-other' };
+  }
+  return (
+    (CATEGORY_CONFIG as Record<string, CategoryMeta>)[key] ?? {
+      label: key,
+      emoji: '📦',
+      color: 'category-other',
+    }
+  );
 }
