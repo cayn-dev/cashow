@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -22,7 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Plus, TrendingUp, TrendingDown, CalendarIcon, Sparkles } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown, CalendarIcon, Sparkles, Camera, Loader2 } from 'lucide-react';
 import { 
   Transaction, 
   TransactionType, 
@@ -40,8 +40,40 @@ import { it, enUS, es, fr, de } from 'date-fns/locale';
 import { useFeedback } from '@/hooks/useFeedback';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSettings } from '@/hooks/useSettings';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const DATE_LOCALES: Record<string, typeof it> = { it, en: enUS, es, fr, de };
+
+/** Downscale + JPEG-compress a picture so the vision model gets a small payload. */
+async function fileToCompressedDataUrl(file: File, maxSize = 1400): Promise<string> {
+  const dataUrl: string = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error('read_failed'));
+    reader.readAsDataURL(file);
+  });
+
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error('decode_failed'));
+      el.src = dataUrl;
+    });
+    const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return dataUrl;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.82);
+  } catch {
+    return dataUrl;
+  }
+}
 
 interface AddTransactionDialogProps {
   onAdd?: (transaction: Omit<Transaction, 'id'>) => void;
@@ -77,9 +109,54 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   const [date, setDate] = useState<Date>(transaction?.date ?? new Date());
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [autoSuggested, setAutoSuggested] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [scanNote, setScanNote] = useState<string | null>(null);
+  const [newCatOpen, setNewCatOpen] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatEmoji, setNewCatEmoji] = useState('🏷️');
+  const fileRef = useRef<HTMLInputElement>(null);
+  const customCats = useCustomCategories();
   const feedback = useFeedback();
 
   const dateLocale = DATE_LOCALES[language] || it;
+
+  const handleReceipt = async (file: File) => {
+    setScanning(true);
+    setScanNote(null);
+    try {
+      const image = await fileToCompressedDataUrl(file);
+      const { data, error } = await supabase.functions.invoke('scan-receipt', { body: { image } });
+      if (error) throw error;
+      const r = (data as any)?.receipt;
+      if (!r) throw new Error('no_data');
+
+      if (typeof r.amount === 'number' && r.amount > 0) setAmount(String(r.amount));
+      if (r.description) {
+        setDescription(String(r.description));
+        setAutoSuggested(true);
+      }
+      if (r.category && (CATEGORY_CONFIG as Record<string, unknown>)[r.category]) {
+        setCategory(r.category as CategoryType);
+      }
+      if (r.date) {
+        const parsed = new Date(r.date);
+        if (!isNaN(parsed.getTime())) setDate(parsed);
+      }
+      setType('expense');
+      setIsSalary(false);
+      const place = [r.merchant, r.location].filter(Boolean).join(' · ');
+      setScanNote(place || null);
+      feedback.success();
+      toast.success(t('receipt.done'));
+    } catch (e: any) {
+      const status = e?.context?.status;
+      if (status === 429) toast.error(t('receipt.rateLimit'));
+      else if (status === 402) toast.error(t('receipt.credits'));
+      else toast.error(t('receipt.failed'));
+    } finally {
+      setScanning(false);
+    }
+  };
 
   // Reset form when opening (or sync with transaction prop)
   useEffect(() => {
