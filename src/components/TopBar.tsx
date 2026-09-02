@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Lock, LogOut, RefreshCw } from 'lucide-react';
+import { Lock, LogOut, RefreshCw, Settings } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFeedback } from '@/hooks/useFeedback';
 import { InstallPWAButton } from '@/components/InstallPWAButton';
@@ -10,9 +10,10 @@ interface TopBarProps {
   pinEnabled?: boolean;
   onLogout?: () => void;
   viewLabel: string;
+  onOpenSettings?: () => void;
 }
 
-export function TopBar({ onLock, pinEnabled, onLogout, viewLabel }: TopBarProps) {
+export function TopBar({ onLock, pinEnabled, onLogout, viewLabel, onOpenSettings }: TopBarProps) {
   const { t } = useLanguage();
   const feedback = useFeedback();
 
@@ -48,6 +49,17 @@ export function TopBar({ onLock, pinEnabled, onLogout, viewLabel }: TopBarProps)
         >
           <RefreshCw className="w-4 h-4" />
         </Button>
+        {onOpenSettings && (
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
+            className="h-9 w-9 rounded-lg text-foreground/70 hover:text-primary hover:bg-primary/10"
+            onClick={() => { feedback.tap(); onOpenSettings(); }}
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
+        )}
         {pinEnabled && onLock && (
           <Button
             variant="ghost"
