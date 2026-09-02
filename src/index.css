@@ -1052,11 +1052,10 @@
   background: linear-gradient(180deg, hsl(0 0% 100% / 0.6) 0%, transparent 55%);
 }
 .light-theme .liquid-pill-active {
-  background: linear-gradient(180deg, hsl(224 88% 58%) 0%, hsl(224 88% 50%) 100%);
-  box-shadow: 0 6px 18px hsl(224 88% 40% / 0.35);
+  background: linear-gradient(180deg, hsl(225 25% 14%) 0%, hsl(225 30% 8%) 100%);
+  box-shadow: 0 6px 18px hsl(224 40% 20% / 0.28);
 }
-.light-theme .liquid-pill-active + span,
-.light-theme [aria-current="page"] .liquid-pill-active ~ span { color: hsl(0 0% 100%); }
+.light-theme .liquid-tab-active { color: hsl(0 0% 100%); }
 .light-theme .glass-input {
   background: hsl(0 0% 100% / 0.9);
   border-color: hsl(224 40% 30% / 0.16);

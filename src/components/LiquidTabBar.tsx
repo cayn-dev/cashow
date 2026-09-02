@@ -70,7 +70,7 @@ export function LiquidTabBar({ currentView, onViewChange, onOpenSettings, classN
               <span
                 className={cn(
                   'relative flex flex-col items-center gap-0.5',
-                  active ? 'text-foreground' : 'text-foreground/75'
+                  active ? 'liquid-tab-active text-foreground' : 'text-foreground/75'
                 )}
               >
                 <item.icon className="w-[19px] h-[19px]" strokeWidth={1.6} />
