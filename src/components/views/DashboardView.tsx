@@ -327,7 +327,22 @@ export function DashboardView({
             {editMode ? <Check className="w-4 h-4" /> : <Settings2 className="w-4 h-4" />}
             <span className="hidden sm:inline">{editMode ? t('dash.done') : t('dash.customize')}</span>
           </Button>
+          {onOpenSettings && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onOpenSettings}
+              className="gap-2"
+              aria-label={t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
+            >
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">
+                {t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
+              </span>
+            </Button>
+          )}
         </div>
+
       </div>
 
       {/* ===== Hidden widgets panel ===== */}
