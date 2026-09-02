@@ -447,9 +447,64 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
                       </SelectItem>
                     );
                   })}
+                  {customCats.categories.map((c) => (
+                    <SelectItem key={c.id} value={`custom:${c.id}`}>
+                      {c.emoji} {c.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+
+              {newCatOpen ? (
+                <div className="flex gap-2">
+                  <Input
+                    value={newCatEmoji}
+                    onChange={(e) => setNewCatEmoji(e.target.value.slice(0, 2))}
+                    className="glass-input w-14 text-center"
+                    aria-label={t('category.emoji')}
+                  />
+                  <Input
+                    value={newCatName}
+                    onChange={(e) => setNewCatName(e.target.value)}
+                    placeholder={t('category.newName')}
+                    className="glass-input flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const name = newCatName.trim();
+                      if (!name) return;
+                      const created = customCats.addCategory({
+                        name,
+                        emoji: newCatEmoji || '🏷️',
+                        color: 'category-other',
+                        keywords: [],
+                      });
+                      setCategory(`custom:${created.id}` as CategoryType);
+                      setNewCatName('');
+                      setNewCatEmoji('🏷️');
+                      setNewCatOpen(false);
+                      feedback.success();
+                      toast.success(t('category.created'));
+                    }}
+                    className="apple-button text-primary-foreground"
+                  >
+                    {t('category.create')}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setNewCatOpen(true)}
+                  className="h-8 px-2 text-xs text-primary hover:bg-primary/10"
+                >
+                  <Plus className="w-3 h-3 mr-1" />
+                  {t('category.new')}
+                </Button>
+              )}
             </div>
+
           )}
 
           {/* Payment Method */}
