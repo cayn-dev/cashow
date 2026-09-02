@@ -272,7 +272,43 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="dialog-stagger space-y-4 mt-4">
+          {/* Receipt scanner */}
+          {!isEdit && (
+            <div className="space-y-2">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleReceipt(f);
+                  e.target.value = '';
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={scanning}
+                onClick={() => { feedback.tap(); fileRef.current?.click(); }}
+                className="w-full glass-input h-11 rounded-xl"
+              >
+                {scanning ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('receipt.scanning')}</>
+                ) : (
+                  <><Camera className="w-4 h-4 mr-2" />{t('receipt.attach')}</>
+                )}
+              </Button>
+              <p className="text-[11px] text-muted-foreground text-center">{t('receipt.hint')}</p>
+              {scanNote && (
+                <p className="text-[11px] text-primary text-center">📍 {scanNote}</p>
+              )}
+            </div>
+          )}
+
           {/* Type Toggle — Liquid Glass capsule with circular buttons */}
+
           <div className="liquid-bar mx-auto w-fit gap-2 p-1.5">
             <Button
               type="button"
