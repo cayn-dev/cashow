@@ -18,6 +18,7 @@ import {
   ArrowRight,
   Sparkles,
   Settings2,
+  Settings as SettingsIcon,
   Check,
   EyeOff,
   Plus,
@@ -48,6 +49,7 @@ interface DashboardViewProps {
   onViewTransactions: () => void;
   currencySymbol?: string;
   openAddTxTick?: number;
+  onOpenSettings?: () => void;
 }
 
 const GREETINGS: Record<string, [string, string, string, string]> = {
@@ -83,6 +85,7 @@ export function DashboardView({
   onViewTransactions,
   currencySymbol = '€',
   openAddTxTick = 0,
+  onOpenSettings,
 }: DashboardViewProps) {
   const insights = useInsights(allTransactions);
   const { t, language } = useLanguage();
@@ -335,7 +338,7 @@ export function DashboardView({
               className="gap-2"
               aria-label={t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
             >
-              <Settings className="w-4 h-4" />
+              <SettingsIcon className="w-4 h-4" />
               <span className="hidden sm:inline">
                 {t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
               </span>
