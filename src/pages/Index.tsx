@@ -11,6 +11,7 @@ import { SalaryView } from '@/components/views/SalaryView';
 import { SavingsView } from '@/components/views/SavingsView';
 import { BudgetView } from '@/components/views/BudgetView';
 import { CalendarView } from '@/components/views/CalendarView';
+import { AccountsView } from '@/components/views/AccountsView';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { PinLockScreen } from '@/components/PinLockScreen';
 import { AuroraBackground } from '@/components/AuroraBackground';
@@ -20,7 +21,7 @@ import { LiquidTabBar } from '@/components/LiquidTabBar';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
+type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -60,6 +61,7 @@ const Index = () => {
       budget: t('nav.budget'),
       salary: t('nav.salary'),
       savings: t('nav.savings'),
+      accounts: t('nav.accounts'),
     };
     return map[currentView];
   }, [currentView, t]);
@@ -108,6 +110,7 @@ const Index = () => {
             pinEnabled={settings.pinEnabled}
             onLogout={handleLogout}
             viewLabel={viewLabel}
+            onOpenSettings={() => setSettingsOpen(true)}
           />
 
           <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 pb-32 max-w-[1480px] w-full mx-auto">
@@ -128,6 +131,7 @@ const Index = () => {
                 onViewTransactions={() => setCurrentView('transactions')}
                 currencySymbol={settings.currencySymbol}
                 openAddTxTick={addTxTick}
+                onOpenSettings={() => setSettingsOpen(true)}
               />
             )}
 
@@ -164,6 +168,10 @@ const Index = () => {
 
             {currentView === 'budget' && (
               <BudgetView transactions={store.transactions} currencySymbol={settings.currencySymbol} />
+            )}
+
+            {currentView === 'accounts' && (
+              <AccountsView currencySymbol={settings.currencySymbol} />
             )}
 
             {currentView === 'calendar' && (

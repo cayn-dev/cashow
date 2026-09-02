@@ -272,7 +272,43 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="dialog-stagger space-y-4 mt-4">
+          {/* Receipt scanner */}
+          {!isEdit && (
+            <div className="space-y-2">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleReceipt(f);
+                  e.target.value = '';
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={scanning}
+                onClick={() => { feedback.tap(); fileRef.current?.click(); }}
+                className="w-full glass-input h-11 rounded-xl"
+              >
+                {scanning ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('receipt.scanning')}</>
+                ) : (
+                  <><Camera className="w-4 h-4 mr-2" />{t('receipt.attach')}</>
+                )}
+              </Button>
+              <p className="text-[11px] text-muted-foreground text-center">{t('receipt.hint')}</p>
+              {scanNote && (
+                <p className="text-[11px] text-primary text-center">📍 {scanNote}</p>
+              )}
+            </div>
+          )}
+
           {/* Type Toggle — Liquid Glass capsule with circular buttons */}
+
           <div className="liquid-bar mx-auto w-fit gap-2 p-1.5">
             <Button
               type="button"
@@ -411,9 +447,64 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
                       </SelectItem>
                     );
                   })}
+                  {customCats.categories.map((c) => (
+                    <SelectItem key={c.id} value={`custom:${c.id}`}>
+                      {c.emoji} {c.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+
+              {newCatOpen ? (
+                <div className="flex gap-2">
+                  <Input
+                    value={newCatEmoji}
+                    onChange={(e) => setNewCatEmoji(e.target.value.slice(0, 2))}
+                    className="glass-input w-14 text-center"
+                    aria-label={t('category.emoji')}
+                  />
+                  <Input
+                    value={newCatName}
+                    onChange={(e) => setNewCatName(e.target.value)}
+                    placeholder={t('category.newName')}
+                    className="glass-input flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const name = newCatName.trim();
+                      if (!name) return;
+                      const created = customCats.addCategory({
+                        name,
+                        emoji: newCatEmoji || '🏷️',
+                        color: 'category-other',
+                        keywords: [],
+                      });
+                      setCategory(`custom:${created.id}` as CategoryType);
+                      setNewCatName('');
+                      setNewCatEmoji('🏷️');
+                      setNewCatOpen(false);
+                      feedback.success();
+                      toast.success(t('category.created'));
+                    }}
+                    className="apple-button text-primary-foreground"
+                  >
+                    {t('category.create')}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setNewCatOpen(true)}
+                  className="h-8 px-2 text-xs text-primary hover:bg-primary/10"
+                >
+                  <Plus className="w-3 h-3 mr-1" />
+                  {t('category.new')}
+                </Button>
+              )}
             </div>
+
           )}
 
           {/* Payment Method */}

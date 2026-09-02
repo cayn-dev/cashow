@@ -5,13 +5,13 @@ import {
   PiggyBank,
   Wallet,
   Target,
-  Settings,
+  Landmark,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFeedback } from '@/hooks/useFeedback';
 
-export type TabView = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
+export type TabView = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts';
 
 interface LiquidTabBarProps {
   currentView: TabView;
@@ -32,6 +32,7 @@ export function LiquidTabBar({ currentView, onViewChange, onOpenSettings, classN
   const items: { id: TabView; label: string; icon: typeof LayoutDashboard }[] = [
     { id: 'dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { id: 'transactions', label: t('nav.transactions'), icon: ArrowUpDown },
+    { id: 'accounts', label: t('nav.accounts'), icon: Landmark },
     { id: 'budget', label: t('nav.budget'), icon: PiggyBank },
     { id: 'salary', label: t('nav.salary'), icon: Wallet },
     { id: 'savings', label: t('nav.savings'), icon: Target },
@@ -69,7 +70,7 @@ export function LiquidTabBar({ currentView, onViewChange, onOpenSettings, classN
               <span
                 className={cn(
                   'relative flex flex-col items-center gap-0.5',
-                  active ? 'text-foreground' : 'text-foreground/75'
+                  active ? 'liquid-tab-active text-foreground' : 'text-foreground/75'
                 )}
               >
                 <item.icon className="w-[19px] h-[19px]" strokeWidth={1.6} />
@@ -81,24 +82,6 @@ export function LiquidTabBar({ currentView, onViewChange, onOpenSettings, classN
           );
         })}
 
-        {onOpenSettings && (
-          <button
-            type="button"
-            onClick={() => {
-              feedback.tap();
-              onOpenSettings();
-            }}
-            aria-label={t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
-            className="relative flex-1 min-w-[52px] rounded-full px-1 py-1.5 tap-shrink"
-          >
-            <span className="relative flex flex-col items-center gap-0.5 text-foreground/75">
-              <Settings className="w-[19px] h-[19px]" strokeWidth={1.6} />
-              <span className="text-[10px] font-medium leading-none truncate max-w-full">
-                {t('settings.title')?.replace(/[⚙️\s]/g, '') || 'Settings'}
-              </span>
-            </span>
-          </button>
-        )}
       </div>
     </nav>
   );

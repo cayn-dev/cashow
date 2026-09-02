@@ -1790,7 +1790,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <div className="text-center text-sm text-muted-foreground pt-4">
             <p>Cashow v1.0.0</p>
-            <p className="text-xs mt-1">Made with ❤️</p>
+            <p className="text-xs mt-1">Made by Cayn Developer</p>
           </div>
         </div>
       </DialogContent>
