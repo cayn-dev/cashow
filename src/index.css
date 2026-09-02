@@ -770,7 +770,7 @@
   100% { transform: translate3d(-40%, -60%, 0) scale(1.2); }
 }
 
-.light .aurora-orb { mix-blend-mode: multiply; opacity: 0.25; }
+.light-theme .aurora-orb { mix-blend-mode: multiply; opacity: 0.25; }
 
 @media (prefers-reduced-motion: reduce) {
   .aurora-orb, .aurora-blob { animation: none !important; }
@@ -1016,3 +1016,53 @@
     animation: fadeIn 0.15s ease-out both !important;
   }
 }
+
+
+/* ==========================================================
+   Light theme — readable glass surfaces
+   ========================================================== */
+.light-theme .glass-panel,
+.light-theme .glass-panel-elevated {
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.86) 0%, hsl(220 30% 99% / 0.72) 100%);
+  border-color: hsl(224 40% 30% / 0.14);
+  box-shadow:
+    0 1px 0 0 hsl(0 0% 100% / 0.9) inset,
+    0 18px 48px -24px hsl(224 40% 20% / 0.28);
+}
+.light-theme .glass-panel::before { opacity: 0.25; }
+.light-theme .glass-panel:hover {
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.94) 0%, hsl(220 30% 99% / 0.82) 100%);
+  border-color: hsl(224 40% 30% / 0.22);
+}
+.light-theme .glass-topbar {
+  background: linear-gradient(180deg, hsl(220 30% 99% / 0.85) 0%, hsl(220 30% 97% / 0.7) 100%);
+  box-shadow: 0 1px 0 0 hsl(224 40% 30% / 0.08) inset;
+}
+.light-theme .glass-tooltip {
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.95) 0%, hsl(220 30% 99% / 0.88) 100%);
+}
+.light-theme .liquid-bar {
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.88) 0%, hsl(220 30% 98% / 0.72) 100%);
+  border-color: hsl(224 40% 30% / 0.16);
+  box-shadow:
+    0 1px 0 0 hsl(0 0% 100% / 0.95) inset,
+    0 10px 30px hsl(224 40% 20% / 0.16);
+}
+.light-theme .liquid-bar::before {
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.6) 0%, transparent 55%);
+}
+.light-theme .liquid-pill-active {
+  background: linear-gradient(180deg, hsl(224 88% 58%) 0%, hsl(224 88% 50%) 100%);
+  box-shadow: 0 6px 18px hsl(224 88% 40% / 0.35);
+}
+.light-theme .liquid-pill-active + span,
+.light-theme [aria-current="page"] .liquid-pill-active ~ span { color: hsl(0 0% 100%); }
+.light-theme .glass-input {
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(224 40% 30% / 0.16);
+}
+.light-theme .wash-navy {
+  background: linear-gradient(180deg, hsl(220 60% 96%) 0%, hsl(220 30% 98%) 45%, hsl(220 30% 97%) 100%);
+}
+.light-theme .wash-income { background: linear-gradient(180deg, hsl(160 50% 94%) 0%, hsl(220 30% 98%) 60%); }
+.light-theme .wash-expense { background: linear-gradient(180deg, hsl(355 60% 95%) 0%, hsl(220 30% 98%) 60%); }
