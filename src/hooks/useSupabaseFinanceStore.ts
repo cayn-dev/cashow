@@ -22,6 +22,7 @@ interface DbTransaction {
   payment_method: string | null;
   is_salary: boolean | null;
   recurring_source_id: string | null;
+  bank_account_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -170,6 +171,7 @@ export function useSupabaseFinanceStore() {
           description: t.description,
           date: new Date(t.date),
           paymentMethod: (t.payment_method || 'cash') as any,
+          bankAccountId: t.bank_account_id || undefined,
           recurrence: 'none' as const,
           isSalary: t.is_salary || false,
         }));
@@ -242,6 +244,7 @@ export function useSupabaseFinanceStore() {
            description: transaction.description,
            date: transaction.date.toISOString(),
            payment_method: transaction.paymentMethod,
+           bank_account_id: transaction.bankAccountId || null,
            is_salary: transaction.isSalary || false,
          })
          .select()
@@ -257,6 +260,7 @@ export function useSupabaseFinanceStore() {
          description: data.description,
          date: new Date(data.date),
          paymentMethod: (data.payment_method || 'cash') as any,
+         bankAccountId: data.bank_account_id || undefined,
          recurrence: 'none' as const,
          isSalary: data.is_salary || false,
        };
@@ -286,6 +290,7 @@ export function useSupabaseFinanceStore() {
            description: updates.description,
            date: updates.date.toISOString(),
            payment_method: updates.paymentMethod,
+           bank_account_id: updates.bankAccountId || null,
            is_salary: updates.isSalary || false,
          })
          .eq('id', id)

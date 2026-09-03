@@ -41,6 +41,7 @@ import { useFeedback } from '@/hooks/useFeedback';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSettings } from '@/hooks/useSettings';
 import { useCustomCategories } from '@/hooks/useCustomCategories';
+import { useBankAccounts } from '@/hooks/useBankAccounts';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -116,6 +117,8 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   const [newCatEmoji, setNewCatEmoji] = useState('🏷️');
   const fileRef = useRef<HTMLInputElement>(null);
   const customCats = useCustomCategories();
+  const { accounts } = useBankAccounts();
+  const [bankAccountId, setBankAccountId] = useState<string>(transaction?.bankAccountId ?? 'none');
   const feedback = useFeedback();
 
   const dateLocale = DATE_LOCALES[language] || it;
@@ -171,6 +174,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         setCustomRecurrenceDays(transaction.customRecurrenceDays ? String(transaction.customRecurrenceDays) : '');
         setIsSalary(!!transaction.isSalary);
         setDate(transaction.date);
+        setBankAccountId(transaction.bankAccountId ?? 'none');
       } else {
         setPaymentMethod((settings.defaultPaymentMethod as PaymentMethod) || 'card');
       }
@@ -210,6 +214,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
       recurrence,
       customRecurrenceDays: recurrence === 'custom' ? parseInt(customRecurrenceDays) : undefined,
       isSalary,
+      bankAccountId: bankAccountId !== 'none' ? bankAccountId : undefined,
     };
 
     if (isEdit && transaction && onEdit) {
@@ -228,6 +233,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
       setRecurrence('none');
       setCustomRecurrenceDays('');
       setIsSalary(false);
+      setBankAccountId('none');
       setDate(new Date());
       setAutoSuggested(false);
     }
@@ -505,6 +511,26 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
               )}
             </div>
 
+          )}
+
+          {/* Account */}
+          {accounts.length > 0 && (
+            <div className="space-y-2">
+              <Label>{t('addTransaction.account')}</Label>
+              <Select value={bankAccountId} onValueChange={setBankAccountId}>
+                <SelectTrigger className="glass-input">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-card-border z-[100]">
+                  <SelectItem value="none">{t('addTransaction.noAccount')}</SelectItem>
+                  {accounts.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.icon || '🏦'} {a.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           )}
 
           {/* Payment Method */}

@@ -43,6 +43,8 @@ export interface Transaction {
   isSalary?: boolean;
   isRecurringInstance?: boolean;
   parentTransactionId?: string;
+  /** Optional link to a bank account (cloud mode only) */
+  bankAccountId?: string;
 }
 
 export interface SavingsGoal {
