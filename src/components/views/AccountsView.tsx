@@ -31,7 +31,7 @@ const db = supabase as any;
 export function AccountsView({ currencySymbol = '€' }: AccountsViewProps) {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { accounts, addAccount, deleteAccount, refetch } = useBankAccounts();
+  const { accounts, addAccount, deleteAccount, refetch, localMode } = useBankAccounts();
   const [addOpen, setAddOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [importTarget, setImportTarget] = useState<string>('');
@@ -192,6 +192,10 @@ export function AccountsView({ currencySymbol = '€' }: AccountsViewProps) {
           </Dialog>
         </div>
       </div>
+
+      {localMode && (
+        <p className="text-xs text-muted-foreground">{t('accounts.localMode')}</p>
+      )}
 
       <GlassCard className="p-6">
         <p className="text-sm text-muted-foreground">{t('accounts.totalWealth')}</p>
