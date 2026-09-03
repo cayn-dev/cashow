@@ -1,4 +1,4 @@
-import { Transaction, CATEGORY_CONFIG, PAYMENT_METHODS } from '@/types/finance';
+import { Transaction, PAYMENT_METHODS, resolveCategoryMeta } from '@/types/finance';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useFeedback } from '@/hooks/useFeedback';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -19,7 +20,8 @@ interface TransactionItemProps {
 export function TransactionItem({ transaction, onDelete, onEdit, currencySymbol = '€' }: TransactionItemProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const category = CATEGORY_CONFIG[transaction.category] || { label: transaction.category, emoji: '📦', color: 'category-other' };
+  const { categories: customCategories } = useCustomCategories();
+  const category = resolveCategoryMeta(transaction.category, customCategories);
   const payment = PAYMENT_METHODS[transaction.paymentMethod] || { label: transaction.paymentMethod, emoji: '💱' };
   const isIncome = transaction.type === 'income';
   const feedback = useFeedback();

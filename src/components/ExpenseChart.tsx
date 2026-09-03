@@ -1,4 +1,5 @@
-import { CategoryType, CATEGORY_CONFIG, Transaction } from '@/types/finance';
+import { CategoryType, Transaction, resolveCategoryMeta } from '@/types/finance';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { GlassCard } from './GlassCard';
 import { GlassEmptyState } from '@/components/ui/glass-empty-state';
 import {
@@ -36,13 +37,14 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
   const { t } = useLanguage();
   const [mode, setMode] = useState<ChartMode>('donut');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { categories: customCategories } = useCustomCategories();
 
   const chartData = Object.entries(data)
     .filter(([_, value]) => value > 0)
     .map(([category, value]) => ({
-      name: CATEGORY_CONFIG[category as CategoryType].label,
+      name: resolveCategoryMeta(category, customCategories).label,
       value,
-      emoji: CATEGORY_CONFIG[category as CategoryType].emoji,
+      emoji: resolveCategoryMeta(category, customCategories).emoji,
       category,
     }))
     .sort((a, b) => b.value - a.value);

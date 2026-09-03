@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { Transaction, CATEGORY_CONFIG } from '@/types/finance';
+import { Transaction, resolveCategoryMeta } from '@/types/finance';
+import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { GlassCard } from './GlassCard';
 import { Progress } from '@/components/ui/progress';
 import { CategoryBudget } from '@/hooks/useSettings';
@@ -27,6 +28,7 @@ export function BudgetProgressList({
   className,
 }: BudgetProgressListProps) {
   const { t } = useLanguage();
+  const { categories: customCategories } = useCustomCategories();
 
   const rows: BudgetRow[] = useMemo(() => {
     const now = new Date();
@@ -72,7 +74,7 @@ export function BudgetProgressList({
       <h3 className="font-semibold text-base mb-4">{t('budget.title')}</h3>
       <div className="space-y-4">
         {rows.map(row => {
-          const cfg = CATEGORY_CONFIG[row.category as keyof typeof CATEGORY_CONFIG];
+          const cfg = resolveCategoryMeta(row.category, customCategories);
           const over = row.spent > row.limit;
           const warn = !over && row.percent >= 80;
           const barColor = over
