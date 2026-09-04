@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Lock, LogOut, RefreshCw, Settings } from 'lucide-react';
+import { Lock, LogOut, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFeedback } from '@/hooks/useFeedback';
 import { InstallPWAButton } from '@/components/InstallPWAButton';
@@ -10,10 +10,9 @@ interface TopBarProps {
   pinEnabled?: boolean;
   onLogout?: () => void;
   viewLabel: string;
-  onOpenSettings?: () => void;
 }
 
-export function TopBar({ onLock, pinEnabled, onLogout, viewLabel, onOpenSettings }: TopBarProps) {
+export function TopBar({ onLock, pinEnabled, onLogout, viewLabel }: TopBarProps) {
   const { t } = useLanguage();
   const feedback = useFeedback();
 
