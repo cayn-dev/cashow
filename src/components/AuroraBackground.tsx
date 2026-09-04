@@ -20,6 +20,10 @@ export function AuroraBackground({ className }: AuroraBackgroundProps) {
       <div className="aurora-orb aurora-orb--b" />
       <div className="aurora-orb aurora-orb--c" />
 
+      {/* Purple smoke plumes drifting behind everything */}
+      <div className="smoke-veil" />
+      <div className="smoke-veil smoke-veil--slow" />
+
       {/* Vignette so edges feel deeper */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(0_0%_0%/0.55)_100%)]" />
 
