@@ -48,6 +48,8 @@ export default function Landing() {
         title="Cashow — Inizia gratis a gestire le tue finanze"
         description="Scopri Cashow: l'app gratuita per tracciare spese, monitorare risparmi e raggiungere i tuoi obiettivi finanziari. Provala senza registrazione."
         path="/welcome"
+        image="/welcome-cover.png"
+        imageAlt="Cashow — app di finanza personale"
       />
       {/* Animated aurora background */}
       <AuroraBackground intensity="vivid" />
