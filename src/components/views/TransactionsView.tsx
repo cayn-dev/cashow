@@ -183,9 +183,13 @@ export function TransactionsView({
                     </Button>
 
                   </PopoverTrigger>
-                  <PopoverContent className="bg-popover border border-card-border shadow-xl w-[300px] p-4 z-[120]" align="end">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
+                  <PopoverContent
+                    className="bg-popover border border-card-border shadow-xl w-[min(340px,calc(100vw-2rem))] p-4 z-[120]"
+                    align="end"
+                    collisionPadding={12}
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-2">
                         <h4 className="font-semibold text-sm">{t('transactions.advanced')}</h4>
                         {advancedActive && (
                           <Button size="sm" variant="ghost" className="h-6 px-2 text-xs" onClick={clearAdvanced}>
@@ -196,8 +200,8 @@ export function TransactionsView({
                       <div className="space-y-1.5">
                         <label className="text-xs text-muted-foreground">{t('transactions.payment')}</label>
                         <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-                          <SelectTrigger className="bg-muted/50"><SelectValue /></SelectTrigger>
-                          <SelectContent className="glass-panel">
+                          <SelectTrigger className="w-full bg-muted/50"><SelectValue /></SelectTrigger>
+                          <SelectContent position="popper" sideOffset={4} className="bg-popover border border-card-border shadow-xl z-[200] max-h-[240px]">
                             <SelectItem value="all">{t('transactions.all')}</SelectItem>
                             {Object.entries(PAYMENT_METHODS).map(([key, m]) => (
                               <SelectItem key={key} value={key}>{m.emoji} {m.label}</SelectItem>
@@ -205,28 +209,29 @@ export function TransactionsView({
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="space-y-1.5">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5 min-w-0">
                           <label className="text-xs text-muted-foreground">{t('transactions.dateFrom')}</label>
-                          <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="bg-muted/50" />
+                          <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="w-full min-w-0 bg-muted/50 text-xs px-2" />
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 min-w-0">
                           <label className="text-xs text-muted-foreground">{t('transactions.dateTo')}</label>
-                          <Input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="bg-muted/50" />
+                          <Input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="w-full min-w-0 bg-muted/50 text-xs px-2" />
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="space-y-1.5">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5 min-w-0">
                           <label className="text-xs text-muted-foreground">{t('transactions.amountMin')}</label>
-                          <Input type="number" inputMode="decimal" placeholder="0" value={amountMin} onChange={e => setAmountMin(e.target.value)} className="bg-muted/50" />
+                          <Input type="number" inputMode="decimal" placeholder="0" value={amountMin} onChange={e => setAmountMin(e.target.value)} className="w-full min-w-0 bg-muted/50" />
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 min-w-0">
                           <label className="text-xs text-muted-foreground">{t('transactions.amountMax')}</label>
-                          <Input type="number" inputMode="decimal" placeholder="∞" value={amountMax} onChange={e => setAmountMax(e.target.value)} className="bg-muted/50" />
+                          <Input type="number" inputMode="decimal" placeholder="∞" value={amountMax} onChange={e => setAmountMax(e.target.value)} className="w-full min-w-0 bg-muted/50" />
                         </div>
                       </div>
                     </div>
                   </PopoverContent>
+
                 </Popover>
               </div>
             </div>
