@@ -22,14 +22,6 @@ export default function Landing() {
   const { enterGuestMode } = useAuth();
   const { t, language, setLanguage } = useLanguage();
 
-  const features = [
-    { icon: BarChart3, title: t('landing.feat1Title'), desc: t('landing.feat1Desc') },
-    { icon: PiggyBank, title: t('landing.feat2Title'), desc: t('landing.feat2Desc') },
-    { icon: Bell, title: t('landing.feat3Title'), desc: t('landing.feat3Desc') },
-    { icon: Bot, title: t('landing.feat4Title'), desc: t('landing.feat4Desc') },
-    { icon: Shield, title: t('landing.feat5Title'), desc: t('landing.feat5Desc') },
-    { icon: Globe, title: t('landing.feat6Title'), desc: t('landing.feat6Desc') },
-  ];
 
   const stats = [
     { value: '100%', label: t('landing.statFree') },
