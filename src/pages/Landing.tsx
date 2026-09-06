@@ -5,7 +5,8 @@ import { useLanguage, LANGUAGES } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import {
   Wallet, TrendingUp, PiggyBank, BarChart3, Bell, Bot,
-  Shield, ArrowRight, Star, Zap, Globe, UtensilsCrossed, Briefcase, ShoppingCart
+  Shield, ArrowRight, Star, Zap, Globe, UtensilsCrossed, Briefcase, ShoppingCart,
+  Sparkles, Lock, MessageSquare, Languages
 } from 'lucide-react';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { Seo } from '@/components/Seo';
