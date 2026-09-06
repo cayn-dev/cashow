@@ -171,9 +171,9 @@ export default function Landing() {
               {/* Sample transactions */}
               <div className="space-y-2.5">
                 {[
-                  { icon: '🍕', label: 'Pizzeria Da Mario', amt: '-€18,00' },
-                  { icon: '💼', label: 'Stipendio', amt: '+€1.950,00' },
-                  { icon: '🛒', label: 'Supermercato', amt: '-€64,30' },
+                  { Icon: UtensilsCrossed, label: 'Pizzeria Da Mario', amt: '-€18,00' },
+                  { Icon: Briefcase, label: 'Stipendio', amt: '+€1.950,00' },
+                  { Icon: ShoppingCart, label: 'Supermercato', amt: '-€64,30' },
                 ].map((tx, i) => (
                   <motion.div
                     key={tx.label}
@@ -182,7 +182,9 @@ export default function Landing() {
                     transition={{ delay: 1.0 + i * 0.15 }}
                     className="flex items-center gap-3 rounded-xl bg-card/60 border border-border/40 px-3 py-2.5"
                   >
-                    <span className="text-lg">{tx.icon}</span>
+                    <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <tx.Icon className="w-4 h-4 text-primary" />
+                    </span>
                     <span className="flex-1 text-sm font-medium truncate">{tx.label}</span>
                     <span className={`text-sm font-semibold tabular-nums ${tx.amt.startsWith('+') ? 'text-emerald-400' : 'text-foreground'}`}>
                       {tx.amt}
