@@ -229,8 +229,8 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* Features */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+      {/* Features — Bento grid */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-24">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -239,30 +239,203 @@ export default function Landing() {
           transition={spring}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t('landing.featuresTitle')}</h2>
+          <motion.div
+            animate={{ boxShadow: ['0 0 0px hsl(var(--primary) / 0)', '0 0 20px hsl(var(--primary) / 0.25)', '0 0 0px hsl(var(--primary) / 0)'] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium mb-4"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            {t('landing.badge')}
+          </motion.div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+            <span className="text-shine">{t('landing.featuresTitle')}</span>
+          </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             {t('landing.featuresDesc')}
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, i) => (
-            <motion.div
-              key={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-              transition={{ ...spring, delay: i * 0.08 }}
-              className="group p-6 rounded-2xl border border-border/50 bg-card backdrop-blur-sm hover:border-primary/30 transition-all duration-500"
-            >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-500">
-                <feature.icon className="w-6 h-6 text-primary" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-[minmax(220px,auto)]">
+          {/* AI Assistant — large spotlight card */}
+          <motion.div
+            onMouseMove={spotlight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0 }}
+            className="bento-card lg:row-span-2 group"
+          >
+            <div className="shine" />
+            <div className="bento-icon">
+              <Bot className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">{t('landing.feat4Title')}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6">{t('landing.feat4Desc')}</p>
+
+            <div className="space-y-3 mt-auto">
+              <div className="ai-bubble rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm inline-block">
+                <MessageSquare className="w-3.5 h-3.5 inline mr-1.5 text-primary/70" />
+                {language === 'it' ? 'Come posso risparmiare di più?' : 'How can I save more?'}
               </div>
-              <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
-            </motion.div>
-          ))}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, ...spring }}
+                className="flex items-center gap-1.5 px-4 py-2.5 ai-bubble rounded-2xl rounded-tl-sm w-fit"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '120ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-bounce" style={{ animationDelay: '240ms' }} />
+              </motion.div>
+            </div>
+
+            <Sparkles className="absolute top-6 right-6 w-5 h-5 text-primary/60 animate-pulse" />
+          </motion.div>
+
+          {/* Smart Charts — wide card */}
+          <motion.div
+            onMouseMove={spotlight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0.08 }}
+            className="bento-card md:col-span-2 group"
+          >
+            <div className="shine" />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="bento-icon">
+                  <BarChart3 className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{t('landing.feat1Title')}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed max-w-md">{t('landing.feat1Desc')}</p>
+              </div>
+              <div className="flex items-end gap-2 h-20 sm:h-24 w-full sm:w-56">
+                {[35, 55, 40, 70, 52, 88, 64].map((h, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${h}%` }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 + i * 0.06, type: 'spring', stiffness: 120, damping: 18 }}
+                    className="flex-1 bento-mini-bar rounded-md"
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Savings Goals */}
+          <motion.div
+            onMouseMove={spotlight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0.16 }}
+            className="bento-card group"
+          >
+            <div className="shine" />
+            <div className="bento-icon">
+              <PiggyBank className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{t('landing.feat2Title')}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{t('landing.feat2Desc')}</p>
+            <div className="relative w-20 h-20 mx-auto mt-5">
+              <div className="bento-ring absolute inset-0" style={{ '--progress': '280deg' } as React.CSSProperties} />
+              <div className="absolute inset-2 rounded-full bg-card/60 backdrop-blur-sm flex items-center justify-center border border-border/40">
+                <span className="text-lg font-bold text-primary">78%</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Smart Notifications */}
+          <motion.div
+            onMouseMove={spotlight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0.24 }}
+            className="bento-card group"
+          >
+            <div className="shine" />
+            <div className="bento-icon">
+              <Bell className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{t('landing.feat3Title')}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{t('landing.feat3Desc')}</p>
+            <div className="mt-5 flex items-center gap-3">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/15">
+                  <Bell className="w-5 h-5 text-primary" />
+                </div>
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_hsl(var(--success))]" />
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+              </div>
+              <span className="text-xs text-muted-foreground">{t('landing.feat3Title')}</span>
+            </div>
+          </motion.div>
+
+          {/* Secure & Private */}
+          <motion.div
+            onMouseMove={spotlight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0.32 }}
+            className="bento-card group"
+          >
+            <div className="shine" />
+            <div className="bento-icon">
+              <Shield className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{t('landing.feat5Title')}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{t('landing.feat5Desc')}</p>
+            <div className="mt-5 flex items-center justify-center">
+              <div className="relative w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                <Shield className="w-8 h-8 text-primary" />
+                <div className="absolute inset-0 rounded-full border border-primary/20 animate-[pulse-ring_2s_ease-out_infinite]" />
+                <Lock className="absolute bottom-3 right-3 w-4 h-4 text-primary/80" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Multi-language */}
+          <motion.div
+            onMouseMove={spotlight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0.40 }}
+            className="bento-card md:col-span-2 lg:col-span-1 group"
+          >
+            <div className="shine" />
+            <div className="bento-icon">
+              <Languages className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{t('landing.feat6Title')}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{t('landing.feat6Desc')}</p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {['IT', 'EN', 'ES', 'FR', 'DE'].map((lang, i) => (
+                <motion.span
+                  key={lang}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 + i * 0.06, ...spring }}
+                  className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-medium border border-primary/20"
+                >
+                  {lang}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
