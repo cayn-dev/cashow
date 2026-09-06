@@ -91,52 +91,145 @@ export default function Landing() {
 
       <main id="main-content">
       {/* Hero */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-20 text-center">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          transition={{ ...spring, delay: 0.1 }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8">
-            <Zap className="w-3.5 h-3.5" />
-            {t('landing.badge')}
-          </div>
-          
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-            {t('landing.heroTitle')}{' '}
-            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              {t('landing.heroHighlight')}
-            </span>
-          </h1>
-          
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            {t('landing.heroDesc')}
-          </p>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-14 pb-20">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          {/* Copy */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            transition={{ ...spring, delay: 0.1 }}
+            className="text-center lg:text-left"
+          >
+            <motion.div
+              animate={{ boxShadow: ['0 0 0px hsl(var(--primary) / 0)', '0 0 24px hsl(var(--primary) / 0.35)', '0 0 0px hsl(var(--primary) / 0)'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              {t('landing.badge')}
+            </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="text-base px-8" onClick={() => navigate('/auth')}>
-              {t('landing.createAccount')} <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button size="lg" variant="outline" className="text-base px-8" onClick={handleGuestMode}>
-              {t('landing.tryWithout')}
-            </Button>
-          </div>
-        </motion.div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] mb-6">
+              {t('landing.heroTitle')}{' '}
+              <motion.span
+                className="inline-block bg-gradient-to-r from-primary via-primary/70 to-primary bg-[length:200%_auto] bg-clip-text text-transparent"
+                animate={{ backgroundPosition: ['0% center', '200% center'] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+              >
+                {t('landing.heroHighlight')}
+              </motion.span>
+            </h1>
+
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 mb-10">
+              {t('landing.heroDesc')}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4">
+              <Button
+                size="lg"
+                className="text-base px-8 shadow-[0_8px_40px_-8px_hsl(var(--primary)/0.6)] hover:shadow-[0_12px_48px_-8px_hsl(var(--primary)/0.8)] transition-shadow duration-300"
+                onClick={() => navigate('/auth')}
+              >
+                {t('landing.createAccount')} <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button size="lg" variant="outline" className="text-base px-8" onClick={handleGuestMode}>
+                {t('landing.tryWithout')}
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Live app preview card */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ ...spring, delay: 0.25 }}
+            className="relative mx-auto w-full max-w-sm"
+          >
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              className="glass-panel-elevated rounded-3xl p-6 space-y-5 ring-1 ring-white/10"
+            >
+              <div className="space-y-1">
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">Cashow</p>
+                <p className="text-4xl font-bold tabular-nums">€ 2.840,50</p>
+                <p className="text-sm text-emerald-400 font-medium">▲ +12,4% questo mese</p>
+              </div>
+              {/* Animated bar chart */}
+              <div className="flex items-end gap-2 h-24">
+                {[35, 55, 40, 70, 52, 88, 64].map((h, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex-1 rounded-lg bg-gradient-to-t from-primary/30 to-primary"
+                    initial={{ height: 0 }}
+                    animate={{ height: `${h}%` }}
+                    transition={{ delay: 0.5 + i * 0.1, type: 'spring', stiffness: 120, damping: 18 }}
+                  />
+                ))}
+              </div>
+              {/* Sample transactions */}
+              <div className="space-y-2.5">
+                {[
+                  { icon: '🍕', label: 'Pizzeria Da Mario', amt: '-€18,00' },
+                  { icon: '💼', label: 'Stipendio', amt: '+€1.950,00' },
+                  { icon: '🛒', label: 'Supermercato', amt: '-€64,30' },
+                ].map((tx, i) => (
+                  <motion.div
+                    key={tx.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1.0 + i * 0.15 }}
+                    className="flex items-center gap-3 rounded-xl bg-card/60 border border-border/40 px-3 py-2.5"
+                  >
+                    <span className="text-lg">{tx.icon}</span>
+                    <span className="flex-1 text-sm font-medium truncate">{tx.label}</span>
+                    <span className={`text-sm font-semibold tabular-nums ${tx.amt.startsWith('+') ? 'text-emerald-400' : 'text-foreground'}`}>
+                      {tx.amt}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Floating chips */}
+            <motion.div
+              animate={{ y: [0, -14, 0], rotate: [-2, 2, -2] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -top-5 -right-3 sm:-right-6 glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-2 ring-1 ring-white/10"
+            >
+              <Bot className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold">AI Insights</span>
+            </motion.div>
+            <motion.div
+              animate={{ y: [0, 12, 0], rotate: [2, -2, 2] }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              className="absolute -bottom-5 -left-3 sm:-left-6 glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-2 ring-1 ring-white/10"
+            >
+              <PiggyBank className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold">Obiettivi smart</span>
+            </motion.div>
+          </motion.div>
+        </div>
 
         {/* Stats */}
-        <motion.div 
-          className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-20 max-w-2xl mx-auto"
+        <motion.div
+          className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-20 max-w-3xl mx-auto"
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true }}
           variants={fadeUp}
-          transition={{ ...spring, delay: 0.3 }}
+          transition={{ ...spring, delay: 0.2 }}
         >
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              whileHover={{ y: -4 }}
+              className="text-center glass-panel rounded-2xl py-5 px-3"
+            >
               <div className="text-2xl sm:text-3xl font-bold text-primary">{stat.value}</div>
               <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </section>
