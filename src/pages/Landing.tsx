@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage, LANGUAGES } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
-import { 
-  Wallet, TrendingUp, PiggyBank, BarChart3, Bell, Bot, 
-  Shield, ArrowRight, Star, Zap, Globe 
+import {
+  Wallet, TrendingUp, PiggyBank, BarChart3, Bell, Bot,
+  Shield, ArrowRight, Star, Zap, Globe, UtensilsCrossed, Briefcase, ShoppingCart
 } from 'lucide-react';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { Seo } from '@/components/Seo';
