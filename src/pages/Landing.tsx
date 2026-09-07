@@ -17,6 +17,14 @@ import cashowLogo from '@/assets/cashow-logo-v2.png.asset.json';
 const spring = { type: 'spring' as const, stiffness: 100, damping: 20 };
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
+function spotlight(e: React.MouseEvent<HTMLDivElement>) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  e.currentTarget.style.setProperty('--mouse-x', `${x}%`);
+  e.currentTarget.style.setProperty('--mouse-y', `${y}%`);
+}
+
 export default function Landing() {
   const navigate = useNavigate();
   const { enterGuestMode } = useAuth();
