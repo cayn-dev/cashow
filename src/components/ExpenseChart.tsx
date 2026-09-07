@@ -117,14 +117,14 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
             className="flex flex-col sm:flex-row items-center gap-6"
           >
             <div className="w-[200px] h-[200px] relative shrink-0">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" className="relative z-0">
                 <PieChart>
                   <Pie
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={62}
-                    outerRadius={92}
+                    innerRadius={70}
+                    outerRadius={96}
                     paddingAngle={3}
                     dataKey="value"
                     onMouseEnter={(_, index) => setActiveIndex(index)}
@@ -167,13 +167,15 @@ export function ExpenseChart({ data, transactions = [] }: ExpenseChartProps) {
                   />
                 </PieChart>
               </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  {t('chart.total')}
-                </span>
-                <span className="font-display font-bold text-xl text-shine mt-0.5">
-                  €{total.toLocaleString()}
-                </span>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                <div className="w-[124px] h-[124px] rounded-full bg-background/90 backdrop-blur-xl border border-border/50 flex flex-col items-center justify-center">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    {t('chart.total')}
+                  </span>
+                  <span className="font-display font-bold text-xl text-shine mt-0.5">
+                    €{total.toLocaleString()}
+                  </span>
+                </div>
               </div>
             </div>
 
