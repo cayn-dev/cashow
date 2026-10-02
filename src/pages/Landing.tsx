@@ -25,10 +25,20 @@ function spotlight(e: React.MouseEvent<HTMLDivElement>) {
   e.currentTarget.style.setProperty('--mouse-y', `${y}%`);
 }
 
+
+const PREVIEW: Record<string, { growth: string; pizza: string; salary: string; market: string; ai: string; goals: string }> = {
+  it: { growth: x, pizza: 'Pizzeria Da Mario', salary: 'Stipendio', market: 'Supermercato', ai: 'Analisi AI', goals: 'Obiettivi smart' },
+  en: { growth: '▲ +12.4% this month', pizza: "Mario's Pizzeria", salary: 'Salary', market: 'Supermarket', ai: 'AI Insights', goals: 'Smart goals' },
+  es: { growth: '▲ +12,4% este mes', pizza: 'Pizzería Da Mario', salary: 'Salario', market: 'Supermercado', ai: 'Análisis IA', goals: 'Objetivos inteligentes' },
+  fr: { growth: '▲ +12,4 % ce mois-ci', pizza: 'Pizzeria Da Mario', salary: 'Salaire', market: 'Supermarché', ai: 'Analyses IA', goals: 'Objectifs malins' },
+  de: { growth: '▲ +12,4 % diesen Monat', pizza: 'Pizzeria Da Mario', salary: 'Gehalt', market: 'Supermarkt', ai: 'KI-Analysen', goals: 'Smarte Ziele' },
+};
+
 export default function Landing() {
   const navigate = useNavigate();
   const { enterGuestMode } = useAuth();
   const { t, language, setLanguage } = useLanguage();
+  const pv = PREVIEW[language] ?? PREVIEW.it;
 
 
   const stats = [
@@ -59,7 +69,7 @@ export default function Landing() {
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 shrink-0">
-          <img src={cashowLogo.url} alt="Cashow" className="w-9 h-9 rounded-xl object-cover ring-1 ring-white/10" />
+          <img src={cashowLogo.url} alt="Cashow" className="w-9 h-9 rounded-xl object-cover border border-border" />
           <span className="font-bold text-lg hidden sm:inline">Cashow</span>
         </div>
 
@@ -148,21 +158,21 @@ export default function Landing() {
             className="relative mx-auto w-full max-w-sm"
           >
             <motion.div
-              animate={{ y: [0, -10, 0] }}
+              animate={{ y: 0 }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              className="glass-panel-elevated rounded-3xl p-6 space-y-5 ring-1 ring-white/10"
+              className="glass-panel-elevated rounded-3xl p-6 space-y-5 border border-border"
             >
               <div className="space-y-1">
                 <p className="text-xs uppercase tracking-widest text-muted-foreground">Cashow</p>
                 <p className="text-4xl font-bold tabular-nums">€ 2.840,50</p>
-                <p className="text-sm text-emerald-400 font-medium">▲ +12,4% questo mese</p>
+                <p className="text-sm text-emerald-400 font-medium">{pv.growth}</p>
               </div>
               {/* Animated bar chart */}
               <div className="flex items-end gap-2 h-24">
                 {[35, 55, 40, 70, 52, 88, 64].map((h, i) => (
                   <motion.div
                     key={i}
-                    className="flex-1 rounded-lg bg-gradient-to-t from-primary/30 to-primary"
+                    className="flex-1 rounded-lg bg-foreground/80"
                     initial={{ height: 0 }}
                     animate={{ height: `${h}%` }}
                     transition={{ delay: 0.5 + i * 0.1, type: 'spring', stiffness: 120, damping: 18 }}
@@ -172,9 +182,9 @@ export default function Landing() {
               {/* Sample transactions */}
               <div className="space-y-2.5">
                 {[
-                  { Icon: UtensilsCrossed, label: 'Pizzeria Da Mario', amt: '-€18,00' },
-                  { Icon: Briefcase, label: 'Stipendio', amt: '+€1.950,00' },
-                  { Icon: ShoppingCart, label: 'Supermercato', amt: '-€64,30' },
+                  { Icon: UtensilsCrossed, label: pv.pizza, amt: '-€18,00' },
+                  { Icon: Briefcase, label: pv.salary, amt: '+€1.950,00' },
+                  { Icon: ShoppingCart, label: pv.market, amt: '-€64,30' },
                 ].map((tx, i) => (
                   <motion.div
                     key={tx.label}
@@ -199,18 +209,18 @@ export default function Landing() {
             <motion.div
               animate={{ y: [0, -14, 0], rotate: [-2, 2, -2] }}
               transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -top-5 -right-3 sm:-right-6 glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-2 ring-1 ring-white/10"
+              className="absolute -top-5 -right-3 sm:-right-6 glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-2 border border-border"
             >
               <Bot className="w-4 h-4 text-primary" />
-              <span className="text-xs font-semibold">AI Insights</span>
+              <span className="text-xs font-semibold">{pv.ai}</span>
             </motion.div>
             <motion.div
               animate={{ y: [0, 12, 0], rotate: [2, -2, 2] }}
               transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="absolute -bottom-5 -left-3 sm:-left-6 glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-2 ring-1 ring-white/10"
+              className="absolute -bottom-5 -left-3 sm:-left-6 glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-2 border border-border"
             >
               <PiggyBank className="w-4 h-4 text-primary" />
-              <span className="text-xs font-semibold">Obiettivi smart</span>
+              <span className="text-xs font-semibold">{pv.goals}</span>
             </motion.div>
           </motion.div>
         </div>
