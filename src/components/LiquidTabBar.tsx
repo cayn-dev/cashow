@@ -36,7 +36,7 @@ export function LiquidTabBar({ currentView, onViewChange, onAdd, className }: Li
         className
       )}
     >
-      <div className="liquid-bar gap-0.5 p-1.5 min-w-0 overflow-x-auto no-scrollbar">
+      <div className="liquid-bar gap-0.5 py-1.5 pl-1.5 pr-3 min-w-0 overflow-x-auto no-scrollbar scroll-pl-1.5">
         {items.map((item) => {
           const active = currentView === item.id;
           return (
