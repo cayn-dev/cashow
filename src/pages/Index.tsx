@@ -183,6 +183,7 @@ const Index = () => {
           currentView={currentView}
           onViewChange={setCurrentView}
           onOpenSettings={() => setSettingsOpen(true)}
+          onAdd={() => { setCurrentView('dashboard'); setAddTxTick((n) => n + 1); }}
         />
 
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />

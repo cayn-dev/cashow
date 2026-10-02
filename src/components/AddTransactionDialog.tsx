@@ -142,12 +142,14 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         setCategory(r.category as CategoryType);
       }
       if (r.date) {
-        const parsed = new Date(r.date);
+        const iso = String(r.date);
+        const parsed = new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? `${iso}T12:00:00` : iso);
         if (!isNaN(parsed.getTime())) setDate(parsed);
       }
       setType('expense');
       setIsSalary(false);
-      const place = [r.merchant, r.location].filter(Boolean).join(' · ');
+      const items = Array.isArray(r.items) ? r.items.filter(Boolean).slice(0, 4).join(', ') : '';
+      const place = [r.merchant, r.location, items].filter(Boolean).join(' · ');
       setScanNote(place || null);
       feedback.success();
       toast.success(t('receipt.done'));

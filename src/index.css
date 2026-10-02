@@ -11,38 +11,38 @@
 @layer base {
   :root {
     /* Base surfaces */
-    --background: 270 20% 3%;              /* nero fumo viola */
+    --background: 0 0% 3%;              /* nero fumo viola */
     --foreground: 220 20% 97%;             /* platinum */
 
     /* Layered glass cards */
-    --card: 275 60% 100% / 0.045;
+    --card: 0 0% 100% / 0.035;
     --card-foreground: 280 15% 97%;
-    --card-glass: 275 60% 100% / 0.055;
-    --card-border: 272 60% 88% / 0.14;
-    --glass-blur: 48px;
-    --glass-saturation: 180%;
+    --card-glass: 0 0% 100% / 0.04;
+    --card-border: 0 0% 100% / 0.08;
+    --glass-blur: 16px;
+    --glass-saturation: 110%;
     --glass-brightness: 1.05;
     --glass-contrast: 1;
     --glass-tint-1: 272 50% 88%;
     --glass-tint-2: 275 60% 100%;
     --glass-edge-light: 272 70% 94%;
 
-    --popover: 272 26% 7%;
+    --popover: 0 0% 7%;
     --popover-foreground: 220 20% 97%;
 
     /* Primary = icy periwinkle (single premium accent, no gold, no pink) */
-    --primary: 272 84% 62%;                /* viola fumo */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 280 90% 76%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 6%;
+    --primary-glow: 0 0% 80%;
 
-    --secondary: 275 60% 100% / 0.07;
-    --secondary-foreground: 275 15% 92%;
+    --secondary: 0 0% 100% / 0.06;
+    --secondary-foreground: 0 0% 92%;
 
-    --muted: 275 60% 100% / 0.045;
-    --muted-foreground: 272 10% 72%;
+    --muted: 0 0% 100% / 0.04;
+    --muted-foreground: 0 0% 62%;
 
-    --accent: 275 95% 78% / 0.16;
-    --accent-foreground: 280 100% 92%;
+    --accent: 0 0% 100% / 0.08;
+    --accent-foreground: 0 0% 96%;
 
     /* Semantic — clean, restrained */
     --success: 158 64% 52%;                /* #34D399 */
@@ -51,7 +51,7 @@
     --warning-foreground: 220 40% 8%;
     --destructive: 0 91% 71%;              /* #F87171 */
     --destructive-foreground: 220 20% 97%;
-    --info: 272 84% 66%;
+    --info: 210 60% 64%;
     --info-foreground: 0 0% 100%;
 
     --income: 158 64% 52%;
@@ -59,11 +59,11 @@
     --freelance: 275 95% 78%;
     --investments: 288 90% 84%;
 
-    --border: 272 50% 88% / 0.12;
-    --input: 275 60% 100% / 0.06;
-    --ring: 275 95% 74%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.06;
+    --ring: 0 0% 70%;
 
-    --radius: 1.5rem;
+    --radius: 1rem;
 
     /* Category accents — cool, restrained */
     --category-food: 20 85% 65%;
@@ -87,39 +87,36 @@
     --category-other: 220 10% 62%;
 
     /* Chart palette — cool premium set, token-driven */
-    --chart-1: 272 90% 74%;
-    --chart-2: 292 85% 74%;
-    --chart-3: 255 90% 76%;
+    --chart-1: 0 0% 92%;
+    --chart-2: 210 50% 64%;
+    --chart-3: 0 0% 58%;
     --chart-4: 158 65% 60%;
     --chart-5: 32 90% 68%;
-    --chart-6: 320 80% 74%;
-    --chart-7: 272 10% 68%;
-    --chart-grid: 275 60% 92% / 0.07;
-    --chart-axis: 272 10% 62%;
+    --chart-6: 190 40% 58%;
+    --chart-7: 0 0% 40%;
+    --chart-grid: 0 0% 100% / 0.06;
+    --chart-axis: 0 0% 55%;
 
     /* Sidebar — deeper glass */
-    --sidebar-background: 272 26% 5% / 0.7;
+    --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 275 15% 84%;
-    --sidebar-primary: 275 95% 76%;
-    --sidebar-primary-foreground: 272 40% 8%;
-    --sidebar-accent: 275 95% 76% / 0.12;
-    --sidebar-accent-foreground: 280 100% 92%;
-    --sidebar-border: 272 50% 88% / 0.09;
-    --sidebar-ring: 275 95% 76%;
+    --sidebar-primary: 0 0% 96%;
+    --sidebar-primary-foreground: 0 0% 6%;
+    --sidebar-accent: 0 0% 100% / 0.07;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 100% / 0.07;
+    --sidebar-ring: 0 0% 70%;
 
     /* Reusable gradients — platinum sheen */
-    --gradient-gold: linear-gradient(135deg, hsl(290 100% 92%) 0%, hsl(275 95% 78%) 55%, hsl(262 70% 60%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(292 100% 88%) 0%, hsl(275 92% 70%) 55%, hsl(258 78% 56%) 100%);
-    --gradient-ink: linear-gradient(180deg, hsl(272 26% 8%) 0%, hsl(270 30% 3%) 100%);
-    --gradient-mesh:
-      radial-gradient(ellipse 60% 50% at 20% 0%, hsl(275 95% 70% / 0.22), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 80% 100%, hsl(292 90% 66% / 0.16), transparent 60%),
-      radial-gradient(ellipse 40% 30% at 50% 50%, hsl(258 80% 62% / 0.12), transparent 70%);
+    --gradient-gold: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(0 0% 78%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 98%) 0%, hsl(0 0% 82%) 100%);
+    --gradient-ink: linear-gradient(180deg, hsl(0 0% 7%) 0%, hsl(0 0% 3%) 100%);
+    --gradient-mesh: none;
     --shadow-editorial:
-      0 30px 80px -20px hsl(272 60% 2% / 0.78),
-      0 0 0 0.5px hsl(275 70% 94% / 0.06) inset,
-      0 1px 0 0 hsl(275 70% 94% / 0.10) inset;
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.35), 0 0 80px hsl(var(--primary) / 0.15);
+      0 30px 80px -20px hsl(0 0% 0% / 0.6),
+      0 0 0 0.5px hsl(0 0% 100% / 0.04) inset,
+      0 1px 0 0 hsl(0 0% 100% / 0.06) inset;
+    --shadow-glow: 0 8px 24px -12px hsl(0 0% 0% / 0.6);
   }
 
   /* Light theme — cool paper (kept for compatibility) */
@@ -289,7 +286,7 @@
     border-radius: var(--radius);
     border: 0.5px solid hsl(var(--card-border));
     box-shadow:
-      0 1px 0 0 hsl(275 70% 94% / 0.10) inset,
+      0 1px 0 0 hsl(0 0% 100% / 0.06) inset,
       0 0 0 0.5px hsl(275 70% 94% / 0.04) inset,
       0 30px 80px -30px hsl(272 60% 2% / 0.7);
     transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
@@ -327,7 +324,7 @@
       linear-gradient(180deg, hsl(275 60% 100% / 0.09) 0%, hsl(275 60% 100% / 0.03) 100%);
     box-shadow:
       0 1px 0 0 hsl(275 70% 94% / 0.14) inset,
-      0 0 0 0.5px hsl(275 70% 94% / 0.06) inset,
+      0 0 0 0.5px hsl(0 0% 100% / 0.04) inset,
       0 40px 100px -30px hsl(272 60% 2% / 0.8);
   }
 
@@ -645,7 +642,7 @@
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
     border-bottom: 0.5px solid hsl(var(--card-border));
-    box-shadow: 0 1px 0 0 hsl(275 70% 94% / 0.06) inset;
+    box-shadow: 0 1px 0 0 hsl(0 0% 100% / 0.04) inset;
   }
 
   /* Compact liquid glass surface for tooltips, popovers, floating chips */
@@ -939,32 +936,14 @@
   /* Floating capsule bar / segmented control shell */
   .liquid-bar {
     @apply relative flex items-center rounded-full;
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.10) 0%, hsl(0 0% 100% / 0.035) 100%);
-    backdrop-filter: blur(36px) saturate(200%);
-    -webkit-backdrop-filter: blur(36px) saturate(200%);
-    border: 0.5px solid hsl(0 0% 100% / 0.16);
-    box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.22) inset,
-      0 -1px 0 0 hsl(0 0% 0% / 0.25) inset,
-      0 10px 34px hsl(0 0% 0% / 0.35),
-      0 24px 60px hsl(0 0% 0% / 0.22);
+    background: hsl(0 0% 9% / 0.82);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border: 0.5px solid hsl(0 0% 100% / 0.09);
+    box-shadow: 0 12px 32px -12px hsl(0 0% 0% / 0.7);
   }
-  /* curved-glass top highlight */
-  .liquid-bar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.12) 0%, transparent 55%);
-  }
-
-  /* Active selected pill inside a liquid bar */
   .liquid-pill-active {
-    background: linear-gradient(180deg, hsl(225 25% 10% / 0.96) 0%, hsl(225 30% 5% / 0.96) 100%);
-    box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.14) inset,
-      0 6px 18px hsl(0 0% 0% / 0.45);
+    background: hsl(0 0% 96%);
   }
 
   /* Screen gradient washes (navy / income / expense / transfer) */
@@ -1183,3 +1162,7 @@
 }
 .light-theme .smoke-veil { opacity: 0.18; mix-blend-mode: multiply; }
 @media (prefers-reduced-motion: reduce) { .smoke-veil { animation: none !important; } }
+
+/* Minimal professional override: quiet ambient, fine glass */
+.aurora-blob, [class*="aurora"] { opacity: .25 !important; }
+.wash-navy { background: hsl(var(--background)) !important; }

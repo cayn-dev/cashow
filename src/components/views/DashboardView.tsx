@@ -154,18 +154,13 @@ export function DashboardView({
       case 'hero':
         return (
           <section className="relative overflow-hidden noir-card p-6 sm:p-10">
-            <div
-              className="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-30 blur-3xl pointer-events-none"
-              style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.7), transparent 65%)' }}
-            />
             <div className="relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
               <div className="min-w-0">
                 <div className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground flex items-center gap-2 mb-3">
-                  <Sparkles className="w-3 h-3 text-primary" />
                   {greeting}
                 </div>
                 <p className="mt-1 text-muted-foreground max-w-xl font-sans">{t('dashboard.subtitle')}</p>
-                <div className="divider-gold mt-5 w-24" />
+                
               </div>
 
               <div className="shrink-0 sm:min-w-[260px]">
@@ -173,20 +168,20 @@ export function DashboardView({
                   {t('dashboard.monthlyBalance')}
                 </div>
                 <div
-                  className="font-display italic text-5xl sm:text-6xl leading-none tracking-tight text-gold sensitive-amount"
+                  className="font-sans font-semibold text-5xl sm:text-6xl leading-none tracking-tight tabular-nums text-foreground sensitive-amount"
                   data-sensitive
                 >
                   {currencySymbol}
                   {monthlyBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                 </div>
                 <div className="mt-3 flex items-center gap-3">
-                  <div className="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${savingsRate}%` }}
                       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
                       className="h-full rounded-full"
-                      style={{ background: 'var(--gradient-gold)' }}
+                      style={{ background: 'hsl(var(--foreground))' }}
                     />
                   </div>
                   <span className="text-xs text-muted-foreground tabular-nums font-sans">
