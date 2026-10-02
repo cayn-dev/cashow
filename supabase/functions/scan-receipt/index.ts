@@ -35,57 +35,63 @@ Deno.serve(async (req) => {
 
     const today = new Date().toISOString().slice(0, 10);
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const prompt =
+      `You extract structured data from photos of receipts/invoices. Today is ${today}. ` +
+      `amount = grand total paid (number, dot decimal). ` +
+      `date = the purchase date PRINTED on the receipt (convert any format like DD/MM/YY to ISO YYYY-MM-DD, ` +
+      `or YYYY-MM-DDTHH:mm when a time is printed); empty string only if no date is printed. ` +
+      `items = up to 6 short names of the purchased products. ` +
+      `Choose category by looking at WHAT was bought (e.g. food items at a supermarket = groceries, ` +
+      `meals at a bar/restaurant = restaurant, petrol = fuel, medicines = pharmacy). ` +
+      `description = a short natural label summarising the purchase in the receipt's language ` +
+      `(e.g. "Spesa Esselunga", "Pizza e bibita", "Rifornimento"). ` +
+      `merchant = shop name, location = street/city if printed, currency = ISO code. Use empty strings when unknown.`;
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
+        "Lovable-API-Key": apiKey,
+        "X-Lovable-AIG-SDK": "fetch",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content:
-              `You extract structured data from photos of receipts/invoices. Today is ${today}. ` +
-              `Always answer by calling the tool. Amount must be the grand total paid (number, dot decimal). ` +
-              `Description must be a short human label of what was bought, in the receipt's language ` +
-              `(e.g. "Pizza calabrese"). merchant is the shop name, location the street/city if printed. ` +
-              `date must be ISO 8601 (YYYY-MM-DD) or YYYY-MM-DDTHH:mm when a time is printed. ` +
-              `Pick the best category from the allowed list.`,
-          },
+        model: "openai/gpt-6-astra",
+        stream: true,
+        store: false,
+        reasoning: { effort: "low" },
+        input: [
+          { role: "system", content: prompt },
           {
             role: "user",
             content: [
-              { type: "text", text: "Extract the data from this receipt." },
-              { type: "image_url", image_url: { url: image } },
+              { type: "input_text", text: "Extract the data from this receipt." },
+              { type: "input_image", image_url: image },
             ],
           },
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "save_receipt",
-              description: "Return the structured receipt data",
-              parameters: {
-                type: "object",
-                properties: {
-                  amount: { type: "number" },
-                  description: { type: "string" },
-                  category: { type: "string", enum: CATEGORIES },
-                  date: { type: "string" },
-                  merchant: { type: "string" },
-                  location: { type: "string" },
-                  currency: { type: "string" },
-                },
-                required: ["amount", "description", "category"],
-                additionalProperties: false,
+        text: {
+          format: {
+            type: "json_schema",
+            name: "receipt",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                amount: { type: "number" },
+                description: { type: "string" },
+                category: { type: "string", enum: CATEGORIES },
+                date: { type: "string" },
+                merchant: { type: "string" },
+                location: { type: "string" },
+                currency: { type: "string" },
+                items: { type: "array", items: { type: "string" } },
               },
+              required: ["amount", "description", "category", "date", "merchant", "location", "currency", "items"],
+              additionalProperties: false,
             },
           },
-        ],
-        tool_choice: { type: "function", function: { name: "save_receipt" } },
+        },
       }),
     });
 
@@ -95,7 +101,7 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (res.status === 402) {
+    if (res.status === 402 || res.status === 403) {
       return new Response(JSON.stringify({ error: "payment_required" }), {
         status: 402,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -110,24 +116,39 @@ Deno.serve(async (req) => {
       });
     }
 
-    const data = await res.json();
-    const call = data?.choices?.[0]?.message?.tool_calls?.[0];
-    if (!call) {
-      return new Response(JSON.stringify({ error: "no_data" }), {
-        status: 422,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    // Consume SSE stream, collecting output text
+    const reader = res.body!.getReader();
+    const dec = new TextDecoder();
+    let buf = "", out = "", refused = false;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split("\n");
+      buf = lines.pop() ?? "";
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const d = line.slice(5).trim();
+        if (!d || d === "[DONE]") continue;
+        try {
+          const ev = JSON.parse(d);
+          if (ev.type === "response.output_text.delta") out += ev.delta ?? "";
+          if (ev.type === "response.refusal.delta") refused = true;
+        } catch { /* ignore */ }
+      }
     }
 
     let parsed: Record<string, unknown>;
     try {
-      parsed = JSON.parse(call.function.arguments);
+      if (refused) throw new Error("refused");
+      parsed = JSON.parse(out);
     } catch {
       return new Response(JSON.stringify({ error: "no_data" }), {
         status: 422,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    for (const k of Object.keys(parsed)) if (parsed[k] === "") delete parsed[k];
 
     return new Response(JSON.stringify({ receipt: parsed }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
