@@ -27,7 +27,7 @@ function spotlight(e: React.MouseEvent<HTMLDivElement>) {
 
 
 const PREVIEW: Record<string, { growth: string; pizza: string; salary: string; market: string; ai: string; goals: string }> = {
-  it: { growth: x, pizza: 'Pizzeria Da Mario', salary: 'Stipendio', market: 'Supermercato', ai: 'Analisi AI', goals: 'Obiettivi smart' },
+  it: { growth: '▲ +12,4% questo mese', pizza: 'Pizzeria Da Mario', salary: 'Stipendio', market: 'Supermercato', ai: 'Analisi AI', goals: 'Obiettivi smart' },
   en: { growth: '▲ +12.4% this month', pizza: "Mario's Pizzeria", salary: 'Salary', market: 'Supermarket', ai: 'AI Insights', goals: 'Smart goals' },
   es: { growth: '▲ +12,4% este mes', pizza: 'Pizzería Da Mario', salary: 'Salario', market: 'Supermercado', ai: 'Análisis IA', goals: 'Objetivos inteligentes' },
   fr: { growth: '▲ +12,4 % ce mois-ci', pizza: 'Pizzeria Da Mario', salary: 'Salaire', market: 'Supermarché', ai: 'Analyses IA', goals: 'Objectifs malins' },

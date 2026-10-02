@@ -936,32 +936,14 @@
   /* Floating capsule bar / segmented control shell */
   .liquid-bar {
     @apply relative flex items-center rounded-full;
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.10) 0%, hsl(0 0% 100% / 0.035) 100%);
-    backdrop-filter: blur(36px) saturate(200%);
-    -webkit-backdrop-filter: blur(36px) saturate(200%);
-    border: 0.5px solid hsl(0 0% 100% / 0.16);
-    box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.22) inset,
-      0 -1px 0 0 hsl(0 0% 0% / 0.25) inset,
-      0 10px 34px hsl(0 0% 0% / 0.35),
-      0 24px 60px hsl(0 0% 0% / 0.22);
+    background: hsl(0 0% 9% / 0.82);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border: 0.5px solid hsl(0 0% 100% / 0.09);
+    box-shadow: 0 12px 32px -12px hsl(0 0% 0% / 0.7);
   }
-  /* curved-glass top highlight */
-  .liquid-bar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(180deg, hsl(0 0% 100% / 0.12) 0%, transparent 55%);
-  }
-
-  /* Active selected pill inside a liquid bar */
   .liquid-pill-active {
-    background: linear-gradient(180deg, hsl(225 25% 10% / 0.96) 0%, hsl(225 30% 5% / 0.96) 100%);
-    box-shadow:
-      0 1px 0 0 hsl(0 0% 100% / 0.14) inset,
-      0 6px 18px hsl(0 0% 0% / 0.45);
+    background: hsl(0 0% 96%);
   }
 
   /* Screen gradient washes (navy / income / expense / transfer) */
