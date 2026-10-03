@@ -1,0 +1,2 @@
+- Keep theme surfaces and contrast in semantic CSS tokens and apply user-selected accents through the settings hook, because every view must remain readable across themes.
+- Extract receipt payment evidence in the existing scan function and apply recognized methods in the transaction form, because scanning should prefill without guessing when evidence is absent.

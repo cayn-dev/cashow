@@ -23,9 +23,9 @@
     --glass-saturation: 110%;
     --glass-brightness: 1.05;
     --glass-contrast: 1;
-    --glass-tint-1: 272 50% 88%;
-    --glass-tint-2: 275 60% 100%;
-    --glass-edge-light: 272 70% 94%;
+    --glass-tint-1: 0 0% 88%;
+    --glass-tint-2: 0 0% 100%;
+    --glass-edge-light: 0 0% 94%;
 
     --popover: 0 0% 7%;
     --popover-foreground: 220 20% 97%;
@@ -121,31 +121,31 @@
 
   /* Light theme — cool paper (kept for compatibility) */
   .light-theme {
-    --background: 220 30% 97%;
-    --foreground: 224 40% 8%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 8%;
 
-    --card: 220 30% 100% / 0.75;
-    --card-foreground: 224 40% 8%;
-    --card-glass: 220 30% 100% / 0.65;
-    --card-border: 224 40% 30% / 0.14;
-    --glass-blur: 56px;
-    --glass-saturation: 200%;
+    --card: 0 0% 100% / 0.9;
+    --card-foreground: 0 0% 8%;
+    --card-glass: 0 0% 100% / 0.85;
+    --card-border: 0 0% 20% / 0.14;
+    --glass-blur: 16px;
+    --glass-saturation: 110%;
 
-    --popover: 220 30% 99%;
-    --popover-foreground: 224 40% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 272 78% 52%;
-    --primary-foreground: 280 30% 99%;
-    --primary-glow: 288 85% 66%;
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 0 0% 25%;
 
-    --secondary: 224 40% 8% / 0.05;
-    --secondary-foreground: 224 20% 25%;
+    --secondary: 0 0% 8% / 0.05;
+    --secondary-foreground: 0 0% 25%;
 
-    --muted: 224 40% 8% / 0.04;
-    --muted-foreground: 224 10% 42%;
+    --muted: 0 0% 8% / 0.04;
+    --muted-foreground: 0 0% 38%;
 
-    --accent: 272 78% 52% / 0.10;
-    --accent-foreground: 272 78% 40%;
+    --accent: 0 0% 8% / 0.07;
+    --accent-foreground: 0 0% 8%;
 
     --success: 158 70% 38%;
     --success-foreground: 220 30% 99%;
@@ -157,23 +157,23 @@
     --income: 158 70% 38%;
     --expense: 358 75% 50%;
 
-    --border: 224 40% 30% / 0.12;
-    --input: 224 40% 8% / 0.05;
-    --ring: 272 78% 52%;
+    --border: 0 0% 20% / 0.14;
+    --input: 0 0% 8% / 0.07;
+    --ring: 0 0% 10%;
 
-    --sidebar-background: 220 30% 99% / 0.7;
-    --sidebar-foreground: 224 20% 25%;
-    --sidebar-primary: 272 78% 52%;
-    --sidebar-primary-foreground: 220 30% 99%;
-    --sidebar-accent: 272 78% 52% / 0.08;
-    --sidebar-accent-foreground: 272 78% 40%;
-    --sidebar-border: 224 40% 30% / 0.10;
+    --sidebar-background: 0 0% 99% / 0.9;
+    --sidebar-foreground: 0 0% 25%;
+    --sidebar-primary: 0 0% 10%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 8% / 0.08;
+    --sidebar-accent-foreground: 0 0% 8%;
+    --sidebar-border: 0 0% 20% / 0.10;
 
-    --gradient-gold: linear-gradient(135deg, hsl(292 90% 70%) 0%, hsl(272 78% 52%) 55%, hsl(258 70% 46%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(292 90% 70%) 0%, hsl(272 78% 52%) 100%);
-    --gradient-ink: linear-gradient(180deg, hsl(220 30% 99%) 0%, hsl(220 25% 94%) 100%);
-    --shadow-editorial: 0 20px 60px -20px hsl(224 40% 20% / 0.18);
-    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.20);
+    --gradient-gold: linear-gradient(135deg, hsl(0 0% 18%) 0%, hsl(0 0% 8%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 18%) 0%, hsl(0 0% 8%) 100%);
+    --gradient-ink: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 97%) 100%);
+    --shadow-editorial: 0 20px 60px -20px hsl(0 0% 20% / 0.14);
+    --shadow-glow: 0 8px 24px -12px hsl(0 0% 0% / 0.18);
   }
 }
 
@@ -948,10 +948,7 @@
 
   /* Screen gradient washes (navy / income / expense / transfer) */
   .screen-wash { position: fixed; inset: 0; z-index: -5; pointer-events: none; transition: opacity .35s ease; }
-  .wash-navy   { background: linear-gradient(180deg, hsl(272 65% 16%) 0%, hsl(270 45% 7%) 45%, hsl(270 20% 3%) 100%); }
-  .wash-income { background: linear-gradient(180deg, hsl(169 61% 14%) 0%, hsl(200 30% 6%) 45%, hsl(270 20% 3%) 100%); }
-  .wash-expense{ background: linear-gradient(180deg, hsl(340 61% 15%) 0%, hsl(320 30% 6%) 45%, hsl(270 20% 3%) 100%); }
-  .wash-transfer{background: linear-gradient(180deg, hsl(255 61% 16%) 0%, hsl(262 30% 7%) 45%, hsl(270 20% 3%) 100%); }
+  .wash-navy, .wash-income, .wash-expense, .wash-transfer { background: hsl(var(--background)); }
 
   /* Square rounded colored icon tile */
   .icon-tile {
@@ -1121,14 +1118,12 @@
   background: linear-gradient(180deg, hsl(225 25% 14%) 0%, hsl(225 30% 8%) 100%);
   box-shadow: 0 6px 18px hsl(224 40% 20% / 0.28);
 }
-.light-theme .liquid-tab-active { color: hsl(0 0% 100%); }
+.light-theme .liquid-tab-active { color: hsl(var(--primary-foreground)); }
 .light-theme .glass-input {
   background: hsl(0 0% 100% / 0.9);
   border-color: hsl(224 40% 30% / 0.16);
 }
-.light-theme .wash-navy {
-  background: linear-gradient(180deg, hsl(220 60% 96%) 0%, hsl(220 30% 98%) 45%, hsl(220 30% 97%) 100%);
-}
+.light-theme .wash-navy { background: hsl(var(--background)); }
 .light-theme .wash-income { background: linear-gradient(180deg, hsl(160 50% 94%) 0%, hsl(220 30% 98%) 60%); }
 .light-theme .wash-expense { background: linear-gradient(180deg, hsl(355 60% 95%) 0%, hsl(220 30% 98%) 60%); }
 
@@ -1166,3 +1161,29 @@
 /* Minimal professional override: quiet ambient, fine glass */
 .aurora-blob, [class*="aurora"] { opacity: .25 !important; }
 .wash-navy { background: hsl(var(--background)) !important; }
+
+/* Authentication stays dark even when the rest of the app uses the light theme. */
+.light-theme .auth-screen {
+  --background: 0 0% 3%;
+  --foreground: 0 0% 97%;
+  --card: 0 0% 100% / 0.06;
+  --card-foreground: 0 0% 97%;
+  --card-border: 0 0% 100% / 0.12;
+  --border: 0 0% 100% / 0.12;
+  --input: 0 0% 100% / 0.10;
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 97%;
+  --muted: 0 0% 100% / 0.08;
+  --muted-foreground: 0 0% 70%;
+  --secondary: 0 0% 100% / 0.08;
+  --secondary-foreground: 0 0% 97%;
+  --accent: 0 0% 100% / 0.10;
+  --accent-foreground: 0 0% 97%;
+  --primary: 0 0% 96%;
+  --primary-foreground: 0 0% 6%;
+  --gradient-primary: linear-gradient(135deg, hsl(0 0% 98%), hsl(0 0% 82%));
+}
+.auth-screen { color: hsl(var(--foreground)); background: hsl(var(--background)); }
+.auth-screen .glass-panel { background: hsl(var(--card)); border-color: hsl(var(--card-border)); }
+.auth-screen .glass-panel::before { opacity: 0; }
+.light-theme .auth-screen .glass-panel:hover { background: hsl(var(--card)); }

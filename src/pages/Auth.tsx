@@ -111,7 +111,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative">
+    <div className="auth-screen min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative">
       <Seo
         title="Accedi a Cashow — Login e Registrazione"
         description="Accedi o crea il tuo account Cashow per sincronizzare le tue finanze su tutti i dispositivi in modo sicuro."
@@ -152,7 +152,7 @@ export default function Auth() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/70 mb-4"
+            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-4"
           >
             <Wallet className="w-8 h-8 text-primary-foreground" />
           </motion.div>
