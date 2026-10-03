@@ -1,0 +1,4 @@
+- [ ] Make light theme monochrome and improve button contrast in dark accent themes.
+- [ ] Make authentication and biometric lock screens dark and readable.
+- [ ] Detect receipt payment method when printed and apply it to the transaction.
+- [ ] Verify preview and receipt scanning.
