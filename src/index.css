@@ -948,10 +948,7 @@
 
   /* Screen gradient washes (navy / income / expense / transfer) */
   .screen-wash { position: fixed; inset: 0; z-index: -5; pointer-events: none; transition: opacity .35s ease; }
-  .wash-navy   { background: linear-gradient(180deg, hsl(272 65% 16%) 0%, hsl(270 45% 7%) 45%, hsl(270 20% 3%) 100%); }
-  .wash-income { background: linear-gradient(180deg, hsl(169 61% 14%) 0%, hsl(200 30% 6%) 45%, hsl(270 20% 3%) 100%); }
-  .wash-expense{ background: linear-gradient(180deg, hsl(340 61% 15%) 0%, hsl(320 30% 6%) 45%, hsl(270 20% 3%) 100%); }
-  .wash-transfer{background: linear-gradient(180deg, hsl(255 61% 16%) 0%, hsl(262 30% 7%) 45%, hsl(270 20% 3%) 100%); }
+  .wash-navy, .wash-income, .wash-expense, .wash-transfer { background: hsl(var(--background)); }
 
   /* Square rounded colored icon tile */
   .icon-tile {
@@ -1121,14 +1118,12 @@
   background: linear-gradient(180deg, hsl(225 25% 14%) 0%, hsl(225 30% 8%) 100%);
   box-shadow: 0 6px 18px hsl(224 40% 20% / 0.28);
 }
-.light-theme .liquid-tab-active { color: hsl(0 0% 100%); }
+.light-theme .liquid-tab-active { color: hsl(var(--primary-foreground)); }
 .light-theme .glass-input {
   background: hsl(0 0% 100% / 0.9);
   border-color: hsl(224 40% 30% / 0.16);
 }
-.light-theme .wash-navy {
-  background: linear-gradient(180deg, hsl(220 60% 96%) 0%, hsl(220 30% 98%) 45%, hsl(220 30% 97%) 100%);
-}
+.light-theme .wash-navy { background: hsl(var(--background)); }
 .light-theme .wash-income { background: linear-gradient(180deg, hsl(160 50% 94%) 0%, hsl(220 30% 98%) 60%); }
 .light-theme .wash-expense { background: linear-gradient(180deg, hsl(355 60% 95%) 0%, hsl(220 30% 98%) 60%); }
 
@@ -1166,3 +1161,29 @@
 /* Minimal professional override: quiet ambient, fine glass */
 .aurora-blob, [class*="aurora"] { opacity: .25 !important; }
 .wash-navy { background: hsl(var(--background)) !important; }
+
+/* Authentication stays dark even when the rest of the app uses the light theme. */
+.light-theme .auth-screen {
+  --background: 0 0% 3%;
+  --foreground: 0 0% 97%;
+  --card: 0 0% 100% / 0.06;
+  --card-foreground: 0 0% 97%;
+  --card-border: 0 0% 100% / 0.12;
+  --border: 0 0% 100% / 0.12;
+  --input: 0 0% 100% / 0.10;
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 97%;
+  --muted: 0 0% 100% / 0.08;
+  --muted-foreground: 0 0% 70%;
+  --secondary: 0 0% 100% / 0.08;
+  --secondary-foreground: 0 0% 97%;
+  --accent: 0 0% 100% / 0.10;
+  --accent-foreground: 0 0% 97%;
+  --primary: 0 0% 96%;
+  --primary-foreground: 0 0% 6%;
+  --gradient-primary: linear-gradient(135deg, hsl(0 0% 98%), hsl(0 0% 82%));
+}
+.auth-screen { color: hsl(var(--foreground)); background: hsl(var(--background)); }
+.auth-screen .glass-panel { background: hsl(var(--card)); border-color: hsl(var(--card-border)); }
+.auth-screen .glass-panel::before { opacity: 0; }
+.light-theme .auth-screen .glass-panel:hover { background: hsl(var(--card)); }
