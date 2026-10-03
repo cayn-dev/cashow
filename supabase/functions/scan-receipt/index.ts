@@ -45,7 +45,11 @@ Deno.serve(async (req) => {
       `meals at a bar/restaurant = restaurant, petrol = fuel, medicines = pharmacy). ` +
       `description = a short natural label summarising the purchase in the receipt's language ` +
       `(e.g. "Spesa Esselunga", "Pizza e bibita", "Rifornimento"). ` +
-      `merchant = shop name, location = street/city if printed, currency = ISO code. Use empty strings when unknown.`;
+      `merchant = shop name, location = street/city if printed, currency = ISO code. Use empty strings when unknown. ` +
+      `paymentMethod = "card" only when the receipt explicitly shows POS, carta/card, bancomat, contactless, Visa, Mastercard or an electronic card payment; ` +
+      `"cash" only when it explicitly shows contanti/cash/efectivo/espèces/Bargeld or cash tendered and change; ` +
+      `"paypal" or "transfer" only if explicitly printed as the method of payment. ` +
+      `Use "unknown" if the payment method is not visible or ambiguous. Do not infer payment method from a merchant, card logo, receipt type or purchase items.`;
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",
@@ -86,8 +90,9 @@ Deno.serve(async (req) => {
                 location: { type: "string" },
                 currency: { type: "string" },
                 items: { type: "array", items: { type: "string" } },
+                paymentMethod: { type: "string", enum: ["card", "cash", "paypal", "transfer", "unknown"] },
               },
-              required: ["amount", "description", "category", "date", "merchant", "location", "currency", "items"],
+              required: ["amount", "description", "category", "date", "merchant", "location", "currency", "items", "paymentMethod"],
               additionalProperties: false,
             },
           },

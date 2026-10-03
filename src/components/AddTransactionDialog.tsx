@@ -146,6 +146,9 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         const parsed = new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? `${iso}T12:00:00` : iso);
         if (!isNaN(parsed.getTime())) setDate(parsed);
       }
+      if (r.paymentMethod === 'card' || r.paymentMethod === 'cash' || r.paymentMethod === 'paypal' || r.paymentMethod === 'transfer') {
+        setPaymentMethod(r.paymentMethod);
+      }
       setType('expense');
       setIsSalary(false);
       const items = Array.isArray(r.items) ? r.items.filter(Boolean).slice(0, 4).join(', ') : '';

@@ -265,8 +265,8 @@ export function useSettings() {
     const preset = ACCENT_PRESETS.find(p => p.id === settings.accentColorId) ?? ACCENT_PRESETS[0];
     const root = document.documentElement;
     const isLight = settings.theme === 'light';
-    if (preset.id === 'mono') {
-      // Monochrome: white on dark, black on light
+    if (isLight || preset.id === 'mono') {
+      // Light mode is always ink on white, regardless of a previously selected accent.
       const base = isLight ? '0 0% 10%' : '0 0% 100%';
       const fg = isLight ? '0 0% 100%' : '0 0% 0%';
       const glow = isLight ? '0 0% 25%' : '0 0% 90%';
@@ -275,18 +275,19 @@ export function useSettings() {
       root.style.setProperty('--primary-glow', glow);
       root.style.setProperty('--ring', base);
       root.style.setProperty('--info', base);
-      root.style.setProperty('--accent', base);
-      root.style.setProperty('--accent-foreground', fg);
+      root.style.setProperty('--accent', isLight ? '0 0% 8% / 0.07' : '0 0% 100% / 0.10');
+      root.style.setProperty('--accent-foreground', isLight ? base : '0 0% 96%');
     } else {
       const base = `${preset.hue} ${preset.sat}% ${preset.light}%`;
       const glow = `${preset.hue} ${preset.sat}% ${Math.min(preset.light + 10, 75)}%`;
       root.style.setProperty('--primary', base);
-      root.style.setProperty('--primary-foreground', '0 0% 100%');
+      // Bright custom accents need dark text, including cyan, violet and pink.
+      root.style.setProperty('--primary-foreground', '0 0% 5%');
       root.style.setProperty('--primary-glow', glow);
       root.style.setProperty('--ring', base);
       root.style.setProperty('--info', base);
-      root.style.setProperty('--accent', base);
-      root.style.setProperty('--accent-foreground', '0 0% 100%');
+      root.style.setProperty('--accent', '0 0% 100% / 0.10');
+      root.style.setProperty('--accent-foreground', '0 0% 96%');
     }
   }, [settings.accentColorId, settings.theme]);
 
