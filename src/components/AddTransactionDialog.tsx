@@ -44,6 +44,7 @@ import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { useBankAccounts } from '@/hooks/useBankAccounts';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 const DATE_LOCALES: Record<string, typeof it> = { it, en: enUS, es, fr, de };
 
@@ -111,6 +112,8 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [autoSuggested, setAutoSuggested] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [scanStep, setScanStep] = useState(0);
+  const [scanPreview, setScanPreview] = useState<string | null>(null);
   const [scanNote, setScanNote] = useState<string | null>(null);
   const [newCatOpen, setNewCatOpen] = useState(false);
   const [newCatName, setNewCatName] = useState('');
@@ -123,11 +126,20 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
 
   const dateLocale = DATE_LOCALES[language] || it;
 
+  useEffect(() => {
+    if (!scanning) return;
+    const interval = window.setInterval(() => setScanStep((step) => (step + 1) % 4), 1250);
+    return () => window.clearInterval(interval);
+  }, [scanning]);
+
   const handleReceipt = async (file: File) => {
+    if (type !== 'expense' || scanning) return;
     setScanning(true);
+    setScanStep(0);
     setScanNote(null);
     try {
       const image = await fileToCompressedDataUrl(file);
+      setScanPreview(image);
       const { data, error } = await supabase.functions.invoke('scan-receipt', { body: { image } });
       if (error) throw error;
       const r = (data as any)?.receipt;
@@ -163,6 +175,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
       else toast.error(t('receipt.failed'));
     } finally {
       setScanning(false);
+      setScanPreview(null);
     }
   };
 
@@ -265,6 +278,32 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         </DialogTrigger>
       ) : null}
       <DialogContent className="dialog-sheet fixed bg-background border-card-border left-0 top-0 translate-x-0 translate-y-0 w-screen max-w-none h-[100dvh] rounded-none border-0 overflow-y-auto p-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:w-full sm:max-w-[425px] sm:h-auto sm:max-h-[90vh] sm:rounded-2xl sm:border sm:p-6">
+        {scanning && (
+          <div role="status" aria-live="polite" className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-background/95 px-8 backdrop-blur-xl">
+            <div className="relative w-full max-w-64 aspect-[3/4] overflow-hidden rounded-md border border-border bg-card shadow-xl">
+              {scanPreview ? <img src={scanPreview} alt="" className="h-full w-full object-contain" /> : <Camera aria-hidden className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-10 w-10 text-muted-foreground" />}
+              <div className="absolute inset-0 bg-background/25" />
+              <motion.div
+                aria-hidden
+                className="absolute inset-x-0 h-0.5 bg-primary shadow-[0_0_16px_hsl(var(--primary)/0.75)]"
+                initial={{ top: '5%' }}
+                animate={{ top: '95%' }}
+                transition={{ duration: 2.3, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+              />
+              <div aria-hidden className="absolute inset-3 border border-primary/40 rounded-sm" />
+            </div>
+            <div className="w-full max-w-64 space-y-3">
+              <p className="text-sm font-medium text-foreground text-center">{t('receipt.scanning')}</p>
+              {['date', 'amount', 'description', 'category'].map((field, i) => (
+                <div key={field} className="flex items-center gap-3 text-xs">
+                  <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-300', i <= scanStep ? 'bg-primary' : 'bg-muted-foreground/30')} />
+                  <span className={cn('transition-colors duration-300', i <= scanStep ? 'text-foreground' : 'text-muted-foreground')}>{t(`addTransaction.${field}`)}</span>
+                  {i === scanStep && <span className="ml-auto h-3 w-3 animate-spin rounded-full border border-primary border-t-transparent" aria-hidden />}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Dynamic color wash: green = income, red = expense */}
         <div
           aria-hidden
@@ -284,7 +323,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         
         <form onSubmit={handleSubmit} className="dialog-stagger space-y-4 mt-4">
           {/* Receipt scanner */}
-          {!isEdit && (
+          {!isEdit && type === 'expense' && (
             <div className="space-y-2">
               <input
                 ref={fileRef}
@@ -324,7 +363,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             <Button
               type="button"
               variant={type === 'expense' ? 'default' : 'outline'}
-              onClick={() => { setType('expense'); setIsSalary(false); }}
+              onClick={() => { if (!scanning) { setType('expense'); setIsSalary(false); } }}
               className={cn(
                 'relative rounded-full px-5 h-11 border-0 tap-shrink transition-all duration-300',
                 type === 'expense'
@@ -338,7 +377,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             <Button
               type="button"
               variant={type === 'income' ? 'default' : 'outline'}
-              onClick={() => setType('income')}
+              onClick={() => { if (!scanning) { setType('income'); setScanNote(null); } }}
               className={cn(
                 'relative rounded-full px-5 h-11 border-0 tap-shrink transition-all duration-300',
                 type === 'income'
@@ -432,7 +471,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             </Label>
             <Input
               id="description"
-              placeholder={t('addTransaction.descPlaceholder')}
+              placeholder={t(type === 'income' ? 'addTransaction.incomeDescPlaceholder' : 'addTransaction.descPlaceholder')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="glass-input"
