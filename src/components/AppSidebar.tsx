@@ -22,7 +22,6 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import cashowLogo from '@/assets/cashow-logo-v2.png.asset.json';
 
 
 type View = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar';
@@ -66,7 +65,7 @@ export function AppSidebar({ currentView, onViewChange, onOpenSettings }: AppSid
           )}
         >
           <img
-            src={cashowLogo.url}
+            src="/cashow-logo-v2.png"
             alt="Cashow"
             className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/10"
           />

@@ -112,7 +112,7 @@ const Index = () => {
             viewLabel={viewLabel}
           />
 
-          <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 pb-32 max-w-[1480px] w-full mx-auto">
+          <main className="flex-1 px-3 sm:px-6 lg:px-8 py-6 pb-44 max-w-[1480px] w-full mx-auto">
             {currentView === 'dashboard' && (
               <DashboardView
                 monthlyIncome={store.monthlyIncome}
