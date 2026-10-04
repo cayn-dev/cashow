@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { AuroraBackground } from '@/components/AuroraBackground';
 import { Seo } from '@/components/Seo';
+import cashowLogo from '@/assets/cashow-logo-v2.png.asset.json';
 
 
 
@@ -68,7 +69,7 @@ export default function Landing() {
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 shrink-0">
-          <img src="/cashow-logo-v2.png" alt="Cashow" className="w-9 h-9 rounded-xl object-cover border border-border" />
+          <img src={cashowLogo.url} alt="Cashow" className="w-9 h-9 rounded-xl object-cover border border-border" />
           <span className="font-bold text-lg hidden sm:inline">Cashow</span>
         </div>
 

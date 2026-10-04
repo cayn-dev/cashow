@@ -3,7 +3,6 @@ import { Home, ArrowUpDown, PiggyBank, Wallet, Target, Landmark, Plus } from 'lu
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useFeedback } from '@/hooks/useFeedback';
-import { Button } from '@/components/ui/button';
 
 export type TabView = 'dashboard' | 'transactions' | 'salary' | 'savings' | 'budget' | 'calendar' | 'accounts';
 
@@ -33,7 +32,7 @@ export function LiquidTabBar({ currentView, onViewChange, onAdd, className }: Li
     <nav
       aria-label="Navigation"
       className={cn(
-        'fixed inset-x-0 bottom-[max(5rem,calc(env(safe-area-inset-bottom)+4rem))] z-50 flex justify-center gap-2 px-3',
+        'fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 flex justify-center gap-2 px-3',
         className
       )}
     >
@@ -41,14 +40,13 @@ export function LiquidTabBar({ currentView, onViewChange, onAdd, className }: Li
         {items.map((item) => {
           const active = currentView === item.id;
           return (
-            <Button
+            <button
               key={item.id}
               type="button"
               aria-label={item.label}
               aria-current={active ? 'page' : undefined}
               onClick={() => { feedback.tap(); onViewChange(item.id); }}
-              variant="ghost"
-              className="relative h-11 shrink-0 rounded-full px-3.5 tap-shrink hover:bg-transparent"
+              className="relative h-11 shrink-0 rounded-full px-3.5 tap-shrink"
             >
               {active && (
                 <motion.span
@@ -61,20 +59,19 @@ export function LiquidTabBar({ currentView, onViewChange, onAdd, className }: Li
                 <item.icon className="w-[18px] h-[18px]" strokeWidth={1.8} />
                 {active && <span className="text-[13px] font-medium whitespace-nowrap">{item.label}</span>}
               </span>
-            </Button>
+            </button>
           );
         })}
       </div>
       {onAdd && (
-        <Button
+        <button
           type="button"
           aria-label={t('transactions.add') || 'Add'}
           onClick={() => { feedback.tap(); onAdd(); }}
-          variant="ghost"
           className="liquid-bar h-14 w-14 shrink-0 justify-center text-foreground tap-shrink"
         >
           <Plus className="w-6 h-6" strokeWidth={1.8} />
-        </Button>
+        </button>
       )}
     </nav>
   );

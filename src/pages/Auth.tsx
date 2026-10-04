@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { motion } from 'framer-motion';
-import { Loader2, Mail, Lock, User, Wallet, Globe, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Wallet, Globe } from 'lucide-react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { AuroraBackground } from '@/components/AuroraBackground';
@@ -36,8 +36,6 @@ export default function Auth() {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupName, setSignupName] = useState('');
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showSignupPassword, setShowSignupPassword] = useState(false);
 
   const emailSchema = z.string().email(t('auth.invalidEmail'));
   const passwordSchema = z.string().min(6, t('auth.passwordMinLength'));
@@ -193,16 +191,13 @@ export default function Auth() {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       id="login-password"
-                      type={showLoginPassword ? 'text' : 'password'}
+                      type="password"
                       placeholder={t('auth.passwordPlaceholder')}
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
-                      className="pl-10 pr-11"
+                      className="pl-10"
                       required
                     />
-                    <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" aria-label={t(showLoginPassword ? 'auth.hidePassword' : 'auth.showPassword')} aria-pressed={showLoginPassword} onClick={() => setShowLoginPassword((v) => !v)}>
-                      {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
                   </div>
                 </div>
 
@@ -274,10 +269,7 @@ export default function Auth() {
                   <Label htmlFor="signup-password">{t('auth.password')}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input id="signup-password" type={showSignupPassword ? 'text' : 'password'} placeholder={t('auth.passwordMin')} value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} className="pl-10 pr-11" required />
-                    <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" aria-label={t(showSignupPassword ? 'auth.hidePassword' : 'auth.showPassword')} aria-pressed={showSignupPassword} onClick={() => setShowSignupPassword((v) => !v)}>
-                      {showSignupPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
+                    <Input id="signup-password" type="password" placeholder={t('auth.passwordMin')} value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} className="pl-10" required />
                   </div>
                 </div>
 

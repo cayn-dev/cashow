@@ -1,9 +1,4 @@
-- [x] Make light theme monochrome and improve button contrast in dark accent themes.
-- [x] Make authentication and biometric lock screens dark and readable.
-- [x] Detect receipt payment method when printed and apply it to the transaction.
-- [ ] Verify preview and receipt scanning, including colorful dark accents and biometric screen.
-- [ ] Animate receipt reading and limit it to expenses; use income-specific examples.
-- [ ] Add password visibility to sign-in and sign-up.
-- [ ] Set up a welcome email after registration (blocked until sender domain is configured).
-- [ ] Keep app images available from public for custom-domain hosting.
-- [ ] Raise bottom navigation clear of the Lovable badge.
+- [ ] Make light theme monochrome and improve button contrast in dark accent themes.
+- [ ] Make authentication and biometric lock screens dark and readable.
+- [ ] Detect receipt payment method when printed and apply it to the transaction.
+- [ ] Verify preview and receipt scanning.
