@@ -13,6 +13,7 @@ import Index from "./pages/Index";
  import NotFound from "./pages/NotFound";
  import OAuthConsent from "./pages/OAuthConsent";
 import { Analytics } from "./components/Analytics";
+import { UpdatePrompt } from "./components/UpdatePrompt";
 import { Loader2 } from "lucide-react";
 
 // Capture invite token immediately so it survives the auth/landing redirect
@@ -54,6 +55,7 @@ const App = () => (
            <Sonner />
            <BrowserRouter>
               <Analytics />
+              <UpdatePrompt />
 
               <Routes>
                 <Route path="/welcome" element={<Landing />} />
