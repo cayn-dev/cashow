@@ -1,4 +1,7 @@
-- [ ] Make light theme monochrome and improve button contrast in dark accent themes.
-- [ ] Make authentication and biometric lock screens dark and readable.
-- [ ] Detect receipt payment method when printed and apply it to the transaction.
-- [ ] Verify preview and receipt scanning.
+- [x] Monochrome light theme, readable dark accents, dark auth screens.
+- [x] Receipt payment method detection (deployed).
+- [x] Receipt scan animation; no scan + income examples in Income.
+- [x] Show/hide password on login and signup.
+- [x] App images served from public folder.
+- [ ] Welcome email after signup — blocked: needs a sender domain owned by the user (Gmail cannot be a sender).
+- [ ] "Update the app" email to all users — not supported (bulk email to a list); in-app update notice could replace it.
