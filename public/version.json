@@ -1,0 +1,10 @@
+{
+  "version": "2026.10.05",
+  "notes": {
+    "it": ["Animazione durante la lettura dello scontrino", "Riconoscimento automatico di carta o contanti dallo scontrino", "Esempi dedicati per le entrate", "Pulsante per mostrare la password", "Nuovi colori più puliti per tema chiaro e scuro"],
+    "en": ["Animation while reading a receipt", "Automatic card or cash detection from receipts", "Dedicated income examples", "Show password button", "Cleaner colors for light and dark themes"],
+    "es": ["Animación al leer el recibo", "Detección automática de tarjeta o efectivo", "Ejemplos dedicados para ingresos", "Botón para mostrar la contraseña", "Colores más limpios en tema claro y oscuro"],
+    "fr": ["Animation pendant la lecture du ticket", "Détection automatique carte ou espèces", "Exemples dédiés aux revenus", "Bouton pour afficher le mot de passe", "Couleurs plus épurées en thème clair et sombre"],
+    "de": ["Animation beim Lesen des Belegs", "Automatische Erkennung von Karte oder Bargeld", "Eigene Beispiele für Einnahmen", "Button zum Anzeigen des Passworts", "Klarere Farben im hellen und dunklen Design"]
+  }
+}

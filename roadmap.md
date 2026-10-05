@@ -4,4 +4,4 @@
 - [x] Show/hide password on login and signup.
 - [x] App images served from public folder.
 - [ ] Welcome email after signup — blocked: needs a sender domain owned by the user (Gmail cannot be a sender).
-- [ ] "Update the app" email to all users — not supported (bulk email to a list); in-app update notice could replace it.
+- [x] In-app update notice with changelog and Update button (replaces bulk email).
