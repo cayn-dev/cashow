@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { motion } from 'framer-motion';
-import { Loader2, Mail, Lock, User, Wallet, Globe } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Wallet, Globe, Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { AuroraBackground } from '@/components/AuroraBackground';
@@ -29,6 +29,7 @@ export default function Auth() {
   const { t, language, setLanguage } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<'google' | 'apple' | null>(null);
+  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const [loginEmail, setLoginEmail] = useState('');
@@ -109,6 +110,17 @@ export default function Auth() {
       toast.error(t('auth.socialError', { provider: provider === 'google' ? 'Google' : 'Apple', message: error.message }));
     }
   };
+
+  const eyeBtn = (
+    <button
+      type="button"
+      onClick={() => setShowPw((v) => !v)}
+      aria-label={showPw ? t('auth.hidePassword') : t('auth.showPassword')}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+    >
+      {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+    </button>
+  );
 
   return (
     <div className="auth-screen min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative">
@@ -191,13 +203,14 @@ export default function Auth() {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       id="login-password"
-                      type="password"
+                      type={showPw ? 'text' : 'password'}
                       placeholder={t('auth.passwordPlaceholder')}
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 pr-10"
                       required
                     />
+                    {eyeBtn}
                   </div>
                 </div>
 
@@ -269,7 +282,8 @@ export default function Auth() {
                   <Label htmlFor="signup-password">{t('auth.password')}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input id="signup-password" type="password" placeholder={t('auth.passwordMin')} value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} className="pl-10" required />
+                    <Input id="signup-password" type={showPw ? 'text' : 'password'} placeholder={t('auth.passwordMin')} value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} className="pl-10 pr-10" required />
+                    {eyeBtn}
                   </div>
                 </div>
 

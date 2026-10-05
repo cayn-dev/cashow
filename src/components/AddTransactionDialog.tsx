@@ -1,3 +1,4 @@
+import { ReceiptScanAnimation } from '@/components/ReceiptScanAnimation';
 import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
@@ -283,8 +284,8 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="dialog-stagger space-y-4 mt-4">
-          {/* Receipt scanner */}
-          {!isEdit && (
+          {/* Receipt scanner (expenses only) */}
+          {!isEdit && type === 'expense' && (
             <div className="space-y-2">
               <input
                 ref={fileRef}
@@ -312,6 +313,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
                 )}
               </Button>
               <p className="text-[11px] text-muted-foreground text-center">{t('receipt.hint')}</p>
+              {scanning && <ReceiptScanAnimation label={t('receipt.reading')} />}
               {scanNote && (
                 <p className="text-[11px] text-primary text-center">📍 {scanNote}</p>
               )}
@@ -432,7 +434,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             </Label>
             <Input
               id="description"
-              placeholder={t('addTransaction.descPlaceholder')}
+              placeholder={t(type === 'income' ? 'addTransaction.incomePlaceholder' : 'addTransaction.descPlaceholder')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="glass-input"
