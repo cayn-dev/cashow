@@ -265,7 +265,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </Button>
         </DialogTrigger>
       ) : null}
-      <DialogContent className="dialog-sheet fixed bg-background border-card-border left-0 top-0 translate-x-0 translate-y-0 w-screen max-w-none h-[100dvh] rounded-none border-0 overflow-y-auto p-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:w-full sm:max-w-[425px] sm:h-auto sm:max-h-[90vh] sm:rounded-2xl sm:border sm:p-6">
+      <DialogContent className="dialog-sheet fixed bg-background border-card-border left-0 top-0 translate-x-0 translate-y-0 w-screen max-w-none h-[100dvh] rounded-none border-0 overflow-y-auto p-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:w-full sm:max-w-[425px] sm:h-auto sm:max-h-[90vh] sm:rounded-2xl sm:border sm:p-6 lg:max-w-3xl lg:p-8">
         {/* Dynamic color wash: green = income, red = expense */}
         <div
           aria-hidden
@@ -283,10 +283,10 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="dialog-stagger space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="dialog-stagger grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
           {/* Receipt scanner (expenses only) */}
           {!isEdit && type === 'expense' && (
-            <div className="space-y-2">
+            <div className="space-y-2 lg:col-span-2">
               <input
                 ref={fileRef}
                 type="file"
@@ -322,7 +322,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
 
           {/* Type Toggle — Liquid Glass capsule with circular buttons */}
 
-          <div className="liquid-bar mx-auto w-fit gap-2 p-1.5">
+          <div className="liquid-bar mx-auto w-fit gap-2 p-1.5 lg:col-span-2">
             <Button
               type="button"
               variant={type === 'expense' ? 'default' : 'outline'}
@@ -355,7 +355,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
 
           {/* Is Salary Toggle (only for income) */}
           {type === 'income' && (
-            <div className="flex items-center gap-3 p-3 glass-panel">
+            <div className="flex items-center gap-3 p-3 glass-panel lg:col-span-2">
               <input
                 type="checkbox"
                 id="isSalary"
@@ -422,7 +422,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           </div>
 
           {/* Description with auto-categorization indicator */}
-          <div className="space-y-2">
+          <div className="space-y-2 lg:col-span-2">
             <Label htmlFor="description" className="flex items-center gap-2">
               {t('addTransaction.description')}
               {autoSuggested && (
@@ -576,7 +576,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
 
           {/* Custom Recurrence Days */}
           {recurrence === 'custom' && (
-            <div className="space-y-2">
+            <div className="space-y-2 lg:col-span-2">
               <Label htmlFor="customDays">{t('addTransaction.customDays')}</Label>
               <Input
                 id="customDays"
@@ -591,7 +591,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             </div>
           )}
 
-          <Button type="submit" className="w-full apple-button text-primary-foreground">
+          <Button type="submit" className="w-full apple-button text-primary-foreground lg:col-span-2">
             {isEdit ? t('addTransaction.update') : t('addTransaction.submit')}
           </Button>
         </form>
