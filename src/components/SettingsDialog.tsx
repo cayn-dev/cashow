@@ -260,14 +260,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="dialog-pop w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 bg-card border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0">
+      <DialogContent className="dialog-pop w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 bg-card border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0 lg:max-w-4xl lg:p-8">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-display">
             {t('settings.title')}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="dialog-stagger space-y-6 py-4">
+        <div className="dialog-stagger space-y-6 py-4 settings-columns lg:columns-2 lg:gap-8">
           {/* Language Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
