@@ -17,60 +17,31 @@ const COPY: Record<string, { title: string; desc: string; btn: string; later: st
 
 type Remote = { version: string; notes: Record<string, string[]> };
 
-const SEEN_KEY = 'cashow-seen-version';
-
-const NEW_COPY: Record<string, { title: string; ok: string }> = {
-  it: { title: 'App aggiornata', ok: 'Ho capito' },
-  en: { title: 'App updated', ok: 'Got it' },
-  es: { title: 'App actualizada', ok: 'Entendido' },
-  fr: { title: 'Application mise à jour', ok: "J'ai compris" },
-  de: { title: 'App aktualisiert', ok: 'Verstanden' },
-};
-
 export function UpdatePrompt() {
   const { language } = useLanguage();
   const [remote, setRemote] = useState<Remote | null>(null);
   const [open, setOpen] = useState(false);
-  // 'update' = a newer version is online (reload needed); 'news' = this version is new for this device
-  const [mode, setMode] = useState<'update' | 'news'>('update');
 
   useEffect(() => {
     let cancelled = false;
-    const force = new URLSearchParams(window.location.search).has('test-update');
-    const check = async (onOpen = false) => {
+    const check = async () => {
       try {
         const res = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) return;
         const data: Remote = await res.json();
-        if (cancelled || !data?.version) return;
-        if (data.version !== APP_VERSION) {
-          if (!force && sessionStorage.getItem('update-dismissed') === data.version) return;
-          setMode('update');
-          setRemote(data);
-          setOpen(true);
-          return;
-        }
-        // Running the latest version: on app open, show what's new once per version.
-        if (onOpen && (force || localStorage.getItem(SEEN_KEY) !== APP_VERSION)) {
-          setMode('news');
-          setRemote(data);
-          setOpen(true);
-        }
+        const force = new URLSearchParams(window.location.search).has('test-update');
+        if (cancelled || !data?.version || (!force && data.version === APP_VERSION)) return;
+        if (!force && sessionStorage.getItem('update-dismissed') === data.version) return;
+        setRemote(data);
+        setOpen(true);
       } catch { /* offline */ }
     };
-    check(true);
-    const id = setInterval(() => check(), 5 * 60 * 1000);
+    check();
+    const id = setInterval(check, 5 * 60 * 1000);
     const onVis = () => document.visibilityState === 'visible' && check();
     document.addEventListener('visibilitychange', onVis);
     return () => { cancelled = true; clearInterval(id); document.removeEventListener('visibilitychange', onVis); };
   }, []);
-
-  const close = () => {
-    setOpen(false);
-    if (!remote) return;
-    if (mode === 'news') localStorage.setItem(SEEN_KEY, APP_VERSION);
-    else sessionStorage.setItem('update-dismissed', remote.version);
-  };
 
   const update = async () => {
     try {
@@ -87,7 +58,6 @@ export function UpdatePrompt() {
 
   if (!remote) return null;
   const c = COPY[language] ?? COPY.it;
-  const n = NEW_COPY[language] ?? NEW_COPY.it;
   const notes = remote.notes[language] ?? remote.notes.it ?? [];
 
   return (
