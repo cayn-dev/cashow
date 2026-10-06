@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
 
 // Must match public/version.json "version" of this build. Bump both when shipping changes.
-export const APP_VERSION = '2026.10.05';
+export const APP_VERSION = '2026.10.06';
 
 const COPY: Record<string, { title: string; desc: string; btn: string; later: string }> = {
   it: { title: 'Nuovo aggiornamento disponibile', desc: 'Ecco le novità:', btn: 'Aggiorna ora', later: 'Più tardi' },
@@ -29,8 +29,9 @@ export function UpdatePrompt() {
         const res = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) return;
         const data: Remote = await res.json();
-        if (cancelled || !data?.version || data.version === APP_VERSION) return;
-        if (sessionStorage.getItem('update-dismissed') === data.version) return;
+        const force = new URLSearchParams(window.location.search).has('test-update');
+        if (cancelled || !data?.version || (!force && data.version === APP_VERSION)) return;
+        if (!force && sessionStorage.getItem('update-dismissed') === data.version) return;
         setRemote(data);
         setOpen(true);
       } catch { /* offline */ }
