@@ -1,73 +1,166 @@
-# Welcome to your Lovable project
+# Cashow
 
-## Project info
+Cashow is a personal finance app designed to make money management clearer, simpler, and more motivating.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Live demo: https://cashow.vercel.app
 
-## How can I edit this code?
+The idea behind Cashow is straightforward: people do not need complicated tools. They need a clean view of their money, useful insights, and a product that feels good to use every day.
 
-There are several ways of editing your application.
+## Why Cashow
 
-**Use Lovable**
+Cashow helps users:
+- track spending and income in one place
+- understand where money is going
+- set goals and monitor progress
+- discover patterns through AI-powered guidance
+- keep the experience local, simple, and easy to trust
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## How it works
 
-Changes made via Lovable will be committed automatically to this repo.
+### 1. Track money in real time
+Users can add recurring costs, one-off expenses, salary movements, and category-based spending. The dashboard updates in real time so the financial picture stays clear.
 
-**Use your preferred IDE**
+### 2. Understand the flow
+Cashow highlights balance changes, spending trends, and the most relevant signals from the last period. The goal is to reduce friction and make financial decisions easier.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 3. Set goals and stay motivated
+Users can create savings or budget goals and follow their progress visually. Progress indicators help turn money management into a daily habit rather than a chore.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 4. Ask for AI help
+The app includes AI-driven financial guidance so users can ask simple questions like:
+- How can I save more?
+- What changed this month?
+- Where am I overspending?
 
-Follow these steps:
+This keeps the experience helpful without being overwhelming.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Core features
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Smart dashboard
+- total balance overview
+- spending by category
+- period-to-period comparison
+- daily financial visibility
 
-# Step 3: Install the necessary dependencies.
-npm i
+### AI insights
+- natural-language financial questions
+- personalized observations and suggestions
+- practical recommendations based on existing habits
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Savings goals
+- create and track goals
+- view progress with visual indicators
+- keep momentum through clear milestones
+
+### Recurring tracking
+- monitor subscriptions and regular expenses
+- detect patterns in recurring costs
+- understand monthly obligations more clearly
+
+### Multi-language support
+Cashow is designed for a broader audience and supports multiple languages, including:
+- Italian
+- English
+- Spanish
+- French
+- German
+
+### Privacy-first experience
+The project is designed around personal finance needs while keeping the experience smooth, secure, and simple to use.
+
+## Product experience
+
+Cashow includes two connected experiences:
+
+- a landing page for first-time visitors
+- an authenticated product experience for active users
+
+This allows users to:
+- discover the app quickly
+- try it in guest mode without friction
+- create an account when ready
+- access the full dashboard and personal finance tools
+
+## Tech stack
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- Supabase
+- React Router
+- TanStack Query
+- Framer Motion
+- Lucide React
+
+## Project structure
+
+```bash
+src/
+  components/
+  hooks/
+  pages/
+  lib/
+  types/
+```
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or bun
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run locally
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Production build
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run build
+```
 
-**Use GitHub Codespaces**
+## Environment variables
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The app uses environment variables for Supabase and other runtime configuration.
 
-## What technologies are used for this project?
+Example:
 
-This project is built with:
+```bash
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+This project is intended for deployment on Vercel and is built to support a fast, modern frontend workflow.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Roadmap
 
-## Can I connect a custom domain to my Lovable project?
+Planned future improvements include:
+- smarter automatic recurring detection
+- deeper AI coaching on budget behavior
+- enhanced reporting and exports
+- richer insight cards and recommendations
+- mobile-first polish and performance improvements
 
-Yes, you can!
+## About the project
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Cashow is a product concept focused on making personal finance feel lighter, more understandable, and more actionable. It is built for people who want clarity without complexity.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Contact
+
+Built by Jacopo Ferrieri.
+
+Website: https://www.cayn.dev
+GitHub: https://github.com/cayn-dev
