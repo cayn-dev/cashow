@@ -2,9 +2,13 @@
 
 Cashow is a personal finance app designed to make money management clearer, simpler, and more motivating.
 
-Live demo: https://cashow.vercel.app
+<div align="center">
+  <a href="https://cashow.lovable.app"><img src="https://img.shields.io/badge/Live-Cashow-182126?style=for-the-badge&logo=vercel&logoColor=D7EEF5" alt="Live: Cashow" /></a>
+  <a href="https://www.cayn.dev"><img src="https://img.shields.io/badge/Portfolio-cayn.dev-182126?style=for-the-badge&logo=googlechrome&logoColor=D7EEF5" alt="Portfolio: cayn.dev" /></a>
+  <a href="https://github.com/cayn-dev/cashow"><img src="https://img.shields.io/badge/Repo-cayn-dev%2Fcashow-182126?style=for-the-badge&logo=github&logoColor=D7EEF5" alt="Repository: cayn-dev/cashow" /></a>
+</div>
 
-The idea behind Cashow is straightforward: people do not need complicated tools. They need a clean view of their money, useful insights, and a product that feels good to use every day.
+The idea behind Cashow is simple: people do not need a complicated finance app. They need a clean view of their money, useful insights, and a product that feels good to use every day.
 
 ## Why Cashow
 
@@ -17,10 +21,10 @@ Cashow helps users:
 
 ## How it works
 
-### 1. Track money in real time
-Users can add recurring costs, one-off expenses, salary movements, and category-based spending. The dashboard updates in real time so the financial picture stays clear.
+### 1. Keep an overview of the money flow
+Users can add expenses, income, subscriptions, and recurring costs. The dashboard updates in real time so the financial picture stays clear.
 
-### 2. Understand the flow
+### 2. Understand what changed
 Cashow highlights balance changes, spending trends, and the most relevant signals from the last period. The goal is to reduce friction and make financial decisions easier.
 
 ### 3. Set goals and stay motivated
@@ -34,13 +38,13 @@ The app includes AI-driven financial guidance so users can ask simple questions 
 
 This keeps the experience helpful without being overwhelming.
 
-## Core features
+## Main features
 
-### Smart dashboard
+### Smart financial dashboard
 - total balance overview
 - spending by category
 - period-to-period comparison
-- daily financial visibility
+- quick access to the most relevant signals
 
 ### AI insights
 - natural-language financial questions
@@ -57,7 +61,7 @@ This keeps the experience helpful without being overwhelming.
 - detect patterns in recurring costs
 - understand monthly obligations more clearly
 
-### Multi-language support
+### Multi-language experience
 Cashow is designed for a broader audience and supports multiple languages, including:
 - Italian
 - English
@@ -65,8 +69,8 @@ Cashow is designed for a broader audience and supports multiple languages, inclu
 - French
 - German
 
-### Privacy-first experience
-The project is designed around personal finance needs while keeping the experience smooth, secure, and simple to use.
+### Privacy-first design
+The project is built around personal finance needs while keeping the experience smooth, secure, and simple to use.
 
 ## Product experience
 
@@ -79,71 +83,7 @@ This allows users to:
 - discover the app quickly
 - try it in guest mode without friction
 - create an account when ready
-- access the full dashboard and personal finance tools
-
-## Tech stack
-
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- shadcn/ui
-- Supabase
-- React Router
-- TanStack Query
-- Framer Motion
-- Lucide React
-
-## Project structure
-
-```bash
-src/
-  components/
-  hooks/
-  pages/
-  lib/
-  types/
-```
-
-## Getting started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or bun
-
-### Install dependencies
-
-```bash
-npm install
-```
-
-### Run locally
-
-```bash
-npm run dev
-```
-
-### Production build
-
-```bash
-npm run build
-```
-
-## Environment variables
-
-The app uses environment variables for Supabase and other runtime configuration.
-
-Example:
-
-```bash
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-## Deployment
-
-This project is intended for deployment on Vercel and is built to support a fast, modern frontend workflow.
+- access the full dashboard and finance tools
 
 ## Roadmap
 
@@ -158,9 +98,10 @@ Planned future improvements include:
 
 Cashow is a product concept focused on making personal finance feel lighter, more understandable, and more actionable. It is built for people who want clarity without complexity.
 
-## Contact
+## Built by
 
-Built by Jacopo Ferrieri.
+Jacopo Ferrieri
 
-Website: https://www.cayn.dev
+Portfolio: https://www.cayn.dev
 GitHub: https://github.com/cayn-dev
+Live app: https://cashow.lovable.app
