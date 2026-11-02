@@ -5,7 +5,6 @@ Cashow is a personal finance app designed to make money management clearer, simp
 <div align="center">
   <a href="https://cashow.lovable.app"><img src="https://img.shields.io/badge/Live-Cashow-182126?style=for-the-badge&logo=vercel&logoColor=D7EEF5" alt="Live: Cashow" /></a>
   <a href="https://www.cayn.dev"><img src="https://img.shields.io/badge/Portfolio-cayn.dev-182126?style=for-the-badge&logo=googlechrome&logoColor=D7EEF5" alt="Portfolio: cayn.dev" /></a>
-  <a href="https://github.com/cayn-dev/cashow"><img src="https://img.shields.io/badge/Repo-cayn-dev%2Fcashow-182126?style=for-the-badge&logo=github&logoColor=D7EEF5" alt="Repository: cayn-dev/cashow" /></a>
 </div>
 
 The idea behind Cashow is simple: people do not need a complicated finance app. They need a clean view of their money, useful insights, and a product that feels good to use every day.
