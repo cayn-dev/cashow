@@ -1,7 +1,7 @@
 # Cashow
 
 <div align="center">
-  <img width="100%" src="https://raw.githubusercontent.com/cayn-dev/cashow/main/Untitled.png" alt="Cashow hero banner" />
+  <img width="100%" src="https://raw.githubusercontent.com/cayn-dev/cashow/main/Untitled.png"/>
 </div>
 
 <div align="center">
