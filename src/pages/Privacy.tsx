@@ -127,6 +127,15 @@ const Privacy = () => {
           ))}
         </div>
 
+        <GlassCard className="p-6 mt-6">
+          <h2 className="font-display font-semibold text-lg mb-3">{t('privacy.contactTitle')}</h2>
+          <p className="text-sm text-muted-foreground">{t('privacy.contactText')}</p>
+          <a href="mailto:jacopo.dev0@gmail.com" className="inline-block mt-2 text-sm font-medium text-foreground underline underline-offset-2">
+            jacopo.dev0@gmail.com
+          </a>
+          <p className="text-sm text-muted-foreground mt-4">{t('privacy.legalBasis')}</p>
+        </GlassCard>
+
         <div className="text-center mt-10 text-sm text-muted-foreground">
           <p>{t('privacy.lastUpdate')}</p>
           <p className="mt-1">{t('privacy.footer')}</p>

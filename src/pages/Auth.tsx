@@ -300,6 +300,14 @@ export default function Auth() {
                   ) : t('auth.createAccount')}
                 </Button>
 
+                <p className="text-xs text-muted-foreground text-center leading-relaxed">
+                  {t('auth.consentPrefix')}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-2">
+                    {t('auth.consentLink')}
+                  </a>
+                  {t('auth.consentSuffix')}
+                </p>
+
                 <div className="relative my-4">
                   <Separator />
                   <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
