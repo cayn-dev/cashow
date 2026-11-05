@@ -1193,3 +1193,53 @@
 .auth-screen .glass-panel { background: hsl(var(--card)); border-color: hsl(var(--card-border)); }
 .auth-screen .glass-panel::before { opacity: 0; }
 .light-theme .auth-screen .glass-panel:hover { background: hsl(var(--card)); }
+
+/* ============= SETTINGS CATEGORIES ============= */
+.settings-columns > * { margin-bottom: 1rem; }
+.settings-category-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 0.75rem 0.25rem;
+}
+
+/* ============= CLEAR GLASSMORPHISM (refined) ============= */
+.glass-panel,
+.glass-panel-elevated {
+  background: linear-gradient(145deg, hsl(0 0% 100% / 0.09) 0%, hsl(0 0% 100% / 0.025) 100%) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.14) !important;
+  box-shadow:
+    inset 0 1px 0 0 hsl(0 0% 100% / 0.18),
+    inset 0 -1px 0 0 hsl(0 0% 100% / 0.03),
+    0 20px 50px -24px hsl(0 0% 0% / 0.55) !important;
+}
+.light-theme .glass-panel,
+.light-theme .glass-panel-elevated {
+  background: linear-gradient(145deg, hsl(0 0% 100% / 0.72) 0%, hsl(0 0% 100% / 0.45) 100%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.8) !important;
+  box-shadow:
+    inset 0 1px 0 0 hsl(0 0% 100% / 0.9),
+    0 16px 40px -22px hsl(0 0% 0% / 0.18) !important;
+}
+.liquid-bar,
+.glass-topbar {
+  backdrop-filter: blur(30px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+}
+
+/* ============= SMOOTHER MOTION ============= */
+:root { --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1); }
+button, a, [role="tab"], [role="switch"], .glass-panel, .glass-panel-elevated {
+  transition-timing-function: var(--ease-fluid);
+}
+button:active:not(:disabled) { transform: scale(0.97); transition: transform 0.18s var(--ease-fluid); }
+.dialog-stagger > * { animation-duration: 0.55s !important; will-change: transform, opacity; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  button:active:not(:disabled) { transform: none; }
+  html { scroll-behavior: auto; }
+}
