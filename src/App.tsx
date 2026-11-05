@@ -12,7 +12,6 @@ import Index from "./pages/Index";
  import Landing from "./pages/Landing";
  import NotFound from "./pages/NotFound";
  import OAuthConsent from "./pages/OAuthConsent";
-import { Analytics } from "./components/Analytics";
 import { UpdatePrompt } from "./components/UpdatePrompt";
 import { Loader2 } from "lucide-react";
 
@@ -54,7 +53,6 @@ const App = () => (
            <Toaster />
            <Sonner />
            <BrowserRouter>
-              <Analytics />
               <UpdatePrompt />
 
               <Routes>
