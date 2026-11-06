@@ -640,6 +640,10 @@ export type Database = {
         Args: { p_current_date: string; p_frequency: string }
         Returns: string
       }
+      erase_user_financial_data: {
+        Args: { _delete_account?: boolean; _user_id: string }
+        Returns: undefined
+      }
       expense_group_id: { Args: { _expense_id: string }; Returns: string }
       has_role: {
         Args: {
