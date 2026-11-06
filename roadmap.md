@@ -5,3 +5,7 @@
 - [x] App images served from public folder.
 - [ ] Welcome email after signup — blocked: needs a sender domain owned by the user (Gmail cannot be a sender).
 - [x] In-app update notice with changelog and Update button (replaces bulk email).
+- [ ] Complete and verify deletion of all data and account without stale synchronization restoring data.
+- [ ] Complete translated settings categories and confirm bank linking is removed.
+- [ ] Finish clear glass surfaces, smooth accessible motion, and desktop/mobile verification.
+- [ ] Update release version and notes in all five languages.
