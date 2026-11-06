@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
 
 // Must match public/version.json "version" of this build. Bump both when shipping changes.
-export const APP_VERSION = '2026.10.05';
+export const APP_VERSION = '2026.11.06';
 
 const COPY: Record<string, { title: string; desc: string; btn: string; later: string }> = {
   it: { title: 'Nuovo aggiornamento disponibile', desc: 'Ecco le novità:', btn: 'Aggiorna ora', later: 'Più tardi' },

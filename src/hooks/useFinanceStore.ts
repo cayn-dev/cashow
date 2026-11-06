@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
 import { netMonthlySalary, type SalaryFrequency } from '@/lib/salary';
+import { isDataErasing } from '@/lib/dataErasure';
 
 
 const STORAGE_KEY = 'finance_data';
@@ -59,6 +60,7 @@ const parseStoredData = (stored: string | null): FinanceData | null => {
 
 // Create automatic backup before major operations
 const createBackup = () => {
+  if (isDataErasing()) return;
   const currentData = localStorage.getItem(STORAGE_KEY);
   if (currentData) {
     localStorage.setItem(BACKUP_KEY, currentData);
@@ -216,6 +218,7 @@ export function useFinanceStore() {
     }
     
     saveTimeout.current = setTimeout(() => {
+      if (isDataErasing()) return;
       // Create backup before saving
       createBackup();
       

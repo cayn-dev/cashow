@@ -70,6 +70,7 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useFeedback } from '@/hooks/useFeedback';
 import { useCustomCategories } from '@/hooks/useCustomCategories';
 import { GlassCard } from './GlassCard';
+import { beginDataErasure, cancelDataErasure, clearAppData } from '@/lib/dataErasure';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -102,6 +103,36 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deletingData, setDeletingData] = useState(false);
+  const [dataConfirmation, setDataConfirmation] = useState(false);
+  const [accountConfirmation, setAccountConfirmation] = useState(false);
+  const handleErasure = async (action: 'data' | 'account') => {
+    if (deletingAccount || deletingData) return;
+    action === 'account' ? setDeletingAccount(true) : setDeletingData(true);
+    beginDataErasure();
+    try {
+      if (isAuthenticated && !isGuest) {
+        const { data, error } = await supabase.functions.invoke('delete-account', { body: { action } });
+        if (error || data?.success !== true) throw error ?? new Error('Deletion failed');
+      } else if (action === 'account') {
+        throw new Error('No account');
+      }
+      clearAppData();
+      sessionStorage.removeItem('pin_verified');
+      sessionStorage.removeItem('pendingInvite');
+      if (action === 'account') {
+        await supabase.auth.signOut({ scope: 'local' });
+        window.location.replace('/auth');
+      } else {
+        window.location.reload();
+      }
+    } catch {
+      cancelDataErasure();
+      setDeletingAccount(false);
+      setDeletingData(false);
+      notifications.sendToast(t('settings.deleteError'), t(action === 'account' ? 'settings.cantDeleteAccount' : 'settings.cantDeleteData'), 'error');
+    }
+  };
   const notifications = useNotifications({
     notificationsEnabled: settings.notificationsEnabled,
     dailyReminder: settings.dailyReminder,
@@ -259,7 +290,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="dialog-pop w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 bg-card border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0 lg:max-w-4xl lg:p-8">
+      <DialogContent className="dialog-pop settings-surface w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0 lg:max-w-4xl lg:p-8">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-display">
             {t('settings.title')}
@@ -1708,9 +1739,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </div>
             </div>
 
-            <AlertDialog>
+            <AlertDialog open={dataConfirmation} onOpenChange={(open) => { if (!deletingData) setDataConfirmation(open); }}>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" className="w-full">
+                <Button variant="destructive" className="w-full" disabled={deletingData || deletingAccount}>
                   <Trash2 className="w-4 h-4 mr-2" />
                   {t('settings.deleteAllData')}
                 </Button>
@@ -1723,12 +1754,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
+                  <AlertDialogCancel disabled={deletingData}>{t('settings.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={settings.resetData}
+                    disabled={deletingData}
+                    onClick={(event) => { event.preventDefault(); void handleErasure('data'); }}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    {t('settings.deleteAll')}
+                    {t(deletingData ? 'settings.deleting' : 'settings.deleteAll')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -1747,7 +1779,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </div>
             </div>
 
-            <AlertDialog>
+            <AlertDialog open={accountConfirmation} onOpenChange={(open) => { if (!deletingAccount) setAccountConfirmation(open); }}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" className="w-full" disabled={deletingAccount}>
                   <Trash2 className="w-4 h-4 mr-2" />
@@ -1768,34 +1800,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>{t('settings.cancel')}</AlertDialogCancel>
+                  <AlertDialogCancel disabled={deletingAccount}>{t('settings.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
+                    disabled={deletingAccount}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    onClick={async () => {
-                      setDeletingAccount(true);
-                      try {
-                        const { data: { session } } = await supabase.auth.getSession();
-                        if (!session) throw new Error('No session');
-
-                        const { error } = await supabase.functions.invoke('delete-account', {
-                          headers: { Authorization: `Bearer ${session.access_token}` },
-                        });
-
-                        if (error) throw error;
-
-                        notifications.sendToast(t('settings.accountDeleted'), t('settings.allDataDeleted'), 'success');
-                        localStorage.clear();
-                        setTimeout(() => {
-                          signOut();
-                        }, 1500);
-                      } catch (err) {
-                        console.error('Error deleting account:', err);
-                        notifications.sendToast(t('settings.deleteError'), t('settings.cantDeleteAccount'), 'error');
-                        setDeletingAccount(false);
-                      }
-                    }}
+                    onClick={(event) => { event.preventDefault(); void handleErasure('account'); }}
                   >
-                    {t('settings.yesDeleteAll')}
+                    {t(deletingAccount ? 'settings.deleting' : 'settings.yesDeleteAll')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
