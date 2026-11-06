@@ -6,6 +6,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { netMonthlySalary, type SalaryFrequency } from '@/lib/salary';
 import { Transaction, SavingsGoal, CategoryType } from '@/types/finance';
 import { toast } from 'sonner';
+import { isDataErasing, dataGeneration } from '@/lib/dataErasure';
 
 
 const CACHE_KEY = 'finance_cache';
@@ -94,6 +95,7 @@ const loadCache = (userId: string): CachedData | null => {
 };
 
 const saveCache = (data: CachedData) => {
+  if (isDataErasing()) return;
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
   } catch {
@@ -126,6 +128,8 @@ export function useSupabaseFinanceStore() {
  
   // Fetch from cloud and update cache
   useEffect(() => {
+    let cancelled = false;
+    const generation = dataGeneration();
     if (!isAuthenticated || !user) {
       setState(prev => ({ ...prev, loading: false }));
       return;
@@ -188,6 +192,7 @@ export function useSupabaseFinanceStore() {
 
         const monthlySalary = profileData?.monthly_salary ? Number(profileData.monthly_salary) : 0;
 
+        if (cancelled || isDataErasing() || generation !== dataGeneration()) return;
         setSalaryConfig({
           amount: profileData?.salary_amount ? Number(profileData.salary_amount) : 0,
           frequency: (profileData?.salary_frequency as SalaryFrequency) || 'monthly',
@@ -206,6 +211,7 @@ export function useSupabaseFinanceStore() {
           cachedAt: new Date().toISOString(),
         });
       } catch (error) {
+        if (cancelled || isDataErasing() || generation !== dataGeneration()) return;
         console.error('Error fetching finance data:', error);
         if (!cacheLoaded.current) {
           toast.error(tt('toast.loadError'));
@@ -215,6 +221,7 @@ export function useSupabaseFinanceStore() {
     };
 
     fetchData();
+    return () => { cancelled = true; };
   }, [user, isAuthenticated]);
 
   // Keep local cache in sync with state changes
