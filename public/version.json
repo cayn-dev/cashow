@@ -1,10 +1,10 @@
 {
-  "version": "2026.11.06",
+  "version": "2026.11.20",
   "notes": {
-    "it": ["Correzione dell’eliminazione dei dati e dell’account", "Impostazioni ordinate per categoria in tutte le lingue", "Rimosso il collegamento alle banche dalle impostazioni", "Vetro più trasparente e animazioni più fluide"],
-    "en": ["Fixed data and account deletion", "Settings organized by category in every language", "Removed bank linking from settings", "Clearer glass and smoother animations"],
-    "es": ["Corregida la eliminación de datos y cuentas", "Ajustes organizados por categoría en todos los idiomas", "Conexión bancaria eliminada de los ajustes", "Cristal más transparente y animaciones más fluidas"],
-    "fr": ["Suppression des données et du compte corrigée", "Réglages classés par catégorie dans toutes les langues", "Connexion bancaire retirée des réglages", "Verre plus transparent et animations plus fluides"],
-    "de": ["Daten- und Kontolöschung korrigiert", "Einstellungen in allen Sprachen nach Kategorien geordnet", "Bankverknüpfung aus den Einstellungen entfernt", "Transparenteres Glas und flüssigere Animationen"]
+    "it": ["Categorie automatiche più precise per entrate e uscite nelle cinque lingue", "Suggerimenti aggiornati mentre scrivi, senza sostituire le categorie scelte manualmente", "Riconoscimento migliorato di stipendi, compensi, rimborsi, vendite e acquisti"],
+    "en": ["More accurate income and expense categories in five languages", "Live suggestions preserve manually selected categories", "Improved recognition of salaries, freelance income, refunds, sales and purchases"],
+    "es": ["Categorías más precisas para ingresos y gastos en cinco idiomas", "Sugerencias al escribir sin sustituir las categorías elegidas manualmente", "Mejor reconocimiento de salarios, honorarios, reembolsos, ventas y compras"],
+    "fr": ["Catégories plus précises pour les revenus et dépenses dans cinq langues", "Suggestions actualisées sans remplacer les catégories choisies manuellement", "Meilleure reconnaissance des salaires, honoraires, remboursements, ventes et achats"],
+    "de": ["Genauere Kategorien für Einnahmen und Ausgaben in fünf Sprachen", "Live-Vorschläge behalten manuell gewählte Kategorien bei", "Bessere Erkennung von Gehältern, Honoraren, Erstattungen, Verkäufen und Einkäufen"]
   }
 }

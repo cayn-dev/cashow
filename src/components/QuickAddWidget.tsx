@@ -29,12 +29,11 @@ export function QuickAddWidget({ onAddTransaction, currencySymbol = '€' }: Qui
   const handleAdd = () => {
     const value = parseFloat(amount);
     if (!value || !description.trim()) return;
-    const auto = autoCategorizeTransaction(description);
-    const finalType = auto?.type || type;
+    const auto = autoCategorizeTransaction(description, type);
     onAddTransaction({
-      type: finalType,
+      type,
       amount: value,
-      category: auto?.category || (finalType === 'income' ? 'salary' : 'other'),
+      category: auto?.category || 'other',
       description: description.trim(),
       date: new Date(),
       paymentMethod: 'card',

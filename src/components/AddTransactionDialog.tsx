@@ -111,6 +111,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   const [date, setDate] = useState<Date>(transaction?.date ?? new Date());
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [autoSuggested, setAutoSuggested] = useState(false);
+  const [categoryLocked, setCategoryLocked] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [scanNote, setScanNote] = useState<string | null>(null);
   const [newCatOpen, setNewCatOpen] = useState(false);
@@ -141,6 +142,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
       }
       if (r.category && (CATEGORY_CONFIG as Record<string, unknown>)[r.category]) {
         setCategory(r.category as CategoryType);
+        setCategoryLocked(true);
       }
       if (r.date) {
         const iso = String(r.date);
@@ -170,6 +172,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
   // Reset form when opening (or sync with transaction prop)
   useEffect(() => {
     if (open) {
+      setCategoryLocked(false);
       if (transaction) {
         setType(transaction.type);
         setAmount(String(transaction.amount));
@@ -189,22 +192,28 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
 
   // Auto-categorization effect (only when creating)
   useEffect(() => {
-    if (isEdit) return;
-    if (description.length >= 3 && !autoSuggested) {
-      const result = autoCategorizeTransaction(description);
-      if (result) {
-        setCategory(result.category);
-        setType(result.type);
-        setAutoSuggested(true);
-        if (result.category === 'salary') {
-          setIsSalary(true);
-        }
-      }
-    }
-    if (description.length < 3) {
-      setAutoSuggested(false);
-    }
-  }, [description, autoSuggested, isEdit]);
+    if (isEdit || categoryLocked) return;
+    const result = autoCategorizeTransaction(description, type, customCats.categories);
+    setCategory(result?.category ?? 'other');
+    setAutoSuggested(!!result);
+    setIsSalary(result?.category === 'salary');
+  }, [description, type, categoryLocked, isEdit, customCats.categories]);
+
+  const chooseCategory = (value: CategoryType) => {
+    setCategory(value);
+    setIsSalary(type === 'income' && value === 'salary');
+    setCategoryLocked(true);
+    setAutoSuggested(false);
+  };
+
+  const chooseType = (value: TransactionType) => {
+    setType(value);
+    setCategoryLocked(false);
+    setCategory('other');
+    setIsSalary(false);
+    setAutoSuggested(false);
+    setScanNote(null);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -213,13 +222,13 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
     const payload: Omit<Transaction, 'id'> = {
       type,
       amount: parseFloat(amount),
-      category: isSalary ? 'salary' : category,
+      category: type === 'income' && isSalary ? 'salary' : category,
       description,
       date,
       paymentMethod,
       recurrence,
       customRecurrenceDays: recurrence === 'custom' ? parseInt(customRecurrenceDays) : undefined,
-      isSalary,
+      isSalary: type === 'income' && isSalary,
       bankAccountId: bankAccountId !== 'none' ? bankAccountId : undefined,
     };
 
@@ -242,6 +251,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
       setBankAccountId('none');
       setDate(new Date());
       setAutoSuggested(false);
+      setCategoryLocked(false);
     }
     setOpen(false);
   };
@@ -326,7 +336,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             <Button
               type="button"
               variant={type === 'expense' ? 'default' : 'outline'}
-              onClick={() => { setType('expense'); setIsSalary(false); }}
+              onClick={() => chooseType('expense')}
               className={cn(
                 'relative rounded-full px-5 h-11 border-0 tap-shrink transition-all duration-300',
                 type === 'expense'
@@ -340,7 +350,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
             <Button
               type="button"
               variant={type === 'income' ? 'default' : 'outline'}
-              onClick={() => setType('income')}
+              onClick={() => chooseType('income')}
               className={cn(
                 'relative rounded-full px-5 h-11 border-0 tap-shrink transition-all duration-300',
                 type === 'income'
@@ -360,7 +370,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
                 type="checkbox"
                 id="isSalary"
                 checked={isSalary}
-                onChange={(e) => setIsSalary(e.target.checked)}
+                onChange={(e) => chooseCategory(e.target.checked ? 'salary' : 'other')}
                 className="w-5 h-5 rounded-lg border-border accent-primary"
               />
               <Label htmlFor="isSalary" className="text-sm cursor-pointer">
@@ -446,7 +456,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
           {!isSalary && (
             <div className="space-y-2">
               <Label>{t('addTransaction.category')}</Label>
-              <Select value={category} onValueChange={(v) => setCategory(v as CategoryType)}>
+              <Select value={category} onValueChange={chooseCategory}>
                 <SelectTrigger className="glass-input">
                   <SelectValue />
                 </SelectTrigger>
@@ -493,7 +503,7 @@ export function AddTransactionDialog({ onAdd, onEdit, transaction, trigger, open
                         color: 'category-other',
                         keywords: [],
                       });
-                      setCategory(`custom:${created.id}` as CategoryType);
+                      chooseCategory(`custom:${created.id}`);
                       setNewCatName('');
                       setNewCatEmoji('🏷️');
                       setNewCatOpen(false);

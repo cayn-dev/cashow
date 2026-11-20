@@ -84,14 +84,14 @@ export function parseBankCSV(text: string): { rows: ParsedRow[]; errors: string[
       if (amount === 0) continue;
 
       const description = (cols[descIdx] || 'Importato').trim() || 'Importato';
-      const auto = autoCategorizeTransaction(description);
+      const auto = autoCategorizeTransaction(description, type);
 
       rows.push({
         date,
         amount,
         description,
-        type: auto?.type || type,
-        category: auto?.category || (type === 'income' ? 'salary' : 'other'),
+        type,
+        category: auto?.category || 'other',
         paymentMethod: 'card',
       });
     } catch (e) {

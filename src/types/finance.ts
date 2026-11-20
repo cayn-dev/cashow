@@ -251,17 +251,73 @@ export const RECURRENCE_CONFIG: Record<RecurrenceType, { label: string; days: nu
   custom: { label: 'Personalizzata', days: 0 },
 };
 
-// Auto-categorize transaction based on description
-export function autoCategorizeTransaction(description: string): { category: CategoryType; type: TransactionType } | null {
-  const lowerDesc = description.toLowerCase();
-  
+// Additional vocabulary in each supported language. Specific phrases outrank merchants.
+const CATEGORY_VOCABULARY: Partial<Record<CategoryType, string[]>> = {
+  salary: ['salary', 'payroll', 'paycheck', 'wage', 'sueldo', 'nómina', 'salaire', 'paie', 'gehalt', 'lohn', 'pensione', 'pension', 'tredicesima', 'quattordicesima', 'bonus stipendio'],
+  freelance: ['compenso', 'parcella', 'prestazione professionale', 'lavoro freelance', 'fattura cliente', 'commissione progetto', 'consulting', 'client invoice', 'honorarios', 'consultoría', 'honoraires', 'beratung', 'honorar'],
+  investments: ['dividendo', 'dividend', 'dividends', 'dividendos', 'dividendes', 'dividenden', 'interessi bancari', 'interest', 'intereses', 'intérêts', 'zinsen', 'cedola', 'cedole', 'capital gain', 'rendimenti', 'investimento', 'investimenti', 'investment', 'investments', 'etf', 'azioni'],
+  groceries: ['spesa alimentare', 'alimentari', 'supermarket', 'groceries', 'grocery', 'supermercado', 'supermarché', 'supermarkt', 'aldi', 'rewe', 'edeka', 'tesco', 'mercadona', 'auchan', 'penny', 'despar', 'pam', 'frutta', 'verdura', 'latte', 'pane'],
+  restaurant: ['pizza', 'sushi', 'pranzo', 'cena', 'colazione', 'bar', 'caffè', 'restaurant', 'dinner', 'lunch', 'coffee', 'restaurante', 'cena restaurante', 'café', 'déjeuner', 'dîner', 'essen gehen', 'kaffee'],
+  fuel: ['diesel', 'gasolio', 'rifornimento', 'petrol', 'gasoline', 'fuel', 'gasolina', 'carburant', 'essence', 'benzin', 'tanken'],
+  transport: ['parcheggio', 'bus', 'tram', 'biglietto treno', 'parking', 'train', 'transporte', 'tren', 'péage', 'zug', 'bahn', 'flixbus'],
+  subscriptions: ['abbonamento', 'subscription', 'suscripción', 'abonnement', 'mitgliedschaft', 'apple tv', 'icloud', 'google one'],
+  utilities: ['bolletta gas', 'bolletta luce', 'bolletta acqua', 'gas bill', 'electricity', 'water bill', 'electricidad', 'facture électricité', 'strom', 'gasrechnung'],
+  rent: ['rent', 'alquiler', 'loyer', 'miete', 'canone affitto'],
+  bills: ['phone bill', 'factura teléfono', 'facture téléphone', 'telefonrechnung'],
+  pharmacy: ['farmaco', 'farmaci', 'parafarmacia', 'pharmacy', 'medicine', 'farmacia', 'pharmacie', 'apotheke', 'medikamente'],
+  health: ['visita medica', 'analisi sangue', 'fisioterapia', 'psicologo', 'doctor', 'dentist', 'hospital', 'médico', 'médecin', 'arzt', 'zahnarzt'],
+  shopping: ['vestiti', 'scarpe', 'abbigliamento', 'zara', 'h&m', 'clothes', 'shoes', 'ropa', 'vêtements', 'kleidung'],
+  online_shopping: ['temu', 'shein', 'aliexpress', 'online shopping'],
+  entertainment: ['cinema', 'concerto', 'teatro', 'videogioco', 'movie', 'concert', 'cine', 'théâtre', 'kino', 'konzert'],
+  travel: ['vacanze', 'aereo', 'flight', 'holiday', 'viaje', 'vuelo', 'voyage', 'avion', 'urlaub', 'flug'],
+  education: ['universita', 'scuola', 'school', 'tuition', 'course', 'curso', 'escuela', 'école', 'cours', 'schule', 'studium'],
+  insurance: ['insurance', 'seguro', 'assurance', 'versicherung'],
+  gifts: ['gift', 'present', 'regali', 'regalo ricevuto', 'regalo compleanno', 'regalo ricevuto compleanno', 'cadeau', 'geschenk'],
+  other: ['rimborso', 'refund', 'reimbursement', 'reembolso', 'remboursement', 'erstattung', 'vendita', 'vendite', 'vinted', 'resale', 'sale proceeds', 'venta', 'vente', 'verkauf', 'cashback', 'bonifico ricevuto', 'trasferimento ricevuto'],
+};
+
+const INCOME_CATEGORIES = new Set<CategoryType>(['salary', 'freelance', 'investments', 'other']);
+
+function normalizeCategoryText(text: string): string {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+}
+
+/** Match whole words/phrases, respect the selected direction, and prefer specific evidence. */
+export function autoCategorizeTransaction(
+  description: string,
+  selectedType?: TransactionType,
+  customCategories: CustomCategory[] = [],
+): { category: CategoryType; type: TransactionType } | null {
+  const text = ` ${normalizeCategoryText(description)} `;
+  if (!text.trim()) return null;
+  const candidates: { category: CategoryType; type: TransactionType; score: number }[] = [];
+  const add = (keyword: string, category: CategoryType, type: TransactionType, custom = false) => {
+    if (selectedType && type !== selectedType) return;
+    const normalized = normalizeCategoryText(keyword);
+    if (!normalized || !text.includes(` ${normalized} `)) return;
+    candidates.push({ category, type, score: normalized.split(' ').length * 100 + normalized.length + (custom ? 1000 : 0) });
+  };
   for (const [keyword, result] of Object.entries(AUTO_CATEGORIZATION_KEYWORDS)) {
-    if (lowerDesc.includes(keyword)) {
-      return result;
-    }
+    add(keyword, result.category, result.type);
   }
-  
-  return null;
+  for (const [category, keywords] of Object.entries(CATEGORY_VOCABULARY)) {
+    const type = INCOME_CATEGORIES.has(category) ? 'income' : 'expense';
+    for (const keyword of keywords) add(keyword, category, type);
+  }
+  for (const custom of customCategories) {
+    for (const keyword of custom.keywords) add(keyword, `custom:${custom.id}`, selectedType ?? 'expense', true);
+  }
+  // A refund or resale is income, not a purchase at the mentioned merchant.
+  if (selectedType === 'income' || !selectedType) {
+    const otherIncome = candidates.find(candidate => candidate.category === 'other' && candidate.type === 'income');
+    if (otherIncome) return { category: 'other', type: 'income' };
+  }
+  candidates.sort((a, b) => b.score - a.score);
+  const best = candidates[0];
+  if (!best) return null;
+  const tied = candidates.find(candidate => candidate.score === best.score && candidate.category !== best.category);
+  return tied ? null : { category: best.category, type: best.type };
 }
 
 // ===== Custom categories =====
