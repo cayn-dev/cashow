@@ -290,7 +290,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="dialog-pop settings-surface w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0 lg:max-w-4xl lg:p-8">
+      <DialogContent className="dialog-pop settings-surface w-[calc(100vw-1rem)] max-w-md rounded-lg p-3 sm:p-6 border-border max-h-[92vh] overflow-y-auto overflow-x-hidden [&_*]:min-w-0 lg:max-w-5xl lg:w-[min(64rem,calc(100vw-4rem))] lg:p-10">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-display">
             {t('settings.title')}
@@ -300,7 +300,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <div className="dialog-stagger space-y-8 py-4">
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catGeneral')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Language Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
@@ -464,7 +464,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catAppearance')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Theme & Accent Color Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
@@ -705,7 +705,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catBudget')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Budget & Spending Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
@@ -994,7 +994,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catNotifications')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Notifications Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
@@ -1160,7 +1160,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catSecurity')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Security Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
@@ -1416,7 +1416,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catData')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Data Statistics Section */}
           <GlassCard className="p-3 sm:p-4">
             <div className="flex items-center gap-3 mb-4">
@@ -1694,7 +1694,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catSupport')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Feedback & Support */}
           <GlassCard className="p-3 sm:p-4 border-primary/20 bg-primary/5">
             <div className="flex items-start gap-3 mb-3 min-w-0">
@@ -1726,7 +1726,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <section className="settings-category">
             <h2 className="settings-category-title">{t('settings.catDanger')}</h2>
-            <div className="lg:columns-2 lg:gap-6 settings-columns">
+            <div className="settings-columns">
           {/* Danger Zone */}
           <GlassCard className="p-3 sm:p-4 border-destructive/30">
             <div className="flex items-center gap-3 mb-4">

@@ -7,6 +7,7 @@
 - [x] In-app update notice with changelog and Update button (replaces bulk email).
 - [ ] Complete and verify deletion of all data and account without stale synchronization restoring data.
 - [ ] Complete translated settings categories and confirm bank linking is removed.
-- [ ] Finish clear glass surfaces, smooth accessible motion, and desktop/mobile verification.
+- [x] Finish clear glass surfaces, smooth accessible motion, and desktop/mobile verification.
 - [x] Update release version and notes in all five languages.
 - [x] Improve and verify income/expense categorization, live suggestions, and manual category protection.
+- [x] Cloud-synced custom categories; wider desktop settings; Apple-style liquid glass.

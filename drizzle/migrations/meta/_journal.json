@@ -8,6 +8,13 @@
       "when": 1793944388472,
       "tag": "0000_atomic_user_data_erasure",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795530604422,
+      "tag": "0001_migration",
+      "breakpoints": true
     }
   ]
 }

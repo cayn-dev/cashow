@@ -1,10 +1,10 @@
 {
-  "version": "2026.11.20",
+  "version": "2026.11.24",
   "notes": {
-    "it": ["Categorie automatiche più precise per entrate e uscite nelle cinque lingue", "Suggerimenti aggiornati mentre scrivi, senza sostituire le categorie scelte manualmente", "Riconoscimento migliorato di stipendi, compensi, rimborsi, vendite e acquisti"],
-    "en": ["More accurate income and expense categories in five languages", "Live suggestions preserve manually selected categories", "Improved recognition of salaries, freelance income, refunds, sales and purchases"],
-    "es": ["Categorías más precisas para ingresos y gastos en cinco idiomas", "Sugerencias al escribir sin sustituir las categorías elegidas manualmente", "Mejor reconocimiento de salarios, honorarios, reembolsos, ventas y compras"],
-    "fr": ["Catégories plus précises pour les revenus et dépenses dans cinq langues", "Suggestions actualisées sans remplacer les catégories choisies manuellement", "Meilleure reconnaissance des salaires, honoraires, remboursements, ventes et achats"],
-    "de": ["Genauere Kategorien für Einnahmen und Ausgaben in fünf Sprachen", "Live-Vorschläge behalten manuell gewählte Kategorien bei", "Bessere Erkennung von Gehältern, Honoraren, Erstattungen, Verkäufen und Einkäufen"]
+    "it": ["Le categorie personalizzate ora sono salvate nel tuo account e non perdono più l'icona", "Impostazioni più ordinate e larghe su computer", "Effetto vetro più fluido in stile Apple"],
+    "en": ["Custom categories are now saved to your account and keep their icon", "Tidier, wider settings on desktop", "Smoother Apple-style liquid glass"],
+    "es": ["Las categorías personalizadas se guardan en tu cuenta y mantienen su icono", "Ajustes más ordenados y amplios en ordenador", "Efecto cristal más fluido al estilo Apple"],
+    "fr": ["Les catégories personnalisées sont enregistrées dans ton compte et gardent leur icône", "Réglages plus clairs et plus larges sur ordinateur", "Effet verre plus fluide façon Apple"],
+    "de": ["Eigene Kategorien werden im Konto gespeichert und behalten ihr Symbol", "Übersichtlichere, breitere Einstellungen am Computer", "Flüssigerer Glaseffekt im Apple-Stil"]
   }
 }
