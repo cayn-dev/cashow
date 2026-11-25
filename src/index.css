@@ -16,7 +16,7 @@
 
     /* Layered glass cards */
     --card: 0 0% 100% / 0.035;
-    --card-foreground: 280 15% 97%;
+    --card-foreground: 0 0% 97%;
     --card-glass: 0 0% 100% / 0.04;
     --card-border: 0 0% 100% / 0.08;
     --glass-blur: 16px;
@@ -61,7 +61,7 @@
 
     --income: 158 64% 52%;
     --expense: 0 91% 71%;
-    --freelance: 275 95% 78%;
+    --freelance: 210 20% 78%;
     --investments: 288 90% 84%;
 
     --border: 0 0% 100% / 0.08;
@@ -78,7 +78,7 @@
     --category-fuel: 32 85% 62%;
     --category-shopping: 268 80% 72%;
     --category-online-shopping: 258 80% 72%;
-    --category-bills: 275 95% 78%;
+    --category-bills: 210 20% 78%;
     --category-utilities: 32 85% 62%;
     --category-rent: 200 85% 68%;
     --category-entertainment: 320 70% 70%;
@@ -104,7 +104,7 @@
 
     /* Sidebar — deeper glass */
     --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 275 15% 84%;
+    --sidebar-foreground: 0 0% 84%;
     --sidebar-primary: 0 0% 96%;
     --sidebar-primary-foreground: 0 0% 6%;
     --sidebar-accent: 0 0% 100% / 0.07;
@@ -290,14 +290,14 @@
   .glass-panel {
     @apply relative overflow-hidden;
     background:
-      linear-gradient(180deg, hsl(275 60% 100% / 0.07) 0%, hsl(275 60% 100% / 0.02) 100%);
+      linear-gradient(180deg, hsl(0 0% 100% / 0.07) 0%, hsl(0 0% 100% / 0.02) 100%);
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     border-radius: var(--radius);
     border: 0.5px solid hsl(var(--card-border));
     box-shadow:
       0 1px 0 0 hsl(0 0% 100% / 0.06) inset,
-      0 0 0 0.5px hsl(275 70% 94% / 0.04) inset,
+      0 0 0 0.5px hsl(0 0% 94% / 0.04) inset,
       0 30px 80px -30px hsl(272 60% 2% / 0.7);
     transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   }
@@ -311,9 +311,9 @@
     padding: 0.5px;
     background: linear-gradient(135deg,
       hsl(288 100% 92% / 0.35) 0%,
-      hsl(275 95% 78% / 0.10) 30%,
+      hsl(0 0% 78% / 0.10) 30%,
       transparent 55%,
-      hsl(260 100% 82% / 0.10) 75%,
+      hsl(0 0% 82% / 0.10) 75%,
       hsl(262 100% 88% / 0.28) 100%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
@@ -324,16 +324,16 @@
 
   .glass-panel:hover {
     background:
-      linear-gradient(180deg, hsl(275 60% 100% / 0.10) 0%, hsl(275 60% 100% / 0.04) 100%);
-    border-color: hsl(275 70% 94% / 0.20);
+      linear-gradient(180deg, hsl(0 0% 100% / 0.10) 0%, hsl(0 0% 100% / 0.04) 100%);
+    border-color: hsl(0 0% 94% / 0.20);
   }
 
   .glass-panel-elevated {
     @apply glass-panel;
     background:
-      linear-gradient(180deg, hsl(275 60% 100% / 0.09) 0%, hsl(275 60% 100% / 0.03) 100%);
+      linear-gradient(180deg, hsl(0 0% 100% / 0.09) 0%, hsl(0 0% 100% / 0.03) 100%);
     box-shadow:
-      0 1px 0 0 hsl(275 70% 94% / 0.14) inset,
+      0 1px 0 0 hsl(0 0% 94% / 0.14) inset,
       0 0 0 0.5px hsl(0 0% 100% / 0.04) inset,
       0 40px 100px -30px hsl(272 60% 2% / 0.8);
   }
@@ -345,7 +345,7 @@
     background:
       radial-gradient(120% 80% at 100% 0%, hsl(224 100% 78% / 0.10), transparent 55%),
       radial-gradient(100% 80% at 0% 100%, hsl(200 100% 70% / 0.06), transparent 55%),
-      linear-gradient(180deg, hsl(275 60% 100% / 0.06) 0%, hsl(275 60% 100% / 0.015) 100%);
+      linear-gradient(180deg, hsl(0 0% 100% / 0.06) 0%, hsl(0 0% 100% / 0.015) 100%);
     backdrop-filter: blur(56px) saturate(200%);
     -webkit-backdrop-filter: blur(56px) saturate(200%);
     border: 0.5px solid hsl(var(--card-border));
@@ -370,7 +370,7 @@
   /* Liquid glass input */
   .glass-input {
     @apply relative;
-    background: hsl(275 60% 100% / 0.05);
+    background: hsl(0 0% 100% / 0.05);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 0.5px solid hsl(220 40% 90% / 0.14);
@@ -380,7 +380,7 @@
 
   .glass-input:focus,
   .glass-input:focus-within {
-    background: hsl(275 60% 100% / 0.09);
+    background: hsl(0 0% 100% / 0.09);
     border-color: hsl(var(--primary) / 0.55);
     box-shadow:
       0 0 0 3px hsl(var(--primary) / 0.16),
@@ -418,9 +418,9 @@
 
   .stat-card:hover {
     transform: translateY(-4px);
-    border-color: hsl(275 70% 94% / 0.28);
+    border-color: hsl(0 0% 94% / 0.28);
     box-shadow:
-      0 1px 0 0 hsl(275 70% 94% / 0.16) inset,
+      0 1px 0 0 hsl(0 0% 94% / 0.16) inset,
       0 30px 70px -20px hsl(272 60% 2% / 0.7),
       0 0 40px hsl(var(--primary) / 0.18);
   }
@@ -484,7 +484,7 @@
 
   .user-bubble {
     @apply glass-panel;
-    background: linear-gradient(135deg, hsl(275 60% 100% / 0.07) 0%, hsl(275 60% 100% / 0.02) 100%);
+    background: linear-gradient(135deg, hsl(0 0% 100% / 0.07) 0%, hsl(0 0% 100% / 0.02) 100%);
   }
 
   /* Liquid FAB */
@@ -560,7 +560,7 @@
     @apply relative overflow-hidden rounded-3xl p-6 sm:p-7;
     background:
       radial-gradient(120% 80% at var(--mouse-x, 50%) var(--mouse-y, 0%), hsl(var(--primary) / 0.10), transparent 55%),
-      linear-gradient(180deg, hsl(275 60% 100% / 0.06) 0%, hsl(275 60% 100% / 0.015) 100%);
+      linear-gradient(180deg, hsl(0 0% 100% / 0.06) 0%, hsl(0 0% 100% / 0.015) 100%);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border: 0.5px solid hsl(var(--card-border));
@@ -657,13 +657,13 @@
 
   /* Compact liquid glass surface for tooltips, popovers, floating chips */
   .glass-tooltip {
-    background: linear-gradient(180deg, hsl(275 60% 100% / 0.10) 0%, hsl(275 60% 100% / 0.04) 100%);
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.10) 0%, hsl(0 0% 100% / 0.04) 100%);
     backdrop-filter: blur(24px) saturate(200%);
     -webkit-backdrop-filter: blur(24px) saturate(200%);
     border: 0.5px solid hsl(var(--card-border));
     border-radius: 0.85rem;
     box-shadow:
-      0 1px 0 0 hsl(275 70% 94% / 0.12) inset,
+      0 1px 0 0 hsl(0 0% 94% / 0.12) inset,
       0 12px 40px -12px hsl(272 60% 2% / 0.7);
     color: hsl(var(--foreground));
   }
@@ -674,7 +674,7 @@
     gap: 2px;
     padding: 3px;
     border-radius: 0.85rem;
-    background: hsl(275 60% 100% / 0.04);
+    background: hsl(0 0% 100% / 0.04);
     border: 0.5px solid hsl(var(--card-border));
     backdrop-filter: blur(18px) saturate(160%);
     -webkit-backdrop-filter: blur(18px) saturate(160%);
@@ -751,10 +751,10 @@
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: hsl(275 70% 94% / 0.14);
+  background: hsl(0 0% 94% / 0.14);
   border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover { background: hsl(275 70% 94% / 0.24); }
+::-webkit-scrollbar-thumb:hover { background: hsl(0 0% 94% / 0.24); }
 
 ::selection {
   background: hsl(var(--primary) / 0.28);
@@ -789,7 +789,7 @@
 .aurora-blob-2 {
   top: 20%; right: -15%;
   width: 60vw; height: 60vw; max-width: 780px; max-height: 780px;
-  background: radial-gradient(circle at 60% 40%, hsl(260 90% 72% / 0.42), transparent 70%);
+  background: radial-gradient(circle at 60% 40%, hsl(0 0% 72% / 0.12), transparent 70%);
   animation: aurora-drift-2 34s ease-in-out infinite;
 }
 .aurora-blob-3 {
@@ -882,7 +882,7 @@
   overflow: hidden;
   border-radius: 12px;
   background:
-    linear-gradient(180deg, hsl(275 60% 100% / 0.06) 0%, hsl(275 60% 100% / 0.02) 100%);
+    linear-gradient(180deg, hsl(0 0% 100% / 0.06) 0%, hsl(0 0% 100% / 0.02) 100%);
   border: 0.5px solid hsl(var(--card-border));
   isolation: isolate;
 }
@@ -920,12 +920,12 @@
   border-radius: 9999px;
   background:
     radial-gradient(circle at 50% 40%, hsl(var(--primary) / 0.22), transparent 65%),
-    linear-gradient(180deg, hsl(275 60% 100% / 0.08) 0%, hsl(275 60% 100% / 0.02) 100%);
+    linear-gradient(180deg, hsl(0 0% 100% / 0.08) 0%, hsl(0 0% 100% / 0.02) 100%);
   border: 0.5px solid hsl(var(--card-border));
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   box-shadow:
-    0 1px 0 0 hsl(275 70% 94% / 0.14) inset,
+    0 1px 0 0 hsl(0 0% 94% / 0.14) inset,
     0 20px 40px -20px hsl(272 60% 2% / 0.6);
 }
 .glass-empty-icon::after {
@@ -937,7 +937,7 @@
   background: linear-gradient(135deg,
     hsl(220 100% 92% / 0.4),
     transparent 45%,
-    hsl(260 100% 82% / 0.2) 100%);
+    hsl(0 0% 82% / 0.2) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -1151,7 +1151,7 @@
   opacity: 0.5;
   filter: blur(60px);
   background:
-    radial-gradient(closest-side at 25% 35%, hsl(275 90% 55% / 0.30), transparent 70%),
+    radial-gradient(closest-side at 25% 35%, hsl(0 0% 55% / 0.12), transparent 70%),
     radial-gradient(closest-side at 70% 25%, hsl(292 85% 58% / 0.22), transparent 70%),
     radial-gradient(closest-side at 55% 80%, hsl(258 85% 50% / 0.24), transparent 70%);
   animation: smoke-swirl 48s ease-in-out infinite alternate;
