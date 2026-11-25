@@ -48,25 +48,25 @@ export function TransactionItem({ transaction, onDelete, onEdit, currencySymbol 
       transition={{ type: 'spring', stiffness: 500, damping: 30, opacity: { duration: 0.2 } }}
       whileHover={{ scale: 1.01, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
       whileTap={{ scale: 0.99 }}
-      className="group flex items-center justify-between py-2.5 px-3 sm:py-3 sm:px-4 rounded-2xl bg-card/50 border border-card-border hover:bg-card/80 transition-colors duration-200 gap-2 overflow-hidden"
+      className="group flex items-center justify-between py-2.5 px-3 sm:py-3 sm:px-4 rounded-2xl bg-card/40 border border-card-border/60 hover:bg-card/70 transition-colors duration-200 gap-2 overflow-hidden"
     >
       <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
         <motion.div
-          className={cn('w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0', isIncome ? 'bg-success/10' : 'bg-muted')}
-          whileHover={{ scale: 1.1, rotate: 5 }}
+          className={cn('w-10 h-10 rounded-[14px] flex items-center justify-center text-lg shrink-0 ring-1 ring-inset ring-border/60', isIncome ? 'bg-success/10' : 'bg-muted/60')}
+          whileHover={{ scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 400, damping: 15 }}
         >
           {category.emoji}
         </motion.div>
 
         <div className="min-w-0 flex-1">
-          <p className="font-semibold text-[15px] text-foreground truncate">{transaction.description}</p>
+          <p className="font-medium text-[15px] tracking-[-0.01em] text-foreground truncate">{transaction.description}</p>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <span className="truncate">{category.label}</span>
-            <span>•</span>
+            <span className="opacity-40">·</span>
             <span className="shrink-0">{format(transaction.date, 'd MMM', { locale: it })}</span>
             {transaction.recurrence !== 'none' && (
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}>
+              <motion.div >
                 <RefreshCw className="w-3 h-3 text-muted-foreground shrink-0" />
               </motion.div>
             )}
@@ -76,7 +76,7 @@ export function TransactionItem({ transaction, onDelete, onEdit, currencySymbol 
 
       <div className="flex items-center gap-1 shrink-0">
         <motion.span
-          className={cn('font-display font-bold text-lg sm:text-2xl whitespace-nowrap tracking-tight', isIncome ? 'text-success' : 'text-destructive')}
+          className={cn('font-display font-semibold text-base sm:text-lg whitespace-nowrap tracking-tight tabular-nums', isIncome ? 'text-success' : 'text-foreground')}
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}

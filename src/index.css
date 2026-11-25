@@ -1299,3 +1299,10 @@ html { scroll-behavior: smooth; }
   .glass-panel::after { animation: none; }
   .glass-panel:hover { transform: none; }
 }
+
+/* Minimal typographic polish */
+@layer base {
+  body { font-feature-settings: "cv11", "ss01", "tnum"; letter-spacing: -0.005em; }
+  h1, h2, h3 { letter-spacing: -0.025em; font-weight: 600; }
+  ::selection { background: hsl(var(--foreground) / 0.15); }
+}

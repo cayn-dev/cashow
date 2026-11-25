@@ -29,7 +29,7 @@ export function StatCard({
     default: 'text-foreground',
     income: 'text-success',
     expense: 'text-destructive',
-    primary: 'text-primary glow-text',
+    primary: 'text-foreground',
   };
 
   return (
@@ -44,8 +44,8 @@ export function StatCard({
     >
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-sm text-muted-foreground font-medium">{title}</p>
-          <p data-sensitive className={cn('text-2xl font-display font-bold tracking-tight sensitive-amount', variantStyles[variant])}>
+          <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground font-medium">{title}</p>
+          <p data-sensitive className={cn('text-2xl font-display font-semibold tracking-[-0.02em] tabular-nums sensitive-amount', variantStyles[variant])}>
             {value}
           </p>
           {subtitle && (
@@ -53,14 +53,14 @@ export function StatCard({
           )}
         </div>
         <div className={cn(
-          'p-3 rounded-xl',
+          'p-2.5 rounded-[12px] ring-1 ring-inset ring-border/50',
           variant === 'income' && 'bg-success/10',
           variant === 'expense' && 'bg-destructive/10',
           variant === 'primary' && 'bg-primary/10',
           variant === 'default' && 'bg-muted'
         )}>
           <Icon className={cn(
-            'w-5 h-5',
+            'w-4 h-4',
             variant === 'income' && 'text-success',
             variant === 'expense' && 'text-destructive',
             variant === 'primary' && 'text-primary',
