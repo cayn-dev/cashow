@@ -1,10 +1,10 @@
 {
-  "version": "2026.11.24",
+  "version": "2026.11.26",
   "notes": {
-    "it": ["Le categorie personalizzate ora sono salvate nel tuo account e non perdono più l'icona", "Impostazioni più ordinate e larghe su computer", "Effetto vetro più fluido in stile Apple"],
-    "en": ["Custom categories are now saved to your account and keep their icon", "Tidier, wider settings on desktop", "Smoother Apple-style liquid glass"],
-    "es": ["Las categorías personalizadas se guardan en tu cuenta y mantienen su icono", "Ajustes más ordenados y amplios en ordenador", "Efecto cristal más fluido al estilo Apple"],
-    "fr": ["Les catégories personnalisées sont enregistrées dans ton compte et gardent leur icône", "Réglages plus clairs et plus larges sur ordinateur", "Effet verre plus fluide façon Apple"],
-    "de": ["Eigene Kategorien werden im Konto gespeichert und behalten ihr Symbol", "Übersichtlichere, breitere Einstellungen am Computer", "Flüssigerer Glaseffekt im Apple-Stil"]
+    "it": ["Angoli più arrotondati per i riquadri della dashboard e le finestre", "Campi e pulsanti con bordi più morbidi, mantenendo lo stile minimal"],
+    "en": ["More rounded dashboard cards and dialogs", "Softer corners on fields and buttons, keeping the minimal style"],
+    "es": ["Esquinas más redondeadas en los paneles y las ventanas", "Bordes más suaves en campos y botones, manteniendo el estilo minimalista"],
+    "fr": ["Coins plus arrondis pour les panneaux et les fenêtres", "Bords plus doux pour les champs et les boutons, en conservant le style minimaliste"],
+    "de": ["Stärker abgerundete Dashboard-Karten und Dialoge", "Weichere Ecken an Feldern und Schaltflächen bei minimalistischem Stil"]
   }
 }
